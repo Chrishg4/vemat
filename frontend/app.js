@@ -26,13 +26,13 @@ let grafico = new Chart(ctx, {
     datasets: [
       {
         label: "Temperatura (°C)",
-        borderColor: "red",
+        borderColor: "#00B4D8",
         data: [],
         fill: false,
       },
       {
         label: "Humedad (%)",
-        borderColor: "blue",
+        borderColor: "#90E0EF",
         data: [],
         fill: false,
       }

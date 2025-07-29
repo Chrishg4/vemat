@@ -1,37 +1,615 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VEMAT - Monitoreo de Zonas Vulnerables</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEMAT - Sistema de Monitoreo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Estilos para el login */
+        .login-container {
+            background: rgba(45, 45, 58, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(144, 224, 239, 0.2);
+        }
+        
+        .login-input {
+            background: #1E1E2F;
+            border: 2px solid #2D2D3A;
+            color: #F1F1F1;
+        }
+        
+        .login-input:focus {
+            border-color: #00B4D8;
+            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.1);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #00B4D8 0%, #0092B7 100%);
+        }
+        
+        .login-btn:hover {
+            background: linear-gradient(135deg, #0092B7 0%, #007A9A 100%);
+        }
+        
+        .error-input {
+            border-color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.1) !important;
+        }
+        
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(241, 241, 241, 0.3);
+            border-top: 2px solid #F1F1F1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading .spinner {
+            display: inline-block;
+        }
+
+        /* Estilos para VEMAT - manteniendo tu diseño original */
+        @layer base {
+            body {
+                background-color: #1E1E2F;
+                color: #F1F1F1;
+            }
+            .panel {
+                background-color: #2D2D3A;
+            }
+            .btn-primary {
+                background-color: #00B4D8;
+            }
+            .btn-primary:hover {
+                background-color: #0092B7;
+            }
+            .highlight {
+                color: #90E0EF;
+            }
+            /* Estilos de la tabla */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1rem;
+            }
+            th, td {
+                padding: 0.75rem;
+                text-align: left;
+                border-bottom: 1px solid #3A3A4A;
+            }
+            th {
+                background-color: #1E1E2F;
+                color: #90E0EF;
+                font-weight: bold;
+            }
+            tr:hover {
+                background-color: #3A3A4A;
+            }
+        }
+        
+        /* Ocultar secciones */
+        .hidden-section {
+            display: none;
+        }
+        
+        /* Animaciones de transición */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-green-100 to-blue-100 min-h-screen font-sans">
+<body class="min-h-screen font-sans">
+    
+    <div id="loginSection" class="min-h-screen flex items-center justify-center p-6">
+        <div class="login-container rounded-2xl p-8 w-full max-w-md shadow-2xl">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold highlight mb-2">🌐 VEMAT</h1>
+                <h2 class="text-xl font-semibold text-gray-300 mb-2">Vigilancia Ecológica</h2>
+                <p class="text-gray-400">Accede al sistema de monitoreo</p>
+            </div>
 
-  <!-- Encabezado -->
-  <header class="bg-green-700 text-white py-6 shadow-md text-center">
-    <h1 class="text-3xl font-bold">🌿 VEMAT - Vigilancia Ecológica de Mosquitos 🌿</h1>
-    <p class="text-sm mt-1">Sistema de monitoreo de zonas vulnerables</p>
-  </header>
+            <div id="successMessage" class="hidden bg-green-900 text-green-300 p-3 rounded-lg mb-4 border border-green-700">
+                ¡Login exitoso! Cargando sistema...
+            </div>
 
-  <!-- Contenido principal -->
-  <main class="p-6 grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+                        Usuario o Email
+                    </label>
+                    <input 
+                        type="text" 
+                        id="email" 
+                        name="email" 
+                        required
+                        class="login-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all duration-300"
+                        placeholder="Ingresa tu usuario"
+                    >
+                    <div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>
+                </div>
 
-    <!-- Panel de datos -->
-    <section class="bg-white p-4 rounded-2xl shadow-lg">
-      <h2 class="text-xl font-bold mb-4">📊 Lecturas actuales</h2>
-      <ul id="sensorData" class="space-y-2 text-gray-700"></ul>
-    </section>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+                        Contraseña
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            required
+                            class="login-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all duration-300 pr-12"
+                            placeholder="Ingresa tu contraseña"
+                        >
+                        <button 
+                            type="button" 
+                            id="togglePassword"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300"
+                        >
+                            👁️
+                        </button>
+                    </div>
+                    <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
+                </div>
 
-    <!-- Panel del gráfico -->
-    <section class="bg-white p-4 rounded-2xl shadow-lg">
-      <h2 class="text-xl font-bold mb-4">📈 Temperatura y Humedad</h2>
-      <canvas id="graficoSensor"></canvas>
-    </section>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input 
+                            type="checkbox" 
+                            id="remember" 
+                            name="remember"
+                            class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
+                        >
+                        <label for="remember" class="ml-2 text-sm text-gray-300">
+                            Recordarme
+                        </label>
+                    </div>
+                    <a href="#" class="text-sm highlight hover:text-blue-300 transition-colors">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
 
-  </main>
+                <button 
+                    type="submit" 
+                    id="loginBtn"
+                    class="login-btn w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-300 hover:transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                    <span class="spinner mr-2"></span>
+                    <span id="btnText">Iniciar Sesión</span>
+                </button>
+            </form>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="app.js"></script>
+            <div class="mt-6 text-center">
+                <p class="text-gray-400 text-sm">
+                    Sistema de monitoreo ambiental VEMAT
+                </p>
+            </div>
+
+            <div class="mt-4 p-3 bg-gray-800 rounded-lg text-xs text-gray-400">
+                <strong>Credenciales de prueba:</strong><br>
+                • admin@vemat.com / admin123<br>
+                • operador@vemat.com / operador123<br>
+                • demo / demo123
+            </div>
+        </div>
+    </div>
+
+    <div id="vematSection" class="hidden-section">
+        <header class="text-center py-6 border-b border-gray-700">
+            <div class="flex justify-between items-center max-w-6xl mx-auto px-6">
+                <div>
+                    <h1 class="text-4xl font-bold highlight">🌐 VEMAT - Vigilancia Ecológica de Mosquitos</h1>
+                    <p class="text-gray-400 mt-1">Sistema de monitoreo de zonas vulnerables</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-400">Bienvenido, <span id="userName" class="highlight"></span></p>
+                    <button 
+                        id="logoutBtn"
+                        class="text-sm text-red-400 hover:text-red-300 transition-colors mt-1"
+                    >
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <main class="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-8">
+            <section class="panel p-6 rounded-2xl shadow-lg">
+                <h2 class="text-2xl font-semibold mb-6 highlight">📊 Lecturas actuales</h2>
+                <ul id="sensorData" class="space-y-4 text-lg"></ul>
+            </section>
+            <section class="panel p-6 rounded-2xl shadow-lg">
+                <h2 class="text-2xl font-semibold mb-6 highlight">📈 Temperatura y Humedad</h2>
+                <canvas id="graficoSensor" class="rounded-lg bg-[#1E1E2F]"></canvas>
+            </section>
+
+            <section class="panel p-6 rounded-2xl shadow-lg col-span-2">
+                <h2 class="text-2xl font-semibold mb-6 highlight">📜 Historial de Lecturas</h2>
+                <div class="overflow-x-auto">
+                    <table id="historyTable">
+                        <thead>
+                            <tr>
+                                <th>Fecha/Hora</th>
+                                <th>Temperatura (°C)</th>
+                                <th>Humedad (%)</th>
+                                <th>CO₂ (ppm)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // ==========================================
+        // SISTEMA DE AUTENTICACIÓN
+        // ==========================================
+        
+        // Usuarios de prueba para VEMAT
+        const users = {
+            'admin@vemat.com': { password: 'admin123', name: 'Administrador VEMAT', role: 'admin' },
+            'operador@vemat.com': { password: 'operador123', name: 'Operador de Campo', role: 'operator' },
+            'demo': { password: 'demo123', name: 'Usuario Demo', role: 'demo' }
+        };
+
+        // Referencias DOM para login
+        const loginSection = document.getElementById('loginSection');
+        const vematSection = document.getElementById('vematSection');
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const btnText = document.getElementById('btnText');
+        const togglePassword = document.getElementById('togglePassword');
+        const successMessage = document.getElementById('successMessage');
+        const userName = document.getElementById('userName');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Función para mostrar/ocultar contraseña
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        // Función para mostrar errores
+        function showError(field, message) {
+            const input = document.getElementById(field);
+            const errorDiv = document.getElementById(field + 'Error');
+            input.classList.add('error-input');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        // Función para limpiar errores
+        function clearErrors() {
+            ['email', 'password'].forEach(field => {
+                const input = document.getElementById(field);
+                const errorDiv = document.getElementById(field + 'Error');
+                input.classList.remove('error-input');
+                errorDiv.classList.add('hidden');
+            });
+        }
+
+        // Función para establecer estado de carga
+        function setLoading(loading) {
+            if (loading) {
+                loginBtn.classList.add('loading');
+                loginBtn.disabled = true;
+                btnText.textContent = 'Iniciando sesión...';
+            } else {
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+                btnText.textContent = 'Iniciar Sesión';
+            }
+        }
+
+        // Función de autenticación
+        function authenticate(email, password) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    const user = users[email.toLowerCase()];
+                    if (user && user.password === password) {
+                        resolve(user);
+                    } else {
+                        reject('Usuario o contraseña incorrectos');
+                    }
+                }, 1500);
+            });
+        }
+
+        // Manejo del formulario de login
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            clearErrors();
+            
+            // Validaciones básicas
+            if (!email) {
+                showError('email', 'El usuario es requerido');
+                return;
+            }
+            
+            if (!password) {
+                showError('password', 'La contraseña es requerida');
+                return;
+            }
+            
+            if (password.length < 3) {
+                showError('password', 'La contraseña debe tener al menos 3 caracteres');
+                return;
+            }
+            
+            setLoading(true);
+            
+            try {
+                const user = await authenticate(email, password);
+                
+                // Guardar sesión
+                sessionStorage.setItem('vematUser', JSON.stringify({
+                    email: email,
+                    name: user.name,
+                    role: user.role,
+                    loginTime: new Date().toISOString()
+                }));
+                
+                // Recordar usuario si está marcado
+                if (document.getElementById('remember').checked) {
+                    localStorage.setItem('vematRemembered', email);
+                }
+                
+                // Mostrar éxito y cambiar a la aplicación
+                successMessage.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    showVematApp(user);
+                }, 2000);
+                
+            } catch (error) {
+                showError('password', error);
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Función para mostrar la aplicación VEMAT
+        function showVematApp(user) {
+            loginSection.style.display = 'none'; // Oculta completamente la sección de login
+            vematSection.classList.remove('hidden-section');
+            vematSection.classList.add('fade-in');
+            userName.textContent = user.name;
+            
+            // Iniciar el sistema de monitoreo
+            iniciarMonitoreo();
+        }
+
+        // Función para cerrar sesión
+        logoutBtn.addEventListener('click', function() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                sessionStorage.removeItem('vematUser');
+                vematSection.classList.add('hidden-section'); // Oculta la sección VEMAT
+                loginSection.style.display = 'flex'; // Vuelve a mostrar la sección de login
+                loginSection.classList.add('fade-in');
+                
+                // Limpiar formulario
+                loginForm.reset();
+                clearErrors();
+                successMessage.classList.add('hidden');
+                
+                // Detener monitoreo y limpieza de intervalos
+                if (intervalId) {
+                    clearInterval(intervalId);
+                }
+                if (historyCleanupIntervalId) { // Detener el intervalo de limpieza del historial
+                    clearInterval(historyCleanupIntervalId);
+                }
+            }
+        });
+
+        // Verificar sesión al cargar
+        window.addEventListener('load', function() {
+            const rememberedUser = localStorage.getItem('vematRemembered');
+            if (rememberedUser) {
+                emailInput.value = rememberedUser;
+                document.getElementById('remember').checked = true;
+            }
+            
+            // Verificar si hay sesión activa
+            const currentUser = sessionStorage.getItem('vematUser');
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                showVematApp(user);
+            }
+        });
+
+        // Limpiar errores al escribir
+        [emailInput, passwordInput].forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.classList.contains('error-input')) {
+                    clearErrors();
+                }
+            });
+        });
+
+        // ==========================================
+        // SISTEMA DE MONITOREO VEMAT (TU CÓDIGO ORIGINAL + HISTORIAL)
+        // ==========================================
+        
+        let intervalId;
+        let historyCleanupIntervalId; // Nuevo ID para el intervalo de limpieza del historial
+        let grafico;
+        const historyTableBody = document.querySelector('#historyTable tbody');
+
+        function generarDatos() {
+            return {
+                temperatura: (20 + Math.random() * 10).toFixed(1),
+                humedad: (50 + Math.random() * 30).toFixed(1),
+                co2: (300 + Math.random() * 200).toFixed(0),
+                timestamp: new Date() // Añadir timestamp para el control de 30 minutos
+            };
+        }
+
+        function mostrarDatos() {
+            const datos = generarDatos();
+            document.getElementById("sensorData").innerHTML = `
+                <li>🌡️ Temperatura: ${datos.temperatura} °C</li>
+                <li>💧 Humedad: ${datos.humedad} %</li>
+                <li>🫁 CO₂: ${datos.co2} ppm</li>
+            `;
+            // Asegúrate de que el gráfico se inicialice solo una vez
+            if (!grafico) {
+                iniciarMonitoreo(); // Esto inicializará el gráfico si aún no existe
+            }
+            actualizarGrafico(+datos.temperatura, +datos.humedad);
+            agregarDatosAlHistorial(datos); // Añadir datos al historial
+        }
+
+        function actualizarGrafico(temp, hum) {
+            const tiempo = new Date().toLocaleTimeString();
+            grafico.data.labels.push(tiempo);
+            grafico.data.datasets[0].data.push(temp);
+            grafico.data.datasets[1].data.push(hum);
+            if (grafico.data.labels.length > 10) {
+                grafico.data.labels.shift();
+                grafico.data.datasets[0].data.shift();
+                grafico.data.datasets[1].data.shift();
+            }
+            grafico.update();
+        }
+
+        function agregarDatosAlHistorial(datos) {
+            const row = historyTableBody.insertRow(0); // Insertar al inicio para que los más recientes estén arriba
+            row.setAttribute('data-timestamp', datos.timestamp.getTime()); // Guardar timestamp en el atributo de datos
+            
+            const timeCell = row.insertCell(0);
+            const tempCell = row.insertCell(1);
+            const humCell = row.insertCell(2);
+            const co2Cell = row.insertCell(3);
+
+            timeCell.textContent = datos.timestamp.toLocaleString();
+            tempCell.textContent = datos.temperatura;
+            humCell.textContent = datos.humedad;
+            co2Cell.textContent = datos.co2;
+        }
+
+        function limpiarHistorial() {
+            const now = new Date().getTime();
+            const thirtyMinutesAgo = now - (30 * 60 * 1000); // 30 minutos en milisegundos
+
+            const rows = historyTableBody.querySelectorAll('tr');
+            rows.forEach(row => {
+                const timestamp = parseInt(row.getAttribute('data-timestamp'));
+                if (timestamp < thirtyMinutesAgo) {
+                    row.remove(); // Eliminar la fila si es más antigua de 30 minutos
+                }
+            });
+        }
+
+        function iniciarMonitoreo() {
+            // Destruir gráfico existente si lo hay para evitar duplicados
+            if (grafico) {
+                grafico.destroy();
+            }
+
+            // Crear el gráfico
+            const ctx = document.getElementById("graficoSensor").getContext("2d");
+            grafico = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: "Temperatura (°C)",
+                            borderColor: "#00B4D8",
+                            data: [],
+                            fill: false,
+                        },
+                        {
+                            label: "Humedad (%)",
+                            borderColor: "#90E0EF",
+                            data: [],
+                            fill: false,
+                        }
+                    ]
+                },
+                options: {
+                    animation: false,
+                    responsive: true,
+                    scales: {
+                        x: { 
+                            display: true, 
+                            grid: {
+                                color: 'rgba(241, 241, 241, 0.1)' 
+                            },
+                            ticks: {
+                                color: '#F1F1F1' 
+                            }
+                        },
+                        y: { 
+                            min: 0, 
+                            max: 100,
+                            grid: {
+                                color: 'rgba(241, 241, 241, 0.1)' 
+                            },
+                            ticks: {
+                                color: '#F1F1F1' 
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#F1F1F1' 
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Mostrar datos iniciales
+            mostrarDatos();
+            
+            // Limpiar cualquier intervalo anterior para evitar múltiples ejecuciones
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+            // Configurar intervalo de actualización de datos
+            intervalId = setInterval(mostrarDatos, 3000);
+
+            // Limpiar cualquier intervalo de limpieza anterior
+            if (historyCleanupIntervalId) {
+                clearInterval(historyCleanupIntervalId);
+            }
+            // Configurar intervalo para limpiar el historial cada minuto
+            historyCleanupIntervalId = setInterval(limpiarHistorial, 60 * 1000); 
+        }
+
+        // Mostrar credenciales en consola para debugging
+        console.log('=== CREDENCIALES DE PRUEBA VEMAT ===');
+        console.log('admin@vemat.com / admin123');
+        console.log('operador@vemat.com / operador123');
+        console.log('demo / demo123');
+        console.log('=====================================');
+    </script>
 </body>
 </html>
