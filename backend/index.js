@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 // Configuración CORS para producción
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://tu-frontend-url.com', 'https://vemat-api.onrender.com'] 
+    ? ['https://tu-frontend-url.com', 'https://vemat-api.onrender.com', 'http://vemat-api.onrender.com'] 
     : '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
