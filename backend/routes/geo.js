@@ -49,12 +49,26 @@ router.post('/', async (req, res) => {
     let lat, lng;
     
     try {
-      // Usar ipapi.co que es gratuito para geolocalización básica
-      const ipResponse = await axios.get('https://ipapi.co/json/');
+      // Obtener la IP real del cliente (ESP32)
+      const clientIP = req.headers['x-forwarded-for'] || 
+                      req.headers['x-real-ip'] || 
+                      req.connection.remoteAddress || 
+                      req.socket.remoteAddress ||
+                      req.ip;
+      
+      console.log('🌍 IP del cliente ESP32:', clientIP);
+      
+      // Usar ipapi.co con la IP específica del ESP32
+      const ipResponse = await axios.get(`https://ipapi.co/${clientIP}/json/`);
       lat = ipResponse.data.latitude;
       lng = ipResponse.data.longitude;
       
-      console.log('📡 Ubicación aproximada por IP:', { lat, lng, city: ipResponse.data.city });
+      console.log('📡 Ubicación real por IP del ESP32:', { 
+        lat, lng, 
+        city: ipResponse.data.city, 
+        country: ipResponse.data.country_name,
+        ip: clientIP 
+      });
       
       if (!lat || !lng) {
         throw new Error('No se pudo obtener ubicación por IP');
@@ -62,9 +76,13 @@ router.post('/', async (req, res) => {
       
     } catch (ipError) {
       console.log('⚠️ IP geolocation falló, usando coordenadas por defecto');
-      // Coordenadas por defecto (puedes cambiarlas por tu ciudad/país)
-      lat = -12.0464; // Lima, Perú (cambia según tu ubicación)
+      // Coordenadas por defecto - ¿De qué país/ciudad eres?
+      lat = -12.0464; // Lima, Perú (CAMBIA ESTAS por tu ubicación real)
       lng = -77.0428;
+      // Ejemplos:
+      // Colombia - Bogotá: lat = 4.7110, lng = -74.0721
+      // México - CDMX: lat = 19.4326, lng = -99.1332
+      // Argentina - Buenos Aires: lat = -34.6037, lng = -58.3816
     }
 
     console.log('📍 Usando coordenadas:', { lat, lng });
