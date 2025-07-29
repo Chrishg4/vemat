@@ -9,7 +9,25 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  ssl: { rejectUnauthorized: true }
+  ssl: { 
+    rejectUnauthorized: false  // Permitir certificados auto-firmados de Aiven
+  },
+  connectTimeout: 60000,  // 60 segundos
+  acquireTimeout: 60000,
+  timeout: 60000
+});
+
+// Test de conexión
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error('❌ Error conectando a la base de datos:', err.message);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+      console.error('🔄 Conexión perdida, reintentando...');
+    }
+  } else {
+    console.log('✅ Conectado exitosamente a la base de datos Aiven');
+    connection.release();
+  }
 });
 
 module.exports = pool;
