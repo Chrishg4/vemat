@@ -6,6 +6,8 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger/swagger');
 const lecturasRoute = require('./routes/lecturas');
+const geoRoute = require('./routes/geo');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,6 +30,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Rutas API
 app.use('/api/lecturas', lecturasRoute);
+app.use('/api/geo', geoRoute);
+
 
 // Ruta base
 app.get('/', (req, res) => {
