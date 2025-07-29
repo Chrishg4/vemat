@@ -39,7 +39,13 @@ app.get('/', (req, res) => {
     message: 'API VEMAT funcionando 🚀',
     version: '1.0.0',
     swagger: '/api-docs',
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    endpoints: {
+      health: '/health',
+      lecturas: '/api/lecturas',
+      geo: '/api/geo',
+      swagger: '/api-docs'
+    }
   });
 });
 
