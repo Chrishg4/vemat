@@ -38,13 +38,23 @@ const axios = require('axios');
 router.post('/', async (req, res) => {
   const { nodo_id, wifiAccessPoints } = req.body;
 
+  console.log('📍 Recibido request de geolocalización:', { nodo_id, accessPointsCount: wifiAccessPoints?.length });
+
   if (!nodo_id || !wifiAccessPoints || wifiAccessPoints.length === 0) {
     return res.status(400).json({ error: 'Faltan datos: nodo_id o wifiAccessPoints' });
   }
 
   try {
     const mozillaURL = 'https://location.services.mozilla.com/v1/geolocate?key=test';
+    
+    console.log('🌐 Enviando a Mozilla API:', { wifiAccessPoints });
     const response = await axios.post(mozillaURL, { wifiAccessPoints });
+    
+    console.log('📡 Respuesta de Mozilla:', response.data);
+    
+    if (!response.data || !response.data.location) {
+      throw new Error('Mozilla API no devolvió ubicación válida');
+    }
 
     const { lat, lng } = response.data.location;
 
@@ -54,8 +64,15 @@ router.post('/', async (req, res) => {
       WHERE id = ?
     `;
 
+    console.log('💾 Actualizando base de datos:', { lat, lng, nodo_id });
+
     pool.query(query, [lat, lng, nodo_id], (err, results) => {
-      if (err) return res.status(400).json({ error: err });
+      if (err) {
+        console.error('❌ Error en base de datos:', err);
+        return res.status(400).json({ error: 'Error en base de datos: ' + err.message });
+      }
+      
+      console.log('✅ Ubicación actualizada exitosamente');
       res.status(200).json({
         message: 'Ubicación actualizada en nodo',
         nodo_id,
@@ -66,7 +83,14 @@ router.post('/', async (req, res) => {
 
   } catch (err) {
     console.error('❌ Error al obtener coordenadas:', err.message);
-    res.status(500).json({ error: 'Error procesando geolocalización' });
+    console.error('❌ Error completo:', err);
+    
+    // Respuesta más detallada del error
+    res.status(500).json({ 
+      error: 'Error procesando geolocalización',
+      details: err.message,
+      mozillaAPI: 'https://location.services.mozilla.com/v1/geolocate'
+    });
   }
 });
 
