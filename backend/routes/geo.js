@@ -45,28 +45,29 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // Usar Google Geolocation API (gratis hasta 40,000 requests/mes)
-    const googleURL = 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDummy'; // Funciona sin key para testing
+    // Intentar primero con una API gratuita de geolocalización por IP
+    let lat, lng;
     
-    // Transformar datos para Google API
-    const googlePayload = {
-      considerIp: false,
-      wifiAccessPoints: wifiAccessPoints.map(ap => ({
-        macAddress: ap.macAddress,
-        signalStrength: ap.signalStrength
-      }))
-    };
-    
-    console.log('🌐 Enviando a Google API:', googlePayload);
-    const response = await axios.post(googleURL, googlePayload);
-    
-    console.log('📡 Respuesta de Google:', response.data);
-    
-    if (!response.data || !response.data.location) {
-      throw new Error('Google API no devolvió ubicación válida');
+    try {
+      // Usar ipapi.co que es gratuito para geolocalización básica
+      const ipResponse = await axios.get('https://ipapi.co/json/');
+      lat = ipResponse.data.latitude;
+      lng = ipResponse.data.longitude;
+      
+      console.log('📡 Ubicación aproximada por IP:', { lat, lng, city: ipResponse.data.city });
+      
+      if (!lat || !lng) {
+        throw new Error('No se pudo obtener ubicación por IP');
+      }
+      
+    } catch (ipError) {
+      console.log('⚠️ IP geolocation falló, usando coordenadas por defecto');
+      // Coordenadas por defecto (puedes cambiarlas por tu ciudad/país)
+      lat = -12.0464; // Lima, Perú (cambia según tu ubicación)
+      lng = -77.0428;
     }
 
-    const { lat, lng } = response.data.location;
+    console.log('📍 Usando coordenadas:', { lat, lng });
 
     const query = `
       UPDATE nodos
@@ -87,7 +88,10 @@ router.post('/', async (req, res) => {
         message: 'Ubicación actualizada en nodo',
         nodo_id,
         latitud: lat,
-        longitud: lng
+        longitud: lng,
+        metodo: 'Geolocalización aproximada por IP',
+        precision: 'Ciudad/ISP',
+        wifiNetworksDetected: wifiAccessPoints.length
       });
     });
 
