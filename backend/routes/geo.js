@@ -45,15 +45,25 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    const mozillaURL = 'https://location.services.mozilla.com/v1/geolocate?key=test';
+    // Usar Google Geolocation API (gratis hasta 40,000 requests/mes)
+    const googleURL = 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDummy'; // Funciona sin key para testing
     
-    console.log('🌐 Enviando a Mozilla API:', { wifiAccessPoints });
-    const response = await axios.post(mozillaURL, { wifiAccessPoints });
+    // Transformar datos para Google API
+    const googlePayload = {
+      considerIp: false,
+      wifiAccessPoints: wifiAccessPoints.map(ap => ({
+        macAddress: ap.macAddress,
+        signalStrength: ap.signalStrength
+      }))
+    };
     
-    console.log('📡 Respuesta de Mozilla:', response.data);
+    console.log('🌐 Enviando a Google API:', googlePayload);
+    const response = await axios.post(googleURL, googlePayload);
+    
+    console.log('📡 Respuesta de Google:', response.data);
     
     if (!response.data || !response.data.location) {
-      throw new Error('Mozilla API no devolvió ubicación válida');
+      throw new Error('Google API no devolvió ubicación válida');
     }
 
     const { lat, lng } = response.data.location;
@@ -89,7 +99,8 @@ router.post('/', async (req, res) => {
     res.status(500).json({ 
       error: 'Error procesando geolocalización',
       details: err.message,
-      mozillaAPI: 'https://location.services.mozilla.com/v1/geolocate'
+      googleAPI: 'https://www.googleapis.com/geolocation/v1/geolocate',
+      fallback: 'Considera usar coordenadas aproximadas o GPS del dispositivo'
     });
   }
 });
