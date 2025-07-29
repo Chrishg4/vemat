@@ -132,14 +132,17 @@ router.post('/', async (req, res) => {
     console.log('📍 Usando coordenadas:', { lat, lng });
 
     const query = `
-      UPDATE nodos
-      SET latitud = ?, longitud = ?
-      WHERE id = ?
+      INSERT INTO nodos (id, latitud, longitud) 
+      VALUES (?, ?, ?)
+      ON DUPLICATE KEY UPDATE 
+      latitud = VALUES(latitud), 
+      longitud = VALUES(longitud),
+      updated_at = CURRENT_TIMESTAMP
     `;
 
     console.log('💾 Actualizando base de datos:', { lat, lng, nodo_id });
 
-    pool.query(query, [lat, lng, nodo_id], (err, results) => {
+    pool.query(query, [nodo_id, lat, lng], (err, results) => {
       if (err) {
         console.error('❌ Error en base de datos:', err);
         return res.status(400).json({ error: 'Error en base de datos: ' + err.message });
