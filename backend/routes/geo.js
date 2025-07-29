@@ -136,8 +136,7 @@ router.post('/', async (req, res) => {
       VALUES (?, ?, ?)
       ON DUPLICATE KEY UPDATE 
       latitud = VALUES(latitud), 
-      longitud = VALUES(longitud),
-      updated_at = CURRENT_TIMESTAMP
+      longitud = VALUES(longitud)
     `;
 
     console.log('💾 Actualizando base de datos:', { lat, lng, nodo_id });
