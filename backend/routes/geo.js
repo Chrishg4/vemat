@@ -49,26 +49,70 @@ router.post('/', async (req, res) => {
     let lat, lng;
     
     try {
-      // Obtener la IP real del cliente (ESP32)
-      const clientIP = req.headers['x-forwarded-for'] || 
-                      req.headers['x-real-ip'] || 
-                      req.connection.remoteAddress || 
-                      req.socket.remoteAddress ||
-                      req.ip;
+      // Mejorar detección de IP del ESP32/cliente real
+      const clientIP = req.headers['cf-connecting-ip'] ||       // Cloudflare
+                      req.headers['x-forwarded-for']?.split(',')[0]?.trim() || // Proxy/Load Balancer
+                      req.headers['x-real-ip'] ||                // Nginx
+                      req.headers['x-client-ip'] ||              // Apache
+                      req.headers['x-cluster-client-ip'] ||      // Cluster
+                      req.connection.remoteAddress ||           // Direct connection
+                      req.socket.remoteAddress ||               // Socket
+                      (req.connection.socket ? req.connection.socket.remoteAddress : null) ||
+                      req.ip;                                   // Express default
       
-      console.log('🌍 IP del cliente ESP32:', clientIP);
-      
-      // Usar ipapi.co con la IP específica del ESP32
-      const ipResponse = await axios.get(`https://ipapi.co/${clientIP}/json/`);
-      lat = ipResponse.data.latitude;
-      lng = ipResponse.data.longitude;
-      
-      console.log('📡 Ubicación real por IP del ESP32:', { 
-        lat, lng, 
-        city: ipResponse.data.city, 
-        country: ipResponse.data.country_name,
-        ip: clientIP 
+      console.log('🌍 IP detectada del ESP32:', clientIP);
+      console.log('🔍 Headers de IP disponibles:', {
+        'cf-connecting-ip': req.headers['cf-connecting-ip'],
+        'x-forwarded-for': req.headers['x-forwarded-for'],
+        'x-real-ip': req.headers['x-real-ip'],
+        'x-client-ip': req.headers['x-client-ip'],
+        'remoteAddress': req.connection.remoteAddress,
+        'req.ip': req.ip
       });
+      
+      // Limpiar IP si viene con IPv6 wrapper
+      let cleanIP = clientIP;
+      if (clientIP && clientIP.startsWith('::ffff:')) {
+        cleanIP = clientIP.substring(7);
+        console.log('🧹 IP limpia (removiendo IPv6 wrapper):', cleanIP);
+      }
+      
+      // Validar que no sea IP privada/local
+      const isPrivateIP = !cleanIP || 
+                         cleanIP === '127.0.0.1' ||
+                         cleanIP === 'localhost' ||
+                         cleanIP.startsWith('192.168.') ||
+                         cleanIP.startsWith('10.') ||
+                         cleanIP.startsWith('172.16.') ||
+                         cleanIP.startsWith('::1');
+      
+      if (isPrivateIP) {
+        console.log('⚠️ IP privada/local detectada:', cleanIP, '- usando geolocalización del servidor');
+        // Si es IP privada, usar la IP pública del servidor de Render
+        const ipResponse = await axios.get('https://ipapi.co/json/');
+        lat = ipResponse.data.latitude;
+        lng = ipResponse.data.longitude;
+        
+        console.log('📡 Ubicación del servidor Render:', { 
+          lat, lng, 
+          city: ipResponse.data.city, 
+          country: ipResponse.data.country_name,
+          note: 'ESP32 en red privada'
+        });
+      } else {
+        // Usar la IP real del ESP32
+        const ipResponse = await axios.get(`https://ipapi.co/${cleanIP}/json/`);
+        lat = ipResponse.data.latitude;
+        lng = ipResponse.data.longitude;
+        
+        console.log('📡 Ubicación real por IP del ESP32:', { 
+          lat, lng, 
+          city: ipResponse.data.city, 
+          country: ipResponse.data.country_name,
+          ip: cleanIP,
+          isp: ipResponse.data.org
+        });
+      }
       
       if (!lat || !lng) {
         throw new Error('No se pudo obtener ubicación por IP');
@@ -76,13 +120,13 @@ router.post('/', async (req, res) => {
       
     } catch (ipError) {
       console.log('⚠️ IP geolocation falló, usando coordenadas por defecto');
-      // Coordenadas por defecto - ¿De qué país/ciudad eres?
-      lat = -12.0464; // Lima, Perú (CAMBIA ESTAS por tu ubicación real)
-      lng = -77.0428;
-      // Ejemplos:
-      // Colombia - Bogotá: lat = 4.7110, lng = -74.0721
-      // México - CDMX: lat = 19.4326, lng = -99.1332
-      // Argentina - Buenos Aires: lat = -34.6037, lng = -58.3816
+      console.log('🔧 Error de IP:', ipError.message);
+      
+      // Coordenadas por defecto - San José, Costa Rica 🇨🇷
+      lat = 9.9281;   // San José, Costa Rica
+      lng = -84.0907; // San José, Costa Rica
+      
+      console.log('📍 Usando coordenadas de Costa Rica por defecto');
     }
 
     console.log('📍 Usando coordenadas:', { lat, lng });
@@ -107,9 +151,10 @@ router.post('/', async (req, res) => {
         nodo_id,
         latitud: lat,
         longitud: lng,
-        metodo: 'Geolocalización aproximada por IP',
-        precision: 'Ciudad/ISP',
-        wifiNetworksDetected: wifiAccessPoints.length
+        metodo: 'Geolocalización mejorada por IP',
+        precision: 'Ciudad/ISP o Coordenadas de Costa Rica 🇨🇷',
+        wifiNetworksDetected: wifiAccessPoints.length,
+        ubicacion: lat === 9.9281 ? 'San José, Costa Rica (por defecto)' : 'Detectada por IP'
       });
     });
 
