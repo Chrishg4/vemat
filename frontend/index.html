@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEMAT - Sistema de Monitoreo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Estilos para VEMAT */
+        @layer base {
+            body {
+                background-color: #1E1E2F;
+                color: #F1F1F1;
+            }
+            .panel {
+                background-color: #2D2D3A;
+            }
+            .btn-primary {
+                background-color: #00B4D8;
+            }
+            .btn-primary:hover {
+                background-color: #0092B7;
+            }
+            .highlight {
+                color: #90E0EF;
+            }
+            /* Estilos de la tabla */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1rem;
+            }
+            th, td {
+                padding: 0.75rem;
+                text-align: left;
+                border-bottom: 1px solid #3A3A4A;
+            }
+            th {
+                background-color: #1E1E2F;
+                color: #90E0EF;
+                font-weight: bold;
+            }
+            tr:hover {
+                background-color: #3A3A4A;
+            }
+        }
+
+        /* Corrección para la altura del gráfico */
+        #graficoSensor {
+            height: 300px; /* Ajusta esta altura según lo necesites */
+            max-height: 400px; /* Opcional: para asegurar que no exceda un límite */
+            width: 100%; /* Asegura que ocupe todo el ancho disponible */
+        }
+
+        /* Estilo para el nuevo texto "Monitorización Vemat" */
+        .header-left-text {
+            color: #F1F1F1; /* Color de texto claro */
+            font-size: 1.25rem; /* Tamaño de fuente ligeramente más grande */
+            font-weight: 600; /* Semibold */
+            margin-right: auto; /* Empuja el título principal al centro */
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans">
+    
+    <div id="vematSection">
+        <header class="text-center py-6 border-b border-gray-700">
+            <div class="flex justify-between items-center max-w-6xl mx-auto px-6">
+                <div class="header-left-text">
+                    Monitorización Vemat
+                </div>
+                <div>
+                    <h1 class="text-4xl font-bold highlight">🌐 VEMAT - Vigilancia Ecológica de Mosquitos</h1>
+                    <p class="text-gray-400 mt-1">Sistema de monitoreo de zonas vulnerables</p>
+                </div>
+                <div></div> 
+            </div>
+        </header>
+        
+        <main class="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-8">
+            <section class="panel p-6 rounded-2xl shadow-lg">
+                <h2 class="text-2xl font-semibold mb-6 highlight">📊 Lecturas actuales</h2>
+                <ul id="sensorData" class="space-y-4 text-lg"></ul>
+            </section>
+            <section class="panel p-6 rounded-2xl shadow-lg">
+                <h2 class="text-2xl font-semibold mb-6 highlight">📈 Temperatura y Humedad</h2>
+                <canvas id="graficoSensor" class="rounded-lg bg-[#1E1E2F]"></canvas>
+            </section>
+
+            <section class="panel p-6 rounded-2xl shadow-lg col-span-2">
+                <h2 class="text-2xl font-semibold mb-6 highlight">📜 Historial de Lecturas</h2>
+                <div class="overflow-x-auto">
+                    <table id="historyTable">
+                        <thead>
+                            <tr>
+                                <th>Fecha/Hora</th>
+                                <th>Temperatura (°C)</th>
+                                <th>Humedad (%)</th>
+                                <th>CO₂ (ppm)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        let intervalId;
+        let historyCleanupIntervalId;
+        let grafico;
+        const historyTableBody = document.querySelector('#historyTable tbody');
+
+        function generarDatos() {
+            return {
+                temperatura: (20 + Math.random() * 10).toFixed(1),
+                humedad: (50 + Math.random() * 30).toFixed(1),
+                co2: (300 + Math.random() * 200).toFixed(0),
+                timestamp: new Date()
+            };
+        }
+
+        function actualizarGrafico(temp, hum) {
+            const tiempo = new Date().toLocaleTimeString();
+            grafico.data.labels.push(tiempo);
+            grafico.data.datasets[0].data.push(temp);
+            grafico.data.datasets[1].data.push(hum);
+            // Mantenemos 10 puntos en el gráfico para una mejor visualización con actualizaciones cada minuto
+            if (grafico.data.labels.length > 10) { 
+                grafico.data.labels.shift();
+                grafico.data.datasets[0].data.shift();
+                grafico.data.datasets[1].data.shift();
+            }
+            grafico.update();
+        }
+
+        function agregarDatosAlHistorial(datos) {
+            const row = historyTableBody.insertRow(0); // Insertar al inicio para que los más recientes estén arriba
+            row.setAttribute('data-timestamp', datos.timestamp.getTime()); // Guardar timestamp en el atributo de datos
+            
+            const timeCell = row.insertCell(0);
+            const tempCell = row.insertCell(1);
+            const humCell = row.insertCell(2);
+            const co2Cell = row.insertCell(3);
+
+            timeCell.textContent = datos.timestamp.toLocaleString();
+            tempCell.textContent = datos.temperatura;
+            humCell.textContent = datos.humedad;
+            co2Cell.textContent = datos.co2;
+        }
+
+        function limpiarHistorial() {
+            const now = new Date().getTime();
+            const fiveMinutesAgo = now - (5 * 60 * 1000); // 5 minutos en milisegundos
+            const rows = historyTableBody.querySelectorAll('tr');
+            rows.forEach(row => {
+                const timestamp = parseInt(row.getAttribute('data-timestamp'));
+                if (timestamp < fiveMinutesAgo) {
+                    row.remove(); // Eliminar la fila si es más antigua de 5 minutos
+                }
+            });
+            console.log("Historial limpiado. Elementos restantes:", historyTableBody.children.length); // Para depuración
+        }
+
+        function iniciarMonitoreo() {
+            const ctx = document.getElementById('graficoSensor').getContext('2d');
+            grafico = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Temperatura (°C)',
+                        data: [],
+                        borderColor: '#00B4D8',
+                        backgroundColor: 'rgba(0, 180, 216, 0.2)',
+                        tension: 0.3,
+                        fill: false
+                    }, {
+                        label: 'Humedad (%)',
+                        data: [],
+                        borderColor: '#90E0EF',
+                        backgroundColor: 'rgba(144, 224, 239, 0.2)',
+                        tension: 0.3,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#3A3A4A'
+                            },
+                            ticks: {
+                                color: '#F1F1F1'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#3A3A4A'
+                            },
+                            ticks: {
+                                color: '#F1F1F1'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#F1F1F1'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Mostrar datos iniciales y configurar intervalos
+            const datosIniciales = generarDatos();
+            document.getElementById("sensorData").innerHTML = `
+                <li>🌡️ Temperatura: ${datosIniciales.temperatura} °C</li>
+                <li>💧 Humedad: ${datosIniciales.humedad} %</li>
+                <li>🫁 CO₂: ${datosIniciales.co2} ppm</li>
+            `;
+            actualizarGrafico(+datosIniciales.temperatura, +datosIniciales.humedad);
+            agregarDatosAlHistorial(datosIniciales);
+
+            // Actualización de datos cada 1 minuto (60000 ms)
+            intervalId = setInterval(() => {
+                const datos = generarDatos();
+                document.getElementById("sensorData").innerHTML = `
+                    <li>🌡️ Temperatura: ${datos.temperatura} °C</li>
+                    <li>💧 Humedad: ${datos.humedad} %</li>
+                    <li>🫁 CO₂: ${datos.co2} ppm</li>
+                `;
+                actualizarGrafico(+datos.temperatura, +datos.humedad);
+                agregarDatosAlHistorial(datos);
+            }, 60000); 
+
+            // Limpiar historial cada 5 minutos (5 * 60 * 1000 ms)
+            historyCleanupIntervalId = setInterval(limpiarHistorial, 5 * 60 * 1000);
+        }
+
+        // Iniciar el monitoreo automáticamente al cargar la página
+        window.addEventListener('load', iniciarMonitoreo);
+
+    </script>
+</body>
+</html>
