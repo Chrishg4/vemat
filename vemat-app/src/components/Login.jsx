@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const usuariosPrueba = [
   { usuario: "admin@vemat.com", contrasena: "admin123" },
@@ -11,27 +12,28 @@ export default function Login() {
   const [usuario, setUsuario] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
-  const [loginExitoso, setLoginExitoso] = useState(false); // Nuevo estado para el mensaje de éxito
+  const [loginExitoso, setLoginExitoso] = useState(false);
   const navigate = useNavigate();
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const { login } = useAuth();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    setError(""); // Limpiar errores previos
-    setLoginExitoso(false); // Resetear mensaje de éxito
+    setError("");
+    setLoginExitoso(false);
 
     const usuarioValido = usuariosPrueba.find(
       (u) => u.usuario === usuario && u.contrasena === contrasena
     );
 
     if (usuarioValido) {
-      setLoginExitoso(true); // Mostrar mensaje de éxito
-      // Simular un retraso antes de navegar al dashboard (opcional, para que se vea el mensaje)
+      setLoginExitoso(true);
+      login(usuarioValido.usuario); // Usar la función login del contexto
       setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500); // Navegar después de 1.5 segundos
+        navigate("/lecturas-actuales");
+      }, 1500);
     } else {
-      setError("Usuario o Email incorrectos.");
+      setError("Usuario o contraseña incorrectos.");
     }
   };
 

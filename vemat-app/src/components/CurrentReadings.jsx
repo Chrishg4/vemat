@@ -1,33 +1,18 @@
-// src/components/CurrentReadings.jsx
-import React from 'react';
-import { FaLaptop, FaThermometerHalf, FaTint, FaSmog } from 'react-icons/fa';
+import React from "react";
 
-export default function CurrentReadings({ data }) {
-  // Aseguramos que los datos existan para evitar errores, mostrando 'N/A' si no.
-  const temperatura = data?.temperatura ?? 'N/A';
-  const humedad = data?.humedad ?? 'N/A';
-  const co2 = data?.co2 ?? 'N/A';
+export default function CurrentReadings({ lectura }) {
+  if (!lectura) return <div>Cargando datos...</div>;
 
   return (
-    <div className="bg-gray-700 p-6 rounded-lg shadow-lg">
-      <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
-        <FaLaptop className="mr-3 text-blue-400 text-2xl" />
-        Lecturas actuales
-      </h2>
-      <ul className="space-y-3 text-gray-200">
-        <li className="flex items-center text-lg">
-          <FaThermometerHalf className="mr-3 text-red-400" />
-          Temperatura: <span className="font-bold ml-2">{temperatura} °C</span>
-        </li>
-        <li className="flex items-center text-lg">
-          <FaTint className="mr-3 text-blue-400" />
-          Humedad: <span className="font-bold ml-2">{humedad} %</span>
-        </li>
-        <li className="flex items-center text-lg">
-          <FaSmog className="mr-3 text-green-400" />
-          CO₂: <span className="font-bold ml-2">{co2} ppm</span>
-        </li>
-      </ul>
+    <div className="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
+      <h2 className="text-xl font-semibold mb-4 text-white">Lecturas Actuales</h2>
+      <div className="space-y-3 text-gray-300">
+        <p><span className="text-blue-400 font-medium">Fecha:</span> {lectura.date}</p>
+        <p><span className="text-blue-400 font-medium">Temperatura:</span> {lectura.temperatura} °C</p>
+        <p><span className="text-blue-400 font-medium">Humedad:</span> {lectura.humedad} %</p>
+        <p><span className="text-blue-400 font-medium">CO₂:</span> {lectura.co2} ppm</p>
+        <p><span className="text-blue-400 font-medium">Ciudad:</span> {lectura.city}</p>
+      </div>
     </div>
   );
 }

@@ -1,33 +1,23 @@
-// src/components/AuthContext.jsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
+// Crear el contexto
 const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
-  // Inicializa isAuthenticated leyendo de localStorage
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('isAuthenticated') === 'true';
-  });
+// Proveedor de contexto
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null); // Inicialmente no hay usuario
 
-  // Efecto para guardar el estado de autenticación en localStorage
-  useEffect(() => {
-    localStorage.setItem('isAuthenticated', isAuthenticated);
-  }, [isAuthenticated]);
-
-  const login = () => setIsAuthenticated(true);
-  const logout = () => {
-    setIsAuthenticated(false);
-    // Limpia cualquier otro dato de sesión si es necesario
-    localStorage.removeItem('isAuthenticated');
-  };
+  const login = (username) => setUser(username);  // Ahora guardamos el nombre de usuario
+  const logout = () => setUser(null);     // Limpia la sesión del usuario
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => {
+// Hook para consumir el contexto
+export function useAuth() {
   return useContext(AuthContext);
-};
+}

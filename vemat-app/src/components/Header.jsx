@@ -1,20 +1,22 @@
 // src/components/Header.jsx
-import React from 'react';
-import { FaGlobeAmericas } from 'react-icons/fa'; // Icono para el globo
+import React from "react";
 
 export default function Header() {
   return (
-    <header className="bg-gray-800 text-white p-4 flex items-center justify-between shadow-md">
-      <div className="flex items-center">
-        {/* Logo VEMAT o cualquier imagen que quieras usar */}
-        {/* Puedes reemplazar el icono por una imagen: <img src="/path/to/your/logo.png" alt="VEMAT Logo" className="h-8 mr-3" /> */}
-        <h1 className="text-2xl font-bold mr-4">Monitorización Vemat</h1>
-        <div className="flex items-center text-lg">
-          <FaGlobeAmericas className="mr-2 text-blue-400" />
-          <span className="font-semibold">VEMAT - Vigilancia Ecológica de Mosquitos</span>
+    <header className="bg-gray-800 text-white py-3 shadow-md">
+      <div className="container mx-auto flex justify-between items-center px-4">
+        <span className="text-sm font-semibold text-gray-300 whitespace-nowrap mr-4">
+          Sistema de monitoreo de mosquitos
+        </span>
+        
+        <h1 className="text-xl font-bold flex-1 text-center mx-auto">
+          <span role="img" aria-label="world symbol" className="mr-2">🌍</span>
+          VEMAT - Vigilancia Ecológica de Mosquitos
+        </h1>
+        
+        <div className="w-48"> {/* Espacio equivalente al lado izquierdo para mantener el título centrado */}
         </div>
       </div>
-      <span className="text-gray-400 text-sm hidden md:block">Sistema de monitoreo de zonas vulnerables</span>
     </header>
   );
 }

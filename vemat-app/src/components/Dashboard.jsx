@@ -1,77 +1,50 @@
-import { useState, useEffect } from "react";
-import { generarDatos } from "../utils/generarDatos";
+// src/components/Dashboard.jsx
+import React from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
 import CurrentReadings from "./CurrentReadings";
-import ChartComponent from "./ChartComponent";
-import HistoryTable from "./HistoryTable";
+import TempHumidityChart from "./TempHumidityChart";
+import ReadingsTable from "./ReadingsTable";
 import MapView from "./MapView";
-
-const LAT_DEFAULT = 10.43079;
-const LON_DEFAULT = -85.08499;
+import MainDashboard from "./MainDashboard";
+import AlertHistoryPage from "../pages/AlertHistoryPage";
+import { useAuth } from "./AuthContext";
+import { useDashboardData } from "../context/DashboardContext";
 
 export default function Dashboard() {
-  const [lecturasActuales, setLecturasActuales] = useState(() => generarDatos());
-  const [historial, setHistorial] = useState([]);
+  const { logout, user } = useAuth();
+  const { latest, data } = useDashboardData();
+  const location = useLocation();
 
-  useEffect(() => {
-    const now = new Date();
-    const fechaHora = now.toLocaleString("es-CR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    });
+  const coordenadasSensor = {
+    lat: latest.latitude || 10.43079,
+    lng: latest.longitude || -85.08499,
+  };
 
-    const primeraLectura = {
-      fecha: fechaHora,
-      ciudad: "Cañas",
-      temperatura: Number(lecturasActuales.temperatura),
-      humedad: Number(lecturasActuales.humedad),
-      co2: Number(lecturasActuales.co2),
-    };
-
-    setHistorial([primeraLectura]);
-
-    const intervalo = setInterval(() => {
-      const datos = generarDatos();
-      const fechaHora = new Date().toLocaleString("es-CR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
-      });
-
-      const datosConCiudadFija = {
-        ...datos,
-        ciudad: "Cañas",
-        fecha: fechaHora,
-        temperatura: Number(datos.temperatura),
-        humedad: Number(datos.humedad),
-        co2: Number(datos.co2),
-      };
-
-      setLecturasActuales(datosConCiudadFija);
-      setHistorial(prev => {
-        const nuevoHistorial = [...prev, datosConCiudadFija];
-        return nuevoHistorial.slice(-20); // mantener solo las últimas 20 lecturas
-      });
-    }, 60000); // cada 60 segundos
-
-    return () => clearInterval(intervalo);
-  }, []);
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   return (
-    <div className="p-4 space-y-4">
-      <CurrentReadings datos={lecturasActuales} ciudad="Cañas" />
-      <ChartComponent datos={historial} />
-      <HistoryTable historial={historial} />
-      <MapView latitude={LAT_DEFAULT} longitude={LON_DEFAULT} />
-      
+    <div className="flex h-screen overflow-hidden bg-gray-900">
+      <Sidebar username={user} onLogout={logout} />
+      <div className="flex flex-col flex-1 w-0 overflow-hidden">
+        <Header />
+        <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
+          <div className="p-2 max-w-7xl mx-auto">
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<MainDashboard />} />
+              <Route path="/lecturas-actuales" element={<CurrentReadings lectura={latest} />} />
+              <Route path="/grafica" element={<TempHumidityChart datos={data} />} />
+              <Route path="/mapa" element={<MapView coordenadas={coordenadasSensor} />} />
+              <Route path="/historial" element={<ReadingsTable historial={data} />} />
+              <Route path="/alertas" element={<AlertHistoryPage />} />
+            </Routes>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

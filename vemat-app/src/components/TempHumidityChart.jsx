@@ -1,114 +1,61 @@
-// src/components/TempHumidityChart.jsx
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import React from "react";
+import { Line } from "react-chartjs-2";
+import { Chart, LineElement, PointElement, LinearScale, CategoryScale } from "chart.js";
 
-// Registrar los componentes de Chart.js que vamos a usar
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+Chart.register(LineElement, PointElement, LinearScale, CategoryScale);
 
-export default function TempHumidityChart({ chartData }) {
+export default function TempHumidityChart({ datos }) {
   const data = {
-    labels: chartData.labels, // Array con fechas/horas
+    labels: datos.map((d) => d.date.split(", ")[1]),
     datasets: [
       {
-        label: 'Temperatura (°C)',
-        data: chartData.temperatures.map(Number), // Convertir a números
-        borderColor: 'rgb(255, 99, 132)', // rojo
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        yAxisID: 'y',
+        label: "Temperatura (°C)",
+        data: datos.map((d) => d.temperatura),
+        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
         tension: 0.4,
       },
       {
-        label: 'Humedad (%)',
-        data: chartData.humidities.map(Number), // Convertir a números
-        borderColor: 'rgb(53, 162, 235)', // azul
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-        yAxisID: 'y1',
+        label: "Humedad (%)",
+        data: datos.map((d) => d.humedad),
+        borderColor: "rgba(54, 162, 235, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
         tension: 0.4,
       },
     ],
   };
 
   const options = {
-    responsive: true,
-    maintainAspectRatio: false, // Para controlar alto con CSS
     plugins: {
       legend: {
-        position: 'top',
         labels: {
-          color: '#cbd5e1', // gris claro
-        },
-      },
-      title: {
-        display: true,
-        text: 'Temperatura y Humedad',
-        color: '#f8fafc', // casi blanco
-        font: { size: 18 },
-      },
+          color: '#9ca3af' // text-gray-400 para las leyendas
+        }
+      }
     },
     scales: {
       x: {
-        ticks: { color: '#cbd5e1' },
-        grid: { color: 'rgba(255,255,255,0.1)' },
-        title: {
-          display: true,
-          text: 'Fecha/Hora',
-          color: '#f8fafc',
-          font: { size: 14 },
+        grid: {
+          color: '#374151' // grid-gray-700
         },
+        ticks: {
+          color: '#9ca3af' // text-gray-400
+        }
       },
       y: {
-        type: 'linear',
-        display: true,
-        position: 'left',
-        ticks: { color: '#cbd5e1' },
-        grid: { color: 'rgba(255,255,255,0.1)' },
-        title: {
-          display: true,
-          text: 'Temperatura (°C)',
-          color: '#f8fafc',
-          font: { size: 14 },
+        grid: {
+          color: '#374151' // grid-gray-700
         },
-        min: 0,
-        max: 35,
-      },
-      y1: {
-        type: 'linear',
-        display: true,
-        position: 'right',
-        grid: { drawOnChartArea: false, color: 'rgba(255,255,255,0.1)' },
-        ticks: { color: '#cbd5e1' },
-        title: {
-          display: true,
-          text: 'Humedad (%)',
-          color: '#f8fafc',
-          font: { size: 14 },
-        },
-        min: 0,
-        max: 100,
-      },
-    },
+        ticks: {
+          color: '#9ca3af' // text-gray-400
+        }
+      }
+    }
   };
 
   return (
-    <div className="bg-gray-700 p-6 rounded-lg shadow-lg h-80 md:h-96 flex flex-col">
+    <div className="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
+      <h2 className="text-xl font-semibold mb-4 text-white">Gráfica de Temperatura y Humedad</h2>
       <Line data={data} options={options} />
     </div>
   );
