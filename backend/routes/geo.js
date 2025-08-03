@@ -5,9 +5,18 @@ const axios = require('axios');
 
 /**
  * @swagger
+ * tags:
+ *   - name: Arduino
+ *     description: Rutas para ESP32
+ */
+
+
+/**
+ * @swagger
  * /geo:
  *   post:
  *     summary: Recibe escaneo Wi-Fi y actualiza la ubicación del nodo
+ *     tags: [Arduino]  // ← SOLO AGREGAR ESTA LÍNEA
  *     requestBody:
  *       required: true
  *       content:

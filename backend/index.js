@@ -7,6 +7,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger/swagger');
 const lecturasRoute = require('./routes/lecturas');
 const geoRoute = require('./routes/geo');
+const datosLecturaRoute = require('./routes/datosLectura');  // ← AGREGAR ESTA LÍNEA
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Rutas API
 app.use('/api/lecturas', lecturasRoute);
 app.use('/api/geo', geoRoute);
+app.use('/api/datosLectura', datosLecturaRoute);  // ← AGREGAR ESTA LÍNEA
 
 
 // Ruta base
@@ -44,6 +46,7 @@ app.get('/', (req, res) => {
       health: '/health',
       lecturas: '/api/lecturas',
       geo: '/api/geo',
+      datosLectura: '/api/datosLectura',  // ← AGREGAR ESTA LÍNEA
       swagger: '/api-docs'
     }
   });
