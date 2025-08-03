@@ -4,6 +4,10 @@ import board
 import wifi
 import socketpool
 import adafruit_requests
+import ssl
+import supervisor
+import rtc
+import json
 
 
 # Configura el ID de tu nodo
@@ -35,15 +39,16 @@ while not wifi.radio.ipv4_address:
     time.sleep(1)
 print("Conectado! IP:", wifi.radio.ipv4_address)
 
-# Inicializar requests
+
+# Inicializar requests con SSL
+
 pool = socketpool.SocketPool(wifi.radio)
-requests = adafruit_requests.Session(pool, None)
+ssl_context = ssl.create_default_context()
+requests = adafruit_requests.Session(pool, ssl_context)
 
 API_URL = "https://vemat.onrender.com/api/lecturas"
 
-import supervisor
-import rtc
-import json
+
 
 def mapear_voltaje_a_ppm(voltaje):
     # Ajusta esta función según tu sensor real
