@@ -13,7 +13,7 @@ const pool = require('../db/connection');
 
 /**
  * @swagger
- * /lecturas:
+ * /api/lecturas:
  *   post:
  *     summary: Recibe datos del ESP32
  *     description: Endpoint para que el ESP32 envíe mediciones de sensores

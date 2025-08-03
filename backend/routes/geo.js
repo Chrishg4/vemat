@@ -13,7 +13,7 @@ const axios = require('axios');
 
 /**
  * @swagger
- * /geo:
+ * /api/geo:
  *   post:
  *     summary: Recibe escaneo Wi-Fi y actualiza la ubicación del nodo
  *     tags: [Arduino]  // ← SOLO AGREGAR ESTA LÍNEA
