@@ -79,10 +79,10 @@ while True:
     humedad_pct = mapear_voltaje_a_humedad(v_humedad)
     sonido_str = clasificar_sonido(ruido)
 
-    # Obtener timestamp ISO8601 (requiere RTC configurado)
+    # Obtener timestamp compatible con MySQL (YYYY-MM-DD HH:MM:SS)
     try:
         fecha = rtc.RTC().datetime
-        timestamp = "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}Z".format(
+        timestamp = "{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}".format(
             fecha.tm_year, fecha.tm_mon, fecha.tm_mday,
             fecha.tm_hour, fecha.tm_min, fecha.tm_sec)
     except Exception:
