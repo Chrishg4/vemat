@@ -16,7 +16,7 @@ const axios = require('axios');
  * /api/geo:
  *   post:
  *     summary: Recibe escaneo Wi-Fi y actualiza la ubicación del nodo
- *     tags: [Arduino]  // ← SOLO AGREGAR ESTA LÍNEA
+ *     tags: [Arduino]  
  *     requestBody:
  *       required: true
  *       content:
