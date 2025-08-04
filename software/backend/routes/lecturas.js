@@ -52,19 +52,36 @@ const pool = require('../db/connection');
 router.post('/', (req, res) => {
   const { nodo_id, temperatura, humedad, co2, sonido, timestamp } = req.body;
   
-  const query = 'INSERT INTO lecturas (nodo_id, temperatura, humedad, co2, sonido, timestamp) VALUES (?, ?, ?, ?, ?, ?)';
+  // Primero crear/verificar que el nodo existe
+  const createNodeQuery = `
+    INSERT INTO nodos (id, activo) 
+    VALUES (?, 1) 
+    ON DUPLICATE KEY UPDATE activo = activo
+  `;
   
-  pool.query(query, [nodo_id, temperatura, humedad, co2, sonido, timestamp || new Date()], (err, results) => {
-    if (err) {
-      console.error('❌ Error guardando lectura:', err);
-      return res.status(400).json({ error: 'Error al guardar lectura: ' + err.message });
+  pool.query(createNodeQuery, [nodo_id], (nodeErr, nodeResults) => {
+    if (nodeErr) {
+      console.error('❌ Error creando/verificando nodo:', nodeErr);
+      return res.status(400).json({ error: 'Error al crear nodo: ' + nodeErr.message });
     }
     
-    console.log('✅ Lectura guardada exitosamente:', { nodo_id, id: results.insertId });
-    res.status(201).json({ 
-      message: 'Lectura guardada', 
-      id: results.insertId,
-      nodo_id: nodo_id 
+    console.log('✅ Nodo verificado/creado:', nodo_id);
+    
+    // Ahora insertar la lectura
+    const lecturaQuery = 'INSERT INTO lecturas (nodo_id, temperatura, humedad, co2, sonido, timestamp) VALUES (?, ?, ?, ?, ?, ?)';
+    
+    pool.query(lecturaQuery, [nodo_id, temperatura, humedad, co2, sonido, timestamp || new Date()], (err, results) => {
+      if (err) {
+        console.error('❌ Error guardando lectura:', err);
+        return res.status(400).json({ error: 'Error al guardar lectura: ' + err.message });
+      }
+      
+      console.log('✅ Lectura guardada exitosamente:', { nodo_id, id: results.insertId });
+      res.status(201).json({ 
+        message: 'Lectura guardada', 
+        id: results.insertId,
+        nodo_id: nodo_id 
+      });
     });
   });
 });
