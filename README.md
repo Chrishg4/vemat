@@ -175,7 +175,7 @@ router.post('/monitoreo-vectorial', (req, res) => {
 
 **Evidencia visual:**
 
--  **API Sistema de Salud:** https://vemat.onrender.com/api-docs/
+-  **API VEMAT:** https://vemat.onrender.com/api-docs/
 -  **Prototipo funcionando:** ESP32 monitoreando condiciones ambientales en tiempo real
 -  **Base de datos especializada:** MySQL con tablas `nodos` (estaciones) y `lecturas` (datos vectoriales)
 -  **Geolocalización de estaciones:** Mapeo automático de ubicaciones de monitoreo
@@ -187,7 +187,7 @@ router.post('/monitoreo-vectorial', (req, res) => {
 **Sistema de Monitoreo Vectorial:**
 **URL:** https://vemat.onrender.com/api-docs/
 
-### Endpoints especializados:
+### Rutas:
 - `POST /api/lecturas` - Recibir datos ambientales de estaciones (ESP32/Arduino)
 - `POST /api/geo` - Geolocalización de estaciones de monitoreo  
 - `GET /api/datosLectura` - Obtener datos para análisis epidemiológico

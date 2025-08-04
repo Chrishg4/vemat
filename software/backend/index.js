@@ -42,7 +42,7 @@ app.use('/api/alertas', alertasRoute);
 // Ruta base
 app.get('/', (req, res) => {
   res.json({
-    message: 'API VEMAT funcionando 🚀',
+    message: 'API VEMAT funcionando ',
     version: '1.0.0',
     swagger: '/api-docs',
     environment: process.env.NODE_ENV || 'development',
@@ -64,6 +64,6 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🟢 Servidor activo en puerto ${PORT}`);
-  console.log(`📚 Documentación Swagger: http://localhost:${PORT}/api-docs`);
+  console.log(` Servidor activo en puerto ${PORT}`);
+  console.log(` Documentación Swagger: http://localhost:${PORT}/api-docs`);
 });
