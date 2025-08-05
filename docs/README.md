@@ -7,13 +7,16 @@
 **Título Completo:** "MONITORIZACIÓN AMBIENTAL INTELIGENTE PARA LA PREVENCIÓN DE ENFERMEDADES VECTORIALES: DETECCIÓN DE HÁBITATS DE MOSQUITOS EN ALCANTARILLADOS URBANOS UTILIZANDO ARDUINO Y SENSORES"
 
 **Equipo:** 
-- [Nombres de los integrantes del equipo]
+- Christofer Hernández García 
+- Jose Pablo Rodriguez Centeno
+- Brad Danny Monge Madrigal
+- Jefferson Rodriguez Gonzalez
 
 **Roles:**
-- [Christofer]: Desarrollo de Hardware y Sensores (ESP32/Arduino)
-- [Christofer y Jose Pablo]: Desarrollo Backend y API (Node.js)
-- [Jefferson y Jose Pablo]: Análisis de Datos y Modelos Predictivos
-- [Brad y Jefferson]: Frontend y Dashboard de Monitoreo
+- Christofer: Desarrollo de Hardware y Sensores (ESP32/Arduino)
+- Christofer y Jose Pablo: Desarrollo Backend y API (Node.js)
+- Jefferson y Jose Pablo: Análisis de Datos y Modelos Predictivos
+- Brad y Jefferson: Frontend y Dashboard de Monitoreo
 
 ## 2. Descripción y Justificación
 
