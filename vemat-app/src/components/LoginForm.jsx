@@ -1,34 +1,20 @@
 // src/components/LoginForm.jsx
-import React, { useState } from 'react';
-import { useAuth } from './AuthContext';
+import React from 'react';
+import { useLogin } from '../use/useLogin';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Iconos para mostrar/ocultar contraseña
 
 export default function LoginForm() {
-  const { login } = useAuth();
-  const [email, setEmail] = useState('admin@vemat.com'); // Valor por defecto para simulación
-  const [password, setPassword] = useState('admin123'); // Valor por defecto para simulación
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginMessage, setLoginMessage] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoginMessage('¡Login exitoso! Cargando sistema...');
-    setIsSuccess(true);
-
-    // Simular un retraso para la carga del sistema
-    setTimeout(() => {
-      // Validación básica (puedes expandirla)
-      if ((email === 'admin@vemat.com' && password === 'admin123') ||
-          (email === 'operador@vemat.com' && password === 'operador123') ||
-          (email === 'demo' && password === 'demo123')) {
-        login(); // Llama a la función de login del contexto
-      } else {
-        setLoginMessage('Credenciales incorrectas. Inténtalo de nuevo.');
-        setIsSuccess(false);
-      }
-    }, 1500); // Simula 1.5 segundos de carga
-  };
+  const {
+    usuario,
+    setUsuario,
+    contrasena,
+    setContrasena,
+    error,
+    loginExitoso,
+    mostrarContrasena,
+    handleLogin,
+    toggleMostrarContrasena
+  } = useLogin();
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
@@ -36,46 +22,52 @@ export default function LoginForm() {
         <div className="text-center mb-6">
           {/* Aquí puedes poner el logo de VEMAT si lo tienes */}
           {/* <img src="/path/to/vemat_logo.png" alt="VEMAT Logo" className="mx-auto mb-4 h-16" /> */}
-          <h1 className="text-2xl font-bold text-white">VEMAT Logo</h1> {/* Placeholder si no hay imagen */}
+          {/* <h1 className="text-2xl font-bold text-white">VEMAT Logo</h1> */} {/* Placeholder si no hay imagen */}
           <p className="text-lg mt-2">Vigilancia Ecológica</p>
           <p className="text-sm text-gray-400">Accede al sistema de monitoreo</p>
         </div>
 
-        {loginMessage && (
-          <div className={`p-3 mb-4 rounded text-center text-sm font-medium ${isSuccess ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>
-            {loginMessage}
+        {loginExitoso && (
+          <div className="p-3 mb-4 rounded text-center text-sm font-medium bg-green-600 text-white">
+            ¡Login exitoso! Cargando sistema...
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="p-3 mb-4 rounded text-center text-sm font-medium bg-red-600 text-white">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium mb-2">Usuario o Email</label>
+            <label htmlFor="usuario" className="block text-sm font-medium mb-2">Usuario o Email</label>
             <input
               type="text"
-              id="email"
+              id="usuario"
               className="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
               required
             />
           </div>
           <div className="mb-4 relative">
-            <label htmlFor="password" className="block text-sm font-medium mb-2">Contraseña</label>
+            <label htmlFor="contrasena" className="block text-sm font-medium mb-2">Contraseña</label>
             <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
+              type={mostrarContrasena ? 'text' : 'password'}
+              id="contrasena"
               className="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={contrasena}
+              onChange={(e) => setContrasena(e.target.value)}
               required
             />
             <button
               type="button"
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={toggleMostrarContrasena}
               style={{ top: '60%' }} // Ajuste manual para centrar el icono verticalmente
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {mostrarContrasena ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
           <div className="flex items-center justify-between mb-6 text-sm">

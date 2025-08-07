@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
-import { AuthProvider } from "./components/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import { DashboardProvider } from "./context/DashboardContext";
 import Login from "./components/Login";
-import { useAuth } from "./components/AuthContext";
+import { useAuth } from "./context/AuthContext";
 
 // Componente de protección de rutas
 function ProtectedRoute({ children }) {

@@ -9,7 +9,7 @@ import ReadingsTable from "./ReadingsTable";
 import MapView from "./MapView";
 import MainDashboard from "./MainDashboard";
 import AlertHistoryPage from "../pages/AlertHistoryPage";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useDashboardData } from "../context/DashboardContext";
 
 export default function Dashboard() {

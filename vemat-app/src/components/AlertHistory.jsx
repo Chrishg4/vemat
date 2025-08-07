@@ -11,7 +11,6 @@ export default function AlertHistory({ alertas }) {
         <table className="w-full table-auto text-sm">
           <thead>
             <tr className="text-blue-400">
-              <th className="px-4 py-2">Fecha</th>
               <th className="px-4 py-2">Tipo</th>
               <th className="px-4 py-2">Valor</th>
               <th className="px-4 py-2">Rango Normal</th>
@@ -19,27 +18,28 @@ export default function AlertHistory({ alertas }) {
             </tr>
           </thead>
           <tbody className="text-gray-300">
-            {alertas.map((alerta, index) => (
-              <tr key={index} className="text-center border-t border-gray-800 hover:bg-gray-800">
-                <td className="px-4 py-2">{alerta.fecha}</td>
-                <td className="px-4 py-2">{alerta.tipo}</td>
-                <td className="px-4 py-2">
-                  {alerta.valor}
-                  {alerta.tipo === 'temperatura' ? '°C' : 
-                    alerta.tipo === 'humedad' ? '%' : 
-                    alerta.tipo === 'co2' ? 'ppm' : ''}
-                </td>
-                <td className="px-4 py-2">{alerta.rangoNormal}</td>
-                <td className="px-4 py-2">
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    alerta.estado === 'enviado' ? 'bg-green-500/20 text-green-400' : 
-                    'bg-red-500/20 text-red-400'
-                  }`}>
-                    {alerta.estado}
-                  </span>
-                </td>
-              </tr>
-            ))}
+            {alertas.map((alerta, index) => {
+              return (
+                <tr key={index} className="text-center border-t border-gray-800 hover:bg-gray-800">
+                  <td className="px-4 py-2 text-blue-400">{alerta.tipo}</td>
+                  <td className="px-4 py-2 text-blue-400">
+                    {alerta.valor}
+                    {alerta.tipo === 'temperatura' ? '°C' : 
+                     alerta.tipo === 'humedad' ? '%' : 
+                     alerta.tipo === 'co2' ? ' ppm' : ''}
+                  </td>
+                  <td className="px-4 py-2">{alerta.rangoNormal}</td>
+                  <td className="px-4 py-2">
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      alerta.estado === 'enviado' ? 'bg-green-500/20 text-green-400' : 
+                      'bg-red-500/20 text-red-400'
+                    }`}>
+                      {alerta.estado}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}

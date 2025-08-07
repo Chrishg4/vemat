@@ -5,10 +5,12 @@ import TempHumidityChart from "./TempHumidityChart";
 import MapView from "./MapView";
 import ReadingsTable from "./ReadingsTable";
 import AlertHistory from "./AlertHistory";
-import { useDashboardData } from "../context/DashboardContext";
+import { useGetReadings } from "../use/useGetReadings";
+import { useGetAlertHistory } from "../use/useGetAlertHistory";
 
 export default function MainDashboard() {
-  const { latest, data, alertHistory } = useDashboardData();
+  const { latest, data } = useGetReadings();
+  const { alertHistory } = useGetAlertHistory();
 
   const coordenadasSensor = {
     lat: latest.latitude || 10.43079,

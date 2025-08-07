@@ -1,10 +1,10 @@
 // src/pages/AlertHistoryPage.jsx
 import React from "react";
 import AlertHistory from "../components/AlertHistory";
-import { useDashboardData } from "../context/DashboardContext";
+import { useGetAlertHistory } from "../use/useGetAlertHistory";
 
 export default function AlertHistoryPage() {
-  const { alertHistory } = useDashboardData();
+  const { alertHistory, loading, error } = useGetAlertHistory();
 
   return (
     <div className="p-6">

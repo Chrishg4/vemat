@@ -1,9 +1,10 @@
-// src/utils/alertService.js
+// src/services/alertsService.js
+import fetchClient from '@/api/fetchClient';
 import emailjs from '@emailjs/browser';
-import { EMAIL_CONFIG } from './emailConfig';
+import { EMAIL_CONFIG } from '@/utils/emailConfig';
 
 // Umbrales para las alertas
-const THRESHOLDS = {
+export const THRESHOLDS = {
   temperatura: {
     min: 20,
     max: 30,
@@ -21,14 +22,23 @@ const THRESHOLDS = {
   }
 };
 
-// Función para verificar si un valor está fuera de rango
-const isOutOfRange = (value, type) => {
+/**
+ * Verifica si un valor está fuera del rango normal
+ * @param {number} value - Valor a verificar
+ * @param {string} type - Tipo de lectura (temperatura, humedad, co2)
+ * @returns {boolean} - true si está fuera de rango, false si no
+ */
+export const isOutOfRange = (value, type) => {
   const threshold = THRESHOLDS[type];
   return value < threshold.min || value > threshold.max;
 };
 
-// Función para generar el mensaje de alerta
-const generateAlertMessage = (readings) => {
+/**
+ * Genera un mensaje de alerta basado en las lecturas
+ * @param {Object} readings - Objeto con las lecturas
+ * @returns {Array} - Array de mensajes de alerta
+ */
+export const generateAlertMessage = (readings) => {
   const alertMessages = [];
   
   for (const [key, threshold] of Object.entries(THRESHOLDS)) {
@@ -43,7 +53,11 @@ const generateAlertMessage = (readings) => {
   return alertMessages;
 };
 
-// Función para enviar el correo de alerta
+/**
+ * Envía un correo electrónico de alerta
+ * @param {Object} readings - Objeto con las lecturas
+ * @returns {Promise} - Promesa con el resultado del envío
+ */
 export const sendAlertEmail = async (readings) => {
   const alertMessages = generateAlertMessage(readings);
   
@@ -71,36 +85,16 @@ export const sendAlertEmail = async (readings) => {
   }
 };
 
-// Función para verificar y enviar alertas si es necesario
-export const checkAndSendAlerts = async (readings, setAlertHistory) => {
-  const alertsToSend = ['temperatura', 'humedad', 'co2']
-    .filter(type => isOutOfRange(readings[type], type))
-    .map(type => ({
-      fecha: readings.fecha || readings.date || new Date().toISOString(),
-      tipo: type,
-      valor: readings[type],
-      rangoNormal: `${THRESHOLDS[type].min}-${THRESHOLDS[type].max}${THRESHOLDS[type].unit}`,
-      estado: 'pendiente'
-    }));
-
-  if (alertsToSend.length > 0) {
-    try {
-      await sendAlertEmail(readings);
-      
-      // Actualizar el estado de las alertas a 'enviado'
-      const alertasConEstado = alertsToSend.map(alerta => ({
-        ...alerta,
-        estado: 'enviado'
-      }));
-
-      // Actualizar el historial de alertas
-      setAlertHistory(prev => [...alertasConEstado, ...prev]);
-    } catch (error) {
-      const alertasConError = alertsToSend.map(alerta => ({
-        ...alerta,
-        estado: 'error'
-      }));
-      setAlertHistory(prev => [...alertasConError, ...prev]);
-    }
+/**
+ * Obtiene el historial de alertas desde la API
+ * @returns {Promise} - Promesa con los datos de alertas
+ */
+export const getAlertHistory = async () => {
+  try {
+    const response = await fetchClient.get();
+    return response;
+  } catch (error) {
+    console.error('Error al obtener historial de alertas:', error);
+    throw error;
   }
 };
