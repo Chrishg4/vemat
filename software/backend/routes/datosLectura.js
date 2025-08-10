@@ -63,7 +63,8 @@ const pool = require('../db/connection');
  *                       humedad:
  *                         type: number
  *                       sonido:
- *                         type: string
+ *                         type: number
+ *                         description: "Frecuencia de sonido en Hz"
  *                 total:
  *                   type: integer
  */

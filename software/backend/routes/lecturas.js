@@ -38,8 +38,9 @@ const pool = require('../db/connection');
  *                 type: number
  *                 example: 400.5
  *               sonido:
- *                 type: string
- *                 example: "normal"
+ *                 type: number
+ *                 example: 1500.5
+ *                 description: "Frecuencia de sonido en Hz"
  *               timestamp:
  *                 type: string
  *                 format: date-time
