@@ -1,7 +1,7 @@
 // src/api/fetchClient.js
 
 // URL completa de la API con proxy CORS
-const API_URL = '/api/datosLectura';
+const API_URL = 'https://vemat.onrender.com/api/datosLectura';
 
 /**
  * Cliente fetch para realizar peticiones HTTP
