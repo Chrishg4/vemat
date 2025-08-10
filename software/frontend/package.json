@@ -1,0 +1,13 @@
+{
+  "name": "vemat-frontend-legacy",
+  "version": "1.0.0",
+  "description": "Legacy frontend - redirects to main app",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'This is the legacy frontend. Please use /software/vemat-app/ for the React app.'"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
