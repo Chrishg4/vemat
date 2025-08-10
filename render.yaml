@@ -5,6 +5,7 @@ services:
     env: node
     buildCommand: cd software/backend && npm install
     startCommand: cd software/backend && npm start
+    rootDir: software/backend
     envVars:
       - key: NODE_ENV
         value: production
@@ -21,11 +22,8 @@ services:
       - key: DB_NAME
         sync: false
 
-  # Frontend React application
+  # Frontend React application (Static Site)
   - type: static
     name: vemat-frontend-app
-    buildCommand: cd software/frontend && npm install && npm run build
+    buildCommand: cd software/frontend && npm ci && npm run build
     staticPublishPath: software/frontend/dist
-    envVars:
-      - key: NODE_ENV
-        value: production
