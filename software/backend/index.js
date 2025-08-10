@@ -8,8 +8,8 @@ const swaggerSpec = require('./swagger/swagger');
 const lecturasRoute = require('./routes/lecturas');
 const geoRoute = require('./routes/geo');
 const datosLecturaRoute = require('./routes/datosLectura');
-const nodosRoute = require('./routes/nodos');
-const alertasRoute = require('./routes/alertas');
+// const nodosRoute = require('./routes/nodos');        // TODO: Crear archivo
+// const alertasRoute = require('./routes/alertas');    // TODO: Crear archivo
 
 
 const app = express();
@@ -35,8 +35,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/lecturas', lecturasRoute);
 app.use('/api/geo', geoRoute);
 app.use('/api/datosLectura', datosLecturaRoute);
-app.use('/api/nodos', nodosRoute);
-app.use('/api/alertas', alertasRoute);
+// app.use('/api/nodos', nodosRoute);         // TODO: Crear archivo nodos.js
+// app.use('/api/alertas', alertasRoute);     // TODO: Crear archivo alertas.js
 
 
 // Ruta base
@@ -51,8 +51,8 @@ app.get('/', (req, res) => {
       lecturas: '/api/lecturas',
       geo: '/api/geo',
       datosLectura: '/api/datosLectura',
-      nodos: '/api/nodos',
-      alertas: '/api/alertas',
+      // nodos: '/api/nodos',           // TODO: Implementar
+      // alertas: '/api/alertas',       // TODO: Implementar
       swagger: '/api-docs'
     }
   });
