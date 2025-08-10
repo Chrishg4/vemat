@@ -1,5 +1,5 @@
 services:
-  # Backend API service only (deploy this first)
+  # Backend API service
   - type: web
     name: vemat-backend-api
     env: node
@@ -21,3 +21,12 @@ services:
         sync: false
       - key: DB_NAME
         sync: false
+
+  # Frontend React application
+  - type: static
+    name: vemat-frontend-app
+    buildCommand: cd software/frontend && npm install && npm run build
+    staticPublishPath: software/frontend/dist
+    envVars:
+      - key: NODE_ENV
+        value: production
