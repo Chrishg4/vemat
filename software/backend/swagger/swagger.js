@@ -15,7 +15,7 @@ const swaggerDefinition = {
       description: 'Servidor local',
     },
     {
-      url: 'https://vemat-api.onrender.com', // Cambiá esto si usás otro hosting
+      url: 'https://vemat.onrender.com',
       description: 'Servidor público',
     },
   ],
