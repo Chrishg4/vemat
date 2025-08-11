@@ -12,6 +12,9 @@ export default function CurrentReadings() {
     <div className="bg-gray-900 px-4 pt-4 pb-2 rounded-xl shadow-lg border border-gray-800 w-full">
       <h2 className="text-xl font-semibold mb-2 text-white">Lecturas Actuales</h2>
       <div className="flex flex-col space-y-2">
+        {latest.nodo_id && (
+          <p><span className="text-blue-400 font-semibold">ID de Nodo:</span> <span className="text-gray-300 text-xl">{latest.nodo_id}</span></p>
+        )}
         {latest.fecha && (
           <p><span className="text-blue-400 font-semibold">Fecha:</span> <span className="text-gray-300 text-xl">{new Date(latest.fecha).toLocaleString('es-CR', { timeZone: 'UTC' })}</span></p>
         )}

@@ -18,6 +18,7 @@ export default function ReadingsTable() {
           <thead className="text-xs border-b border-gray-600 sticky top-0 bg-gray-900">
             <tr>
               <th className="px-4 py-3 text-left text-cyan-400">Fecha</th>
+              <th className="px-4 py-3 text-left text-cyan-400">ID de Nodo</th>
               <th className="px-4 py-3 text-left text-cyan-400">Temperatura</th>
               <th className="px-4 py-3 text-left text-cyan-400">Humedad</th>
               <th className="px-4 py-3 text-left text-cyan-400">CO₂</th>
@@ -32,6 +33,7 @@ export default function ReadingsTable() {
                 className="border-b border-gray-700 hover:bg-gray-800 transition"
               >
                 <td className="px-4 py-3">{new Date(lectura.fecha).toLocaleString('es-CR', { timeZone: 'UTC' })}</td>
+                <td className="px-4 py-3">{lectura.nodo_id}</td>
                 <td className="px-4 py-3">{lectura.temperatura} °C</td>
                 <td className="px-4 py-3">{lectura.humedad} %</td>
                 <td className="px-4 py-3">{lectura.co2} ppm</td>

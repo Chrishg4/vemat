@@ -81,6 +81,8 @@ export const useGetReadings = (autoRefresh = true, refreshInterval = 3600000) =>
       const allReadings = await getAllReadings();
       const latestReading = await getLatestReading();
       
+      // Expects 'id_nodo' to be present in each reading object from the API.
+      // If 'id_nodo' is not displayed, verify the API response structure.
       if (Array.isArray(allReadings) && allReadings.length > 0) {
         setData([...allReadings].reverse()); // orden descendente
       }
