@@ -6,7 +6,7 @@ export default function Header() {
     <header className="bg-gray-800 text-white py-3 shadow-md">
       <div className="container mx-auto flex justify-between items-center px-4">
         <span className="text-sm font-semibold text-gray-300 whitespace-nowrap mr-4">
-          Universidad Tecnológica Nacional
+          Universidad Tecnica Nacional - Sede Guanacaste
         </span>
         
         <h1 className="text-xl font-bold flex-1 text-center mx-auto">
