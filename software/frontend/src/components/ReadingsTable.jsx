@@ -11,7 +11,7 @@ export default function ReadingsTable({ limit, showTitle = true, title = "Histor
   const displayData = limit ? [...data].reverse().slice(0, limit) : [...data].reverse();
 
   const tableContainerClasses = limit 
-    ? "overflow-auto h-[220px]" 
+    ? "" 
     : "overflow-auto";
 
   return (
