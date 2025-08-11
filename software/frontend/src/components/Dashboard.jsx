@@ -9,6 +9,7 @@ import ReadingsTable from "./ReadingsTable";
 import MapView from "./MapView";
 import MainDashboard from "./MainDashboard";
 import AlertHistoryPage from "../pages/AlertHistoryPage";
+import CO2EpiWeekChartPage from "../pages/CO2EpiWeekChartPage";
 
 import { useAuth } from "../context/AuthContext";
 import { useDashboardData } from "../context/DashboardContext";
@@ -42,6 +43,7 @@ export default function Dashboard() {
               <Route path="/mapa" element={<MapView coordenadas={coordenadasSensor} />} />
               <Route path="/historial" element={<ReadingsTable historial={data} />} />
               <Route path="/alertas" element={<AlertHistoryPage />} />
+              <Route path="/epi-week-chart" element={<CO2EpiWeekChartPage />} />
               
             </Routes>
           </div>

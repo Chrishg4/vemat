@@ -58,6 +58,12 @@ export default function Sidebar({ username, onLogout }) {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/epi-week-chart" className={linkClasses} title="Gráfica Semana Epidemiológica">
+              <FaChartLine className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
+              {!isCollapsed && 'Gráfica Semana Epidemiológica'}
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/mapa" className={linkClasses} title="Mapa de Ubicación">
               <FaMapMarkedAlt className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
               {!isCollapsed && 'Mapa de Ubicación'}
