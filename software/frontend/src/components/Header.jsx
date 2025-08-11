@@ -1,5 +1,6 @@
 // src/components/Header.jsx
 import React from "react";
+import { GiMosquito } from "react-icons/gi"; // Importar icono
 
 export default function Header() {
   return (
@@ -9,13 +10,12 @@ export default function Header() {
           Universidad Tecnica Nacional - Sede Guanacaste
         </span>
         
-        <h1 className="text-xl font-bold flex-1 text-center mx-auto">
-          <span role="img" aria-label="world symbol" className="mr-2">🌎</span>
-           Sistema de monitoreo de mosquitos
+        <h1 className="text-xl font-bold flex-1 text-center mx-auto flex items-center justify-center">
+          <GiMosquito className="mr-2 text-green-400 text-2xl" />
+          Sistema de monitoreo ecoepidemiológico de los mosquitos
         </h1>
         
-        <div className="w-48"> {/* Espacio equivalente al lado izquierdo para mantener el título centrado */}
-        </div>
+        <div className="w-48">{/* Espacio para mantener el título centrado */}</div>
       </div>
     </header>
   );
