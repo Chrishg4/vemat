@@ -1,6 +1,6 @@
 // src/components/Header.jsx
 import React from "react";
-import { GiMosquito } from "react-icons/gi"; // Importar icono
+import { GiBug } from "react-icons/gi"; // Importar icono de insecto
 
 export default function Header() {
   return (
@@ -11,7 +11,7 @@ export default function Header() {
         </span>
         
         <h1 className="text-xl font-bold flex-1 text-center mx-auto flex items-center justify-center">
-          <GiMosquito className="mr-2 text-green-400 text-2xl" />
+          <GiBug className="mr-2 text-green-400 text-2xl" />
           Sistema de monitoreo ecoepidemiológico de los mosquitos
         </h1>
         
