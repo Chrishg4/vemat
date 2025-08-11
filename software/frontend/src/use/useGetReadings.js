@@ -21,8 +21,9 @@ export const useGetReadings = (autoRefresh = true, refreshInterval = 3600000) =>
   /**
    * Verifica y envía alertas si es necesario
    * @param {Object} reading - Lectura a verificar
+   * @param {Array} allReadings - Todas las lecturas disponibles
    */
-  const checkAndSendAlerts = async (reading) => {
+  const checkAndSendAlerts = async (reading, allReadings) => {
     // Verificar si esta lectura ya ha sido procesada para alertas
     if (reading.id === lastProcessedId) {
       console.log('Esta lectura ya fue procesada para alertas');
@@ -46,7 +47,7 @@ export const useGetReadings = (autoRefresh = true, refreshInterval = 3600000) =>
 
     if (alertsToSend.length > 0) {
       try {
-        await sendAlertEmail(reading);
+        await sendAlertEmail(reading, allReadings);
         
         // Actualizar el estado de las alertas a 'enviado'
         const alertasConEstado = alertsToSend.map(alerta => ({
@@ -95,7 +96,7 @@ export const useGetReadings = (autoRefresh = true, refreshInterval = 3600000) =>
         
         // Solo enviar alertas si es una nueva lectura
         if (isNewReading) {
-          await checkAndSendAlerts(latestReading);
+          await checkAndSendAlerts(latestReading, allReadings);
         }
       }
     } catch (err) {

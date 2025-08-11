@@ -22,33 +22,23 @@ export const useGetAlertHistory = () => {
     try {
       const data = await getAlertHistory();
       if (data && data.data) {
-        // Procesamos los datos para identificar alertas
-        const alertas = [];
-        
-        data.data.forEach(reading => {
-          // Usar directamente la fecha de la lectura para mantener consistencia con la tabla de lecturas
-          ['temperatura', 'humedad', 'co2'].forEach(tipo => {
-            // Usar los umbrales correctos según el tipo
-            const min = tipo === 'temperatura' ? 20 : 
-                       tipo === 'humedad' ? 30 : 300;
-            const max = tipo === 'temperatura' ? 30 : 
-                       tipo === 'humedad' ? 80 : 1000;
-                       
-            if (reading[tipo] < min || reading[tipo] > max) {
-              alertas.push({
-                fecha: reading.fecha, // Usar la misma fecha que en las lecturas
-                tipo,
-                valor: reading[tipo],
-                rangoNormal: tipo === 'temperatura' ? '20-30°C' : 
-                             tipo === 'humedad' ? '30-80%' : 
-                             '300-1000ppm',
-                estado: 'enviado'
-              });
-            }
+        const allReadings = data.data;
+        const allGeneratedAlerts = [];
+
+        // Generate alerts for each reading, including favorable conditions
+        allReadings.forEach((reading, index) => {
+          const alertsForReading = generateAlertMessage(reading, allReadings);
+          alertsForReading.forEach(alertMsg => {
+            allGeneratedAlerts.push({
+              fecha: reading.fecha,
+              tipo: 'custom', // Or a more specific type if needed
+              valor: alertMsg,
+              estado: 'enviado'
+            });
           });
         });
         
-        setAlertHistory(alertas);
+        setAlertHistory(allGeneratedAlerts);
       }
     } catch (err) {
       handleApiError(err);
