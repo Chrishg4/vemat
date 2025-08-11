@@ -1,7 +1,7 @@
 // src/components/Sidebar.jsx
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaTachometerAlt, FaChartLine, FaMapMarkedAlt, FaTable, FaUserCircle, FaSignOutAlt, FaBell, FaBars, FaChevronLeft } from 'react-icons/fa';
+import { FaTachometerAlt, FaChartLine, FaMapMarkedAlt, FaTable, FaUserCircle, FaSignOutAlt, FaBell, FaBars, FaChevronLeft, FaCalendarWeek } from 'react-icons/fa';
 
 export default function Sidebar({ username, onLogout }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -61,6 +61,12 @@ export default function Sidebar({ username, onLogout }) {
             <NavLink to="/epi-week-chart" className={linkClasses} title="Gráfica Semana Epidemiológica">
               <FaChartLine className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
               {!isCollapsed && 'Gráfica Semana Epidemiológica'}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/resumen-semanal" className={linkClasses} title="Resumen Semanal">
+              <FaCalendarWeek className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
+              {!isCollapsed && 'Resumen Semanal'}
             </NavLink>
           </li>
           <li>

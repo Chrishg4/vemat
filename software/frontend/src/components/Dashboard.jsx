@@ -10,6 +10,7 @@ import MapView from "./MapView";
 import MainDashboard from "./MainDashboard";
 import AlertHistoryPage from "../pages/AlertHistoryPage";
 import CO2EpiWeekChartPage from "../pages/CO2EpiWeekChartPage";
+import EpiWeekSummaryPage from "../pages/EpiWeekSummaryPage";
 
 import { useAuth } from "../context/AuthContext";
 import { useDashboardData } from "../context/DashboardContext";
@@ -44,6 +45,7 @@ export default function Dashboard() {
               <Route path="/historial" element={<ReadingsTable showTitle={true} title="Historial de Lecturas" />} />
               <Route path="/alertas" element={<AlertHistoryPage />} />
               <Route path="/epi-week-chart" element={<CO2EpiWeekChartPage />} />
+              <Route path="/resumen-semanal" element={<EpiWeekSummaryPage />} />
               
             </Routes>
           </div>

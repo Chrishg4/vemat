@@ -5,6 +5,7 @@ import TempHumidityChart from "./TempHumidityChart";
 import MapView from "./MapView";
 import ReadingsTable from "./ReadingsTable";
 import AlertHistory from "./AlertHistory";
+import EpiWeekDashboardWidget from "./EpiWeekDashboardWidget";
 import { useGetReadings } from "../use/useGetReadings";
 import { useGetAlertHistory } from "../use/useGetAlertHistory";
 
@@ -22,6 +23,10 @@ export default function MainDashboard() {
     <div className="p-4 space-y-4">
       <div className="flex items-center mb-6">
         <h1 className="text-2xl font-bold text-white">Panel Principal de Control</h1>
+      </div>
+
+      <div className="mb-4">
+        <EpiWeekDashboardWidget />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
