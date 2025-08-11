@@ -1,5 +1,5 @@
 // src/components/MainDashboard.jsx
-import React from "react";
+import React, { useState } from "react";
 import CurrentReadings from "./CurrentReadings";
 import TempHumidityChart from "./TempHumidityChart";
 import MapView from "./MapView";
@@ -11,6 +11,7 @@ import { useGetAlertHistory } from "../use/useGetAlertHistory";
 export default function MainDashboard() {
   const { latest, data } = useGetReadings();
   const { alertHistory } = useGetAlertHistory();
+  const [chartMode, setChartMode] = useState('line'); // Estado para el modo del gráfico
 
   const coordenadasSensor = {
     lat: latest.latitude || 10.43079,
@@ -39,7 +40,18 @@ export default function MainDashboard() {
         
         {/* Fila 3: Gráfica */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
-          <TempHumidityChart />
+          <div className="flex justify-end mb-4">
+            <select
+              value={chartMode}
+              onChange={(e) => setChartMode(e.target.value)}
+              className="bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            >
+              <option value="line">Líneas</option>
+              <option value="bar">Barras</option>
+              <option value="epiWeek">Semana Epidemiológica</option>
+            </select>
+          </div>
+          <TempHumidityChart chartMode={chartMode} />
         </div>
 
         {/* Fila 4: Historial de Alertas */}

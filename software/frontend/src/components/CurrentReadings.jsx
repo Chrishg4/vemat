@@ -19,7 +19,9 @@ export default function CurrentReadings() {
         <p><span className="text-blue-400 font-semibold">Humedad:</span> <span className="text-gray-300 text-xl">{latest.humedad} %</span></p>
         <p><span className="text-blue-400 font-semibold">CO₂:</span> <span className="text-gray-300 text-xl">{latest.co2} ppm</span></p>
         <p><span className="text-blue-400 font-semibold">Sonido:</span> <span className="text-gray-300 text-xl">{latest.sonido} Hz</span></p>
-        <p><span className="text-blue-400 font-semibold">Cantón:</span> <span className="text-gray-300 text-xl">Cañas</span></p>
+        {latest.ubicacion && (
+          <p><span className="text-blue-400 font-semibold">Ubicación:</span> <span className="text-gray-300 text-xl">{latest.ubicacion}</span></p>
+        )}
       </div>
     </div>
   )

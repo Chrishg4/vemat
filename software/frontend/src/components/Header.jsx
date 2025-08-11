@@ -1,6 +1,5 @@
 // src/components/Header.jsx
 import React from "react";
-import { MdBugReport } from "react-icons/md"; // Ícono de bug/insecto
 import { GiAmberMosquito } from "react-icons/gi";
 
 export default function Header() {
