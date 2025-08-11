@@ -1,19 +1,27 @@
 import React from "react";
 import { useDashboardData } from "../context/DashboardContext";
 
-export default function ReadingsTable() {
+export default function ReadingsTable({ limit, showTitle = true, title = "Historial de Lecturas" }) {
   const { data } = useDashboardData();
 
   if (!data || data.length === 0) {
     return <p className="text-white">Cargando historial...</p>;
   }
 
+  const displayData = limit ? [...data].reverse().slice(0, limit) : [...data].reverse();
+
+  const tableContainerClasses = limit 
+    ? "overflow-auto h-[220px]" 
+    : "overflow-auto";
+
   return (
     <div className="bg-gray-900 p-4 rounded-xl shadow-lg w-full">
-      <h2 className="text-white text-xl font-semibold mb-4">
-        Historial de Lecturas
-      </h2>
-      <div className="overflow-auto h-[220px] no-scrollbar">
+      {showTitle && (
+        <h2 className="text-white text-xl font-semibold mb-4">
+          {title}
+        </h2>
+      )}
+      <div className={tableContainerClasses}>
         <table className="min-w-full text-sm text-gray-300">
           <thead className="text-xs border-b border-gray-600 sticky top-0 bg-gray-900">
             <tr>
@@ -27,7 +35,7 @@ export default function ReadingsTable() {
             </tr>
           </thead>
           <tbody>
-            {[...data].reverse().map((lectura, index) => (
+            {displayData.map((lectura, index) => (
               <tr
                 key={index}
                 className="border-b border-gray-700 hover:bg-gray-800 transition"

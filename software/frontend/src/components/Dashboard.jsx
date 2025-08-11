@@ -41,7 +41,7 @@ export default function Dashboard() {
               <Route path="/lecturas-actuales" element={<CurrentReadings lectura={latest} />} />
               <Route path="/grafica" element={<TempHumidityChart datos={data} />} />
               <Route path="/mapa" element={<MapView coordenadas={coordenadasSensor} />} />
-              <Route path="/historial" element={<ReadingsTable historial={data} />} />
+              <Route path="/historial" element={<ReadingsTable showTitle={true} title="Historial de Lecturas" />} />
               <Route path="/alertas" element={<AlertHistoryPage />} />
               <Route path="/epi-week-chart" element={<CO2EpiWeekChartPage />} />
               

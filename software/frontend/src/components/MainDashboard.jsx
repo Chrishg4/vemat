@@ -32,7 +32,7 @@ export default function MainDashboard() {
 
         {/* Fila 2: Historial de Lecturas (movido y con formato de ancho completo) */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
-          <ReadingsTable historial={data} />
+          <ReadingsTable limit={5} showTitle={true} title="Lecturas Recientes" />
         </div>
 
         {/* Fila 3: Mapa */}
