@@ -15,17 +15,29 @@ const datosLecturaRoute = require('./routes/datosLectura');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración CORS para producción
+// Orígenes permitidos (prod + dev)
+const allowedOrigins = [
+  'https://vemat-frontend.onrender.com', // frontend en Render
+  'https://vemat.onrender.com',          // por si hay llamadas cruzadas internas
+  'http://localhost:5173',               // Vite dev
+  'http://127.0.0.1:5173',
+  'http://localhost:4173',               // preview build de Vite
+  'http://127.0.0.1:4173'
+];
+
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://vemat-frontend.onrender.com', 'https://vemat-api.onrender.com', 'http://vemat-api.onrender.com'] 
-    : '*',
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);               // Postman/cURL
+    return cb(null, allowedOrigins.includes(origin)); // true/false
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With']
 };
 
 app.use(cors(corsOptions));
+// Manejo explícito del preflight
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // Documentación Swagger
