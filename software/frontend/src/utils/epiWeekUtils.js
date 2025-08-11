@@ -34,21 +34,61 @@ export const getEpiWeek = (date) => {
 };
 
 /**
- * Agrupa y agrega datos por semana epidemiológica.
+ * Genera una lista completa de las 52 semanas epidemiológicas para un año dado,
+ * inicializando los valores de datos a null.
+ *
+ * @param {number} year El año para el que se generarán las semanas epidemiológicas.
+ * @returns {Array<Object>} Una lista de objetos, cada uno representando una semana epidemiológica.
+ */
+export const getFullEpiWeeksForYear = (year) => {
+  const weeks = [];
+  // Para 2025, el 1 de enero es miércoles. El domingo más cercano es el 29 de diciembre de 2024.
+  // Asumimos que la semana 1 de un año comienza el domingo más cercano al 1 de enero de ese año.
+  // Esto puede variar ligeramente según la definición exacta de la semana epidemiológica.
+  // Aquí, para 2025, la semana 1 comienza el 29 de diciembre de 2024.
+  let currentWeekStart = new Date(`${year - 1}-12-29T00:00:00`); 
+
+  for (let i = 1; i <= 52; i++) {
+    const weekName = `SE ${i}/${year}`;
+    const weekKey = `${year}-EW${String(i).padStart(2, '0')}`;
+    weeks.push({
+      name: weekName,
+      key: weekKey,
+      temperatura: null,
+      humedad: null,
+      co2: null,
+      sonido: null,
+    });
+    currentWeekStart.setDate(currentWeekStart.getDate() + 7); // Avanzar a la siguiente semana
+  }
+  return weeks;
+};
+
+/**
+ * Agrupa y agrega datos por semana epidemiológica, asegurando que todas las 52 semanas estén presentes.
  * Asume que los datos tienen una propiedad 'fecha' y propiedades numéricas como 'temperatura', 'humedad', 'co2', 'sonido'.
  * Calcula el promedio para cada métrica por semana epidemiológica.
  *
- * @param {Array<Object>} rawData Los datos brutos a agrupar. Cada objeto debe tener una propiedad 'fecha' (string o Date).
- * @returns {Array<Object>} Los datos agregados por semana epidemiológica.
+ * @param {Array<Object>} rawData Los datos brutos a agrupar. Cada objeto debe tener una propiedad 'fecha' (string o Date).\n * @returns {Array<Object>} Los datos agregados por semana epidemiológica, incluyendo todas las 52 semanas.
  */
 export const aggregateByEpiWeek = (rawData) => {
   const aggregated = {};
+  let yearToProcess = 2025; // Asumimos 2025 como el año principal a procesar
 
+  // Primero, agregamos los datos existentes
   rawData.forEach(item => {
     const date = new Date(item.fecha);
     const year = date.getFullYear();
     const epiWeek = getEpiWeek(date);
-    const key = `${year}-EW${epiWeek < 10 ? '0' + epiWeek : epiWeek}`;
+    const key = `${year}-EW${String(epiWeek).padStart(2, '0')}`;
+
+    // Si el año de la fecha es diferente al año principal, ajustamos el año a procesar
+    // Esto es para manejar casos donde la semana 1 del año siguiente empieza en el año anterior
+    if (year !== yearToProcess && epiWeek === 1 && date.getMonth() === 11) { // Diciembre
+      yearToProcess = year + 1;
+    } else if (year !== yearToProcess && epiWeek > 50 && date.getMonth() === 0) { // Enero
+      yearToProcess = year - 1;
+    }
 
     if (!aggregated[key]) {
       aggregated[key] = {
@@ -69,14 +109,24 @@ export const aggregateByEpiWeek = (rawData) => {
     aggregated[key].sonidoSum += parseFloat(item.sonido);
   });
 
-  return Object.keys(aggregated).sort().map(key => {
-    const data = aggregated[key];
-    return {
-      name: key, // e.g., "2023-EW01"
-      temperatura: data.temperaturaSum / data.count,
-      humedad: data.humedadSum / data.count,
-      co2: data.co2Sum / data.count,
-      sonido: data.sonidoSum / data.count,
-    };
+  // Generar todas las 52 semanas para el año principal
+  const fullEpiWeeks = getFullEpiWeeksForYear(yearToProcess);
+
+  // Fusionar los datos agregados con la lista completa de semanas
+  const finalChartData = fullEpiWeeks.map(fullWeek => {
+    const existingData = aggregated[fullWeek.key];
+    if (existingData) {
+      return {
+        name: fullWeek.name, // Usamos el nombre de la semana completa para consistencia
+        temperatura: existingData.temperaturaSum / existingData.count,
+        humedad: existingData.humedadSum / existingData.count,
+        co2: existingData.co2Sum / existingData.count,
+        sonido: existingData.sonidoSum / existingData.count,
+      };
+    } else {
+      return fullWeek; // Si no hay datos, devolvemos la semana con valores null
+    }
   });
+
+  return finalChartData;
 };
