@@ -25,20 +25,22 @@ export default function MainDashboard() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Fila 1: Lecturas Actuales y Historial de Lecturas */}
+        {/* Fila 1: Lecturas Actuales */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
           <CurrentReadings lectura={latest} />
         </div>
-        <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
+
+        {/* Fila 2: Historial de Lecturas (movido y con formato de ancho completo) */}
+        <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
           <ReadingsTable historial={data} />
         </div>
 
-        {/* Fila 2: Mapa */}
+        {/* Fila 3: Mapa */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
           <MapView coordenadas={coordenadasSensor} />
         </div>
         
-        {/* Fila 3: Gráfica */}
+        {/* Fila 4: Gráfica */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
           <div className="flex justify-end mb-4">
             <select
@@ -54,7 +56,7 @@ export default function MainDashboard() {
           <TempHumidityChart chartMode={chartMode} />
         </div>
 
-        {/* Fila 4: Historial de Alertas */}
+        {/* Fila 5: Historial de Alertas */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
           <AlertHistory alertas={alertHistory} />
         </div>
