@@ -15,20 +15,27 @@ const datosLecturaRoute = require('./routes/datosLectura');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Orígenes permitidos (prod + dev)
+// Configuración CORS mejorada para desarrollo y producción
 const allowedOrigins = [
-  'https://vemat-frontend.onrender.com', // frontend en Render
-  'https://vemat.onrender.com',          // por si hay llamadas cruzadas internas
-  'http://localhost:5173',               // Vite dev
-  'http://127.0.0.1:5173',
-  'http://localhost:4173',               // preview build de Vite
-  'http://127.0.0.1:4173'
+  'https://vemat-frontend.onrender.com',  // Frontend en Render
+  'https://vemat.onrender.com',           // Backend en Render (para llamadas internas)
+  'http://localhost:5173',                // Vite dev server
+  'http://127.0.0.1:5173',               // Alternativa localhost
+  'http://localhost:4173',               // Vite preview
+  'http://127.0.0.1:4173'                // Alternativa localhost preview
 ];
 
 const corsOptions = {
-  origin: (origin, cb) => {
-    if (!origin) return cb(null, true);               // Postman/cURL
-    return cb(null, allowedOrigins.includes(origin)); // true/false
+  origin: (origin, callback) => {
+    // Permitir requests sin origin (Postman, curl, apps móviles)
+    if (!origin) return callback(null, true);
+    
+    // Verificar si el origin está en la lista permitida
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    return callback(new Error('No permitido por CORS'), false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -36,7 +43,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-// Manejo explícito del preflight
+
+// Manejar preflight requests explícitamente
 app.options('*', cors(corsOptions));
 app.use(express.json());
 
