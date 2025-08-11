@@ -1,6 +1,7 @@
 // src/components/Header.jsx
 import React from "react";
 import { MdBugReport } from "react-icons/md"; // Ícono de bug/insecto
+import { GiAmberMosquito } from "react-icons/gi";
 
 export default function Header() {
   return (
@@ -11,7 +12,8 @@ export default function Header() {
         </span>
         
         <h1 className="text-xl font-bold flex-1 text-center mx-auto flex items-center justify-center">
-          <MdBugReport className="mr-2 text-green-400 text-2xl" />
+          
+          <GiAmberMosquito className="mr-2 text-yellow-400 text-2xl" />
           Sistema de monitoreo ecoepidemiológico de los mosquitos
         </h1>
         
