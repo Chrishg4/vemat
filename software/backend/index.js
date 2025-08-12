@@ -5,9 +5,11 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger/swagger');
+
 const lecturasRoute = require('./routes/lecturas');
 const geoRoute = require('./routes/geo');
-const datosLecturaRoute = require('./routes/datosLectura');  // ← AGREGAR ESTA LÍNEA
+const datosLecturaRoute = require('./routes/datosLectura');
+const latlogRoute = require('./routes/lat&loglecturas');
 
 
 const app = express();
@@ -30,9 +32,11 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Rutas API
+
 app.use('/api/lecturas', lecturasRoute);
 app.use('/api/geo', geoRoute);
-app.use('/api/datosLectura', datosLecturaRoute);  // ← AGREGAR ESTA LÍNEA
+app.use('/api/datosLectura', datosLecturaRoute);
+app.use('/api/latlog', latlogRoute);
 
 
 // Ruta base
@@ -47,7 +51,8 @@ app.get('/', (req, res) => {
       lecturas: '/api/lecturas',
       geo: '/api/geo',
       datosLectura: '/api/datosLectura',  // ← AGREGAR ESTA LÍNEA
-      swagger: '/api-docs'
+  latlog: '/api/latlog',
+  swagger: '/api-docs'
     }
   });
 });

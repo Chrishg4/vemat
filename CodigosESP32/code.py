@@ -11,7 +11,7 @@ import json
 
 
 # Configura el ID de tu nodo
-NODO_ID = "node-01"
+NODO_ID = "node-07"
 
 # Inicializar pines
 co2_simulado = analogio.AnalogIn(board.IO36)       # VP / GPIO36
