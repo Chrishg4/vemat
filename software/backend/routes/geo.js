@@ -69,8 +69,8 @@ router.post('/', async (req, res) => {
                       (req.connection.socket ? req.connection.socket.remoteAddress : null) ||
                       req.ip;                                   // Express default
       
-      console.log('🌍 IP detectada del ESP32:', clientIP);
-      console.log('🔍 Headers de IP disponibles:', {
+      console.log(' IP detectada del ESP32:', clientIP);
+      console.log(' Headers de IP disponibles:', {
         'cf-connecting-ip': req.headers['cf-connecting-ip'],
         'x-forwarded-for': req.headers['x-forwarded-for'],
         'x-real-ip': req.headers['x-real-ip'],
@@ -83,7 +83,7 @@ router.post('/', async (req, res) => {
       let cleanIP = clientIP;
       if (clientIP && clientIP.startsWith('::ffff:')) {
         cleanIP = clientIP.substring(7);
-        console.log('🧹 IP limpia (removiendo IPv6 wrapper):', cleanIP);
+        console.log(' IP limpia (removiendo IPv6 wrapper):', cleanIP);
       }
       
       // Validar que no sea IP privada/local
@@ -96,13 +96,13 @@ router.post('/', async (req, res) => {
                          cleanIP.startsWith('::1');
       
       if (isPrivateIP) {
-        console.log('⚠️ IP privada/local detectada:', cleanIP, '- usando geolocalización del servidor');
+        console.log(' IP privada/local detectada:', cleanIP, '- usando geolocalización del servidor');
         // Si es IP privada, usar la IP pública del servidor de Render
         const ipResponse = await axios.get('https://ipapi.co/json/');
         lat = ipResponse.data.latitude;
         lng = ipResponse.data.longitude;
         
-        console.log('📡 Ubicación del servidor Render:', { 
+        console.log(' Ubicación del servidor Render:', { 
           lat, lng, 
           city: ipResponse.data.city, 
           country: ipResponse.data.country_name,
@@ -114,7 +114,7 @@ router.post('/', async (req, res) => {
         lat = ipResponse.data.latitude;
         lng = ipResponse.data.longitude;
         
-        console.log('📡 Ubicación real por IP del ESP32:', { 
+        console.log(' Ubicación real por IP del ESP32:', { 
           lat, lng, 
           city: ipResponse.data.city, 
           country: ipResponse.data.country_name,
@@ -128,17 +128,17 @@ router.post('/', async (req, res) => {
       }
       
     } catch (ipError) {
-      console.log('⚠️ IP geolocation falló, usando coordenadas por defecto');
-      console.log('🔧 Error de IP:', ipError.message);
+      console.log(' IP geolocation falló, usando coordenadas por defecto');
+      console.log(' Error de IP:', ipError.message);
       
       // Coordenadas por defecto - San José, Costa Rica 🇨🇷
       lat = 9.9281;   // San José, Costa Rica
       lng = -84.0907; // San José, Costa Rica
       
-      console.log('📍 Usando coordenadas de Costa Rica por defecto');
+      console.log(' Usando coordenadas de Costa Rica por defecto');
     }
 
-    console.log('📍 Usando coordenadas:', { lat, lng });
+    console.log(' Usando coordenadas:', { lat, lng });
 
     const query = `
       INSERT INTO nodos (id, latitud, longitud) 
@@ -148,15 +148,15 @@ router.post('/', async (req, res) => {
       longitud = VALUES(longitud)
     `;
 
-    console.log('💾 Actualizando base de datos:', { lat, lng, nodo_id });
+    console.log(' Actualizando base de datos:', { lat, lng, nodo_id });
 
     pool.query(query, [nodo_id, lat, lng], (err, results) => {
       if (err) {
-        console.error('❌ Error en base de datos:', err);
+        console.error(' Error en base de datos:', err);
         return res.status(400).json({ error: 'Error en base de datos: ' + err.message });
       }
       
-      console.log('✅ Ubicación actualizada exitosamente');
+      console.log(' Ubicación actualizada exitosamente');
       res.status(200).json({
         message: 'Ubicación actualizada en nodo',
         nodo_id,
@@ -170,8 +170,8 @@ router.post('/', async (req, res) => {
     });
 
   } catch (err) {
-    console.error('❌ Error al obtener coordenadas:', err.message);
-    console.error('❌ Error completo:', err);
+    console.error(' Error al obtener coordenadas:', err.message);
+    console.error(' Error completo:', err);
     
     // Respuesta más detallada del error
     res.status(500).json({ 

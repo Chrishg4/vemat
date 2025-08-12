@@ -63,7 +63,8 @@ const pool = require('../db/connection');
  *                       humedad:
  *                         type: number
  *                       sonido:
- *                         type: string
+ *                         type: number
+ *                         description: "Frecuencia de sonido en Hz"
  *                 total:
  *                   type: integer
  */
@@ -98,7 +99,7 @@ router.get('/', (req, res) => {
   
   pool.query(query, queryParams, (err, results) => {
     if (err) {
-      console.error('❌ Error en consulta datosLectura:', err);
+      console.error(' Error en consulta datosLectura:', err);
       return res.status(500).json({ 
         success: false,
         error: 'Error al obtener datos de lectura',
@@ -106,7 +107,7 @@ router.get('/', (req, res) => {
       });
     }
     
-    console.log(`✅ DatosLectura: ${results.length} registros encontrados`);
+    console.log(` DatosLectura: ${results.length} registros encontrados`);
     
     res.json({
       success: true,

@@ -1,0 +1,4 @@
+Dependencia para iconos de react
+
+    * npm install react-icons --save
+

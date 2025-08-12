@@ -8,8 +8,7 @@ const swaggerSpec = require('./swagger/swagger');
 
 const lecturasRoute = require('./routes/lecturas');
 const geoRoute = require('./routes/geo');
-const datosLecturaRoute = require('./routes/datosLectura');
-const latlogRoute = require('./routes/lat&loglecturas');
+const datosLecturaRoute = require('./routes/datosLectura');  // ← AGREGAR ESTA LÍNEA
 
 
 const app = express();
@@ -18,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 // Configuración CORS para producción
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://tu-frontend-url.com', 'https://vemat-api.onrender.com', 'http://vemat-api.onrender.com'] 
+    ? ['https://vemat-frontend.onrender.com', 'https://vemat-api.onrender.com', 'http://vemat-api.onrender.com'] 
     : '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -35,14 +34,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api/lecturas', lecturasRoute);
 app.use('/api/geo', geoRoute);
-app.use('/api/datosLectura', datosLecturaRoute);
-app.use('/api/latlog', latlogRoute);
+app.use('/api/datosLectura', datosLecturaRoute);  // ← AGREGAR ESTA LÍNEA
 
 
 // Ruta base
 app.get('/', (req, res) => {
   res.json({
-    message: 'API VEMAT funcionando 🚀',
+    message: 'API VEMAT funcionando ',
     version: '1.0.0',
     swagger: '/api-docs',
     environment: process.env.NODE_ENV || 'development',
@@ -51,8 +49,7 @@ app.get('/', (req, res) => {
       lecturas: '/api/lecturas',
       geo: '/api/geo',
       datosLectura: '/api/datosLectura',  // ← AGREGAR ESTA LÍNEA
-  latlog: '/api/latlog',
-  swagger: '/api-docs'
+      swagger: '/api-docs'
     }
   });
 });
@@ -63,6 +60,6 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🟢 Servidor activo en puerto ${PORT}`);
-  console.log(`📚 Documentación Swagger: http://localhost:${PORT}/api-docs`);
+  console.log(` Servidor activo en puerto ${PORT}`);
+  console.log(` Documentación Swagger: http://localhost:${PORT}/api-docs`);
 });

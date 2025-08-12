@@ -28,9 +28,10 @@ def leer_temperatura(pin):
     return temp_c
 
 def leer_ruido(pin):
-    # Escala el valor analógico a porcentaje (0-100%)
-    nivel = (pin.value / 65535) * 100
-    return round(nivel, 2)
+    # Convierte el valor analógico a frecuencia en Hz
+    # Escala de 0-65535 a un rango de frecuencias típicas (100-3000 Hz)
+    frecuencia_hz = ((pin.value / 65535) * (3000 - 100)) + 100
+    return round(frecuencia_hz, 1)
 
 
 # Conexión WiFi automática usando settings.toml
@@ -60,24 +61,29 @@ def mapear_voltaje_a_humedad(voltaje):
     # Ejemplo: 0V = 0%, 3.3V = 100%
     return round((voltaje / 3.3) * 100, 1)
 
-def clasificar_sonido(valor):
-    # Puedes ajustar el umbral según tu aplicación
-    if valor < 30:
-        return "bajo"
-    elif valor < 70:
-        return "normal"
+def clasificar_sonido(frecuencia_hz):
+    """
+    Función auxiliar para mostrar en consola la clasificación
+    pero NO se envía al servidor
+    """
+    if frecuencia_hz < 500:
+        return "Baja frecuencia"
+    elif frecuencia_hz < 2000:
+        return "Frecuencia media" 
     else:
-        return "alto"
+        return "Alta frecuencia"
 
 while True:
     v_co2 = leer_voltaje(co2_simulado)
     v_humedad = leer_voltaje(humedad_simulada)
     temp = leer_temperatura(temperatura)
-    ruido = leer_ruido(ruido_simulado)
+    sonido_hz = leer_ruido(ruido_simulado)  # Ahora retorna Hz
 
     co2_ppm = mapear_voltaje_a_ppm(v_co2)
     humedad_pct = mapear_voltaje_a_humedad(v_humedad)
-    sonido_str = clasificar_sonido(ruido)
+    
+    # Solo para mostrar en consola la clasificación
+    clasificacion_sonido = clasificar_sonido(sonido_hz)
 
     # Obtener timestamp compatible con MySQL (YYYY-MM-DD HH:MM:SS)
     try:
@@ -93,11 +99,12 @@ while True:
         "temperatura": round(temp, 2),
         "humedad": humedad_pct,
         "co2": co2_ppm,
-        "sonido": sonido_str,
+        "sonido": sonido_hz,  # Enviar el número en Hz
         "timestamp": timestamp
     }
 
     print("Enviando datos:", data)
+    print("📊 Sonido: {:.1f} Hz ({})".format(sonido_hz, clasificacion_sonido))
     try:
         response = requests.post(API_URL, json=data)
         print("Respuesta:", response.status_code, response.text)
