@@ -11,6 +11,7 @@ import MainDashboard from "./MainDashboard";
 import AlertHistoryPage from "../pages/AlertHistoryPage";
 import CO2EpiWeekChartPage from "../pages/CO2EpiWeekChartPage";
 import EpiWeekSummaryPage from "../pages/EpiWeekSummaryPage";
+import IAAssistant from "./IAAssistant"; // Import the IAAssistant component
 
 import { useAuth } from "../context/AuthContext";
 import { useDashboardData } from "../context/DashboardContext";
@@ -46,7 +47,7 @@ export default function Dashboard() {
               <Route path="/alertas" element={<AlertHistoryPage />} />
               <Route path="/epi-week-chart" element={<CO2EpiWeekChartPage />} />
               <Route path="/resumen-semanal" element={<EpiWeekSummaryPage />} />
-              
+              <Route path="/ia-assistant" element={<IAAssistant />} /> {/* New route for IAAssistant */}
             </Routes>
           </div>
         </main>

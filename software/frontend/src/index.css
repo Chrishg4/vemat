@@ -16,6 +16,15 @@
   }
 }
 
+:root {
+  --ia-primary: #2563EB;     /* Azul principal (Tailwind blue-600) */
+  --ia-warning: #F59E0B;     /* Amarillo para demo */
+  --ia-danger: #EF4444;      /* Rojo para errores */
+  --ia-info: #3B82F6;        /* Azul para información (Tailwind blue-500) */
+  --ia-background: #EFF6FF;  /* Azul muy claro para fondo (Tailwind blue-50) */
+  --ia-text: #1E3A8A;        /* Azul oscuro para texto (Tailwind blue-900) */
+}
+
 /* Other custom CSS below */
 body {
   margin: 0;
