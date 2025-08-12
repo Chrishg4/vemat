@@ -1,5 +1,6 @@
 
 import { useState, useCallback } from 'react';
+import { API_BASE_URL } from '../apiConfig.js';
 
 const useIAService = () => {
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,7 @@ const useIAService = () => {
         body.nodo_id = nodoId;
       }
 
-      const response = await fetch('/api/consulta', {
+      const response = await fetch(`${API_BASE_URL}/api/consulta`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -38,7 +39,7 @@ const useIAService = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/prompts');
+      const response = await fetch(`${API_BASE_URL}/api/prompts`);
       const data = await response.json();
       if (!response.ok || !data.success) {
         throw new Error(data.error || 'Error al obtener prompts sugeridos');
@@ -56,7 +57,7 @@ const useIAService = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/status');
+      const response = await fetch(`${API_BASE_URL}/api/status`);
       const data = await response.json();
       if (!response.ok || !data.success) {
         throw new Error(data.error || 'Error al verificar el estado de la IA');
