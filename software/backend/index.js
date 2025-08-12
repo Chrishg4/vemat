@@ -8,7 +8,11 @@ const swaggerSpec = require('./swagger/swagger');
 
 const lecturasRoute = require('./routes/lecturas');
 const geoRoute = require('./routes/geo');
-const datosLecturaRoute = require('./routes/datosLectura');  // ← AGREGAR ESTA LÍNEA
+const datosLecturaRoute = require('./routes/datosLectura');
+// Rutas IA
+const consultaRoute = require('./routes/consulta');
+const statusRoute = require('./routes/status');
+const promptsRoute = require('./routes/prompts');
 
 
 const app = express();
@@ -54,7 +58,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api/lecturas', lecturasRoute);
 app.use('/api/geo', geoRoute);
-app.use('/api/datosLectura', datosLecturaRoute);  // ← AGREGAR ESTA LÍNEA
+app.use('/api/datosLectura', datosLecturaRoute);
+// Rutas IA
+app.use('/api/consulta', consultaRoute);
+app.use('/api/status', statusRoute);
+app.use('/api/prompts', promptsRoute);
 
 
 // Ruta base
@@ -68,7 +76,11 @@ app.get('/', (req, res) => {
       health: '/health',
       lecturas: '/api/lecturas',
       geo: '/api/geo',
-      datosLectura: '/api/datosLectura',  // ← AGREGAR ESTA LÍNEA
+      datosLectura: '/api/datosLectura',
+      // Endpoints IA
+      consulta: '/api/consulta',
+      status: '/api/status',
+      prompts: '/api/prompts',
       swagger: '/api-docs'
     }
   });
