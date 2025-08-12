@@ -1,4 +1,4 @@
-// src/components/SoundChart.jsx
+// src/components/AcusticaChart.jsx
 import React from 'react';
 import {
   LineChart,
@@ -11,18 +11,18 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-export default function SoundChart({ data }) {
+export default function AcusticaChart({ data }) {
   const chartData = data.map(item => ({
     name: new Date(item.fecha).toLocaleString('es-CR', {
       timeZone: 'UTC',
     }),
-    sonido: typeof item.sonido === 'number' ? item.sonido : 0,
+    acustica: typeof item.acustica === 'number' ? item.acustica : 0,
   }));
 
   return (
     <div className="chart-container bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
       <h2 className="text-white text-xl font-semibold mb-4">
-        Gráfico de Sonido (Hz)
+        Gráfico de Acustica (Hz)
       </h2>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData}>
@@ -36,10 +36,10 @@ export default function SoundChart({ data }) {
           <Legend />
           <Line
             type="monotone"
-            dataKey="sonido"
+            dataKey="acustica"
             stroke="#8884d8"
             dot={false}
-            name="Sonido (Hz)"
+            name="Acustica (Hz)"
           />
         </LineChart>
       </ResponsiveContainer>

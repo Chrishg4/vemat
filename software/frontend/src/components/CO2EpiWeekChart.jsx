@@ -26,7 +26,7 @@ const getFullEpiWeeks = (year) => {
       co2: null,
       temperatura: null,
       humedad: null,
-      sonido: null,
+      acustica: null,
       // Store the weekKey for easy lookup
       weekKey: `${year}-${String(i).padStart(2, '0')}`
     });
@@ -55,7 +55,7 @@ export default function CO2EpiWeekChart() {
     acc[weekKey].totalCo2 += parseFloat(item.co2);
     acc[weekKey].totalTemp += parseFloat(item.temperatura);
     acc[weekKey].totalHum += parseFloat(item.humedad);
-    acc[weekKey].totalSound += parseFloat(item.sonido);
+    acc[weekKey].totalSound += parseFloat(item.acustica);
     acc[weekKey].count += 1;
     return acc;
   }, {});
@@ -72,7 +72,7 @@ export default function CO2EpiWeekChart() {
         co2: actualWeekData.totalCo2 / actualWeekData.count,
         temperatura: actualWeekData.totalTemp / actualWeekData.count,
         humedad: actualWeekData.totalHum / actualWeekData.count,
-        sonido: actualWeekData.totalSound / actualWeekData.count,
+        acustica: actualWeekData.totalSound / actualWeekData.count,
       };
     }
     return fullWeek; // Return week with nulls if no data
@@ -95,7 +95,7 @@ export default function CO2EpiWeekChart() {
           <YAxis
             yAxisId="right"
             orientation="right"
-            label={{ value: "CO₂ ppm / Sonido (Hz)", angle: 90, position: "insideRight", fill: "#ccc" }}
+            label={{ value: "CO₂ ppm / Acustica (Hz)", angle: 90, position: "insideRight", fill: "#ccc" }}
             tick={{ fill: "#ccc" }}
           />
           <Tooltip />
@@ -127,10 +127,10 @@ export default function CO2EpiWeekChart() {
           <Line
             yAxisId="right"
             type="monotone"
-            dataKey="sonido"
+            dataKey="acustica"
             stroke="#FF0000"
             dot={true}
-            name="Sonido (Hz)"
+            name="Acustica (Hz)"
           />
         </LineChart>
       </ResponsiveContainer>

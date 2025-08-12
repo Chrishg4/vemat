@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { getAllReadings } from '../services/readingsService';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 
-export const useGetSoundHistory = () => {
+export const useGetAcusticaHistory = () => {
   const [soundHistory, setSoundHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const { error, handleApiError, clearError } = useErrorHandler();
@@ -17,7 +17,7 @@ export const useGetSoundHistory = () => {
       if (Array.isArray(readings)) {
         const history = readings.map(reading => ({
           fecha: reading.fecha,
-          sonido: reading.sonido
+          acustica: reading.sonido
         }));
         setSoundHistory(history);
       }

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { getAllReadings, getLatestReading } from '../services/readingsService';
 import { useErrorHandler } from '../hooks/useErrorHandler';
-import { sendAlertEmail, isOutOfRange } from '../services/alertsService';
+import { sendAlertEmail } from '../services/alertsService';
 
 /**
  * Hook para obtener y manejar las lecturas de datos
@@ -30,45 +30,19 @@ export const useGetReadings = (autoRefresh = true, refreshInterval = 3600000) =>
       return;
     }
     
-    // Usar los umbrales correctos para cada tipo
-    const alertsToSend = ['temperatura', 'humedad', 'co2']
-      .filter(type => isOutOfRange(reading[type], type))
-      .map(type => {
-        return {
-          fecha: reading.fecha, // Usar la misma fecha que en las lecturas
-          tipo: type,
-          valor: reading[type],
-          rangoNormal: type === 'temperatura' ? '20-30°C' : 
-                      type === 'humedad' ? '30-80%' : 
-                      '300-1000ppm',
-          estado: 'pendiente'
-        };
-      });
-
-    if (alertsToSend.length > 0) {
-      try {
-        await sendAlertEmail(reading, allReadings);
-        
-        // Actualizar el estado de las alertas a 'enviado'
-        const alertasConEstado = alertsToSend.map(alerta => ({
-          ...alerta,
-          estado: 'enviado'
-        }));
-
-        // Actualizar el historial de alertas
-        setAlertHistory(prev => [...alertasConEstado, ...prev]);
-      } catch (error) {
-        const alertasConError = alertsToSend.map(alerta => ({
-          ...alerta,
-          estado: 'error'
-        }));
-        
-        setAlertHistory(prev => [...alertasConError, ...prev]);
-      }
+    try {
+      await sendAlertEmail(reading, allReadings);
       
-      // Marcar esta lectura como procesada
-      setLastProcessedId(reading.id);
+      // Actualizar el historial de alertas (assuming sendAlertEmail returns something useful or we just log success)
+      // For now, just log success or handle error
+      console.log('Alerta de condiciones favorables procesada.');
+      
+    } catch (error) {
+      console.error('Error al procesar alerta de condiciones favorables:', error);
     }
+    
+    // Marcar esta lectura como procesada
+    setLastProcessedId(reading.id);
   };
 
   /**
@@ -81,22 +55,33 @@ export const useGetReadings = (autoRefresh = true, refreshInterval = 3600000) =>
     try {
       const allReadings = await getAllReadings();
       const latestReading = await getLatestReading();
+      let processedAllReadings = []; // Initialize here
       
       // Expects 'id_nodo' to be present in each reading object from the API.
       // If 'id_nodo' is not displayed, verify the API response structure.
       if (Array.isArray(allReadings) && allReadings.length > 0) {
-        setData([...allReadings].reverse()); // orden descendente
+        processedAllReadings = allReadings.map(reading => ({
+          ...reading,
+          acustica: reading.sonido // Map 'sonido' from API to 'acustica'
+        }));
+        setData([...processedAllReadings].reverse()); // orden descendente
       }
       
       if (latestReading) {
+        // Create a new object with 'acustica' property
+        const processedLatestReading = {
+          ...latestReading,
+          acustica: latestReading.sonido // Map 'sonido' from API to 'acustica'
+        };
+
         // Verificar si hay una nueva lectura comparando con la actual
-        const isNewReading = !latest.id || latest.id !== latestReading.id;
+        const isNewReading = !latest.id || latest.id !== processedLatestReading.id;
         
-        setLatest(latestReading);
+        setLatest(processedLatestReading);
         
         // Solo enviar alertas si es una nueva lectura
         if (isNewReading) {
-          await checkAndSendAlerts(latestReading, allReadings);
+          await checkAndSendAlerts(processedLatestReading, processedAllReadings);
         }
       }
     } catch (err) {

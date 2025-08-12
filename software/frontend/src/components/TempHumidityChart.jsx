@@ -29,7 +29,7 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
       });
       return {
           ...item,
-          sonido: typeof soundReading?.sonido === 'number' ? soundReading.sonido : 0,
+          acustica: typeof soundReading?.acustica === 'number' ? soundReading.acustica : 0,
       };
     }));
     xAxisLabel = 'Semana Epidemiológica';
@@ -46,7 +46,7 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
           temperatura: parseFloat(item.temperatura),
           humedad: parseFloat(item.humedad),
           co2: parseFloat(item.co2),
-          sonido: typeof soundReading?.sonido === 'number' ? soundReading.sonido : 0,
+          acustica: typeof soundReading?.acustica === 'number' ? soundReading.acustica : 0,
       }
     });
   }
@@ -71,7 +71,7 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
           <YAxis
             yAxisId="right"
             orientation="right"
-            label={{ value: "CO₂ ppm / Sonido (Hz)", angle: 90, position: "insideRight", fill: "#ccc" }}
+            label={{ value: "CO₂ ppm / Acustica (Hz)", angle: 90, position: "insideRight", fill: "#ccc" }}
             tick={{ fill: "#ccc" }}
           />
           <Tooltip />
@@ -106,11 +106,11 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
           <ChartElement
             yAxisId="right"
             type={chartMode === 'line' ? "monotone" : undefined}
-            dataKey="sonido"
+            dataKey="acustica"
             stroke="#FF0000"
             fill="#FF0000"
             dot={chartMode === 'line' ? false : undefined}
-            name="Sonido (Hz)"
+            name="Acustica (Hz)"
           />
         </ChartComponent>
       </ResponsiveContainer>

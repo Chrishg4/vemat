@@ -4,23 +4,7 @@ import emailjs from '@emailjs/browser';
 import { EMAIL_CONFIG } from '@/utils/emailConfig';
 
 // Umbrales para las alertas
-export const THRESHOLDS = {
-  temperatura: {
-    min: 20,
-    max: 30,
-    unit: '°C'
-  },
-  humedad: {
-    min: 30,
-    max: 80,
-    unit: '%'
-  },
-  co2: {
-    min: 300,
-    max: 1000,
-    unit: 'ppm'
-  }
-};
+
 
 export const FAVORABLE_THRESHOLDS = {
   temperatura: {
@@ -51,16 +35,7 @@ export const isFavorableCondition = (value, type) => {
   return value >= threshold.min && value <= threshold.max;
 };
 
-/**
- * Verifica si un valor está fuera del rango normal
- * @param {number} value - Valor a verificar
- * @param {string} type - Tipo de lectura (temperatura, humedad, co2)
- * @returns {boolean} - true si está fuera de rango, false si no
- */
-export const isOutOfRange = (value, type) => {
-  const threshold = THRESHOLDS[type];
-  return value < threshold.min || value > threshold.max;
-};
+
 
 
 export const checkAndGenerateFavorableConditionsAlert = (allReadings) => {
@@ -104,15 +79,6 @@ export const checkAndGenerateFavorableConditionsAlert = (allReadings) => {
  */
 export const generateAlertMessage = (readings, allReadings) => {
   const alertMessages = [];
-  
-  for (const [key, threshold] of Object.entries(THRESHOLDS)) {
-    if (isOutOfRange(readings[key], key)) {
-      alertMessages.push(
-        `${key.charAt(0).toUpperCase() + key.slice(1)}: ${readings[key]}${threshold.unit} ` +
-        `(Rango normal: ${threshold.min}-${threshold.max}${threshold.unit})`
-      );
-    }
-  }
 
   // Verificar y añadir la alerta de condiciones favorables
   const favorableAlert = checkAndGenerateFavorableConditionsAlert(allReadings);
@@ -137,7 +103,7 @@ export const sendAlertEmail = async (readings, allReadings) => {
     email: 'danny24mm11@gmail.com',
     name: 'Danny',
     subject: '¡ALERTA! Valores anormales detectados',
-    message: `Se han detectado valores fuera de rango:\n${alertMessages.join('\n')}\nUbicación: ${readings.ubicacion || 'Cañas'}\nFecha: ${readings.fecha || readings.date || new Date().toISOString()}`
+    message: `Condiciones favorables para proliferación de mosquitos detectadas:\n${alertMessages.join('\n')}\nUbicación: ${readings.ubicacion || 'Cañas'}\nFecha: ${readings.fecha || readings.date || new Date().toISOString()}`
   };
 
   try {

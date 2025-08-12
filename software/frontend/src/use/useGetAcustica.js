@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { getLatestReading } from '../services/readingsService';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 
-export const useGetSound = (autoRefresh = true, refreshInterval = 5000) => {
+export const useGetAcustica = (autoRefresh = true, refreshInterval = 5000) => {
   const [sound, setSound] = useState(0);
   const [loading, setLoading] = useState(false);
   const { error, handleApiError, clearError } = useErrorHandler();

@@ -22,7 +22,7 @@ export default function EpiWeekTable() {
     acc[weekKey].totalTemp += parseFloat(item.temperatura);
     acc[weekKey].totalHum += parseFloat(item.humedad);
     acc[weekKey].totalCo2 += parseFloat(item.co2);
-    acc[weekKey].totalSound += parseFloat(item.sonido);
+    acc[weekKey].totalSound += parseFloat(item.acustica);
     acc[weekKey].count += 1;
     return acc;
   }, {});
@@ -52,7 +52,7 @@ export default function EpiWeekTable() {
               <th className="px-4 py-3 text-left text-cyan-400">Temp. Promedio (°C)</th>
               <th className="px-4 py-3 text-left text-cyan-400">Hum. Promedio (%)</th>
               <th className="px-4 py-3 text-left text-cyan-400">CO₂ Promedio (ppm)</th>
-              <th className="px-4 py-3 text-left text-cyan-400">Sonido Promedio (Hz)</th>
+              <th className="px-4 py-3 text-left text-cyan-400">Acustica Promedio (Hz)</th>
             </tr>
           </thead>
           <tbody>

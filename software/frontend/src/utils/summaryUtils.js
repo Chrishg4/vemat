@@ -16,9 +16,9 @@ const createInitialAggregator = () => ({
   co2Sum: 0,
   co2Min: Infinity,
   co2Max: -Infinity,
-  sonidoSum: 0,
-  sonidoMin: Infinity,
-  sonidoMax: -Infinity,
+  acusticaSum: 0,
+  acusticaMin: Infinity,
+  acusticaMax: -Infinity,
 });
 
 /**
@@ -30,7 +30,7 @@ const updateAggregator = (aggregator, item) => {
   const temperatura = parseFloat(item.temperatura);
   const humedad = parseFloat(item.humedad);
   const co2 = parseFloat(item.co2);
-  const sonido = parseFloat(item.sonido);
+  const acustica = parseFloat(item.acustica);
 
   aggregator.count++;
 
@@ -49,10 +49,10 @@ const updateAggregator = (aggregator, item) => {
   if (co2 < aggregator.co2Min) aggregator.co2Min = co2;
   if (co2 > aggregator.co2Max) aggregator.co2Max = co2;
 
-  // Sonido
-  aggregator.sonidoSum += sonido;
-  if (sonido < aggregator.sonidoMin) aggregator.sonidoMin = sonido;
-  if (sonido > aggregator.sonidoMax) aggregator.sonidoMax = sonido;
+  // Acustica
+  aggregator.acusticaSum += acustica;
+  if (acustica < aggregator.acusticaMin) aggregator.acusticaMin = acustica;
+  if (acustica > aggregator.acusticaMax) aggregator.acusticaMax = acustica;
 };
 
 /**
@@ -66,7 +66,7 @@ const finalizeSummary = (aggregator) => {
       temperatura: { avg: null, min: null, max: null },
       humedad: { avg: null, min: null, max: null },
       co2: { avg: null, min: null, max: null },
-      sonido: { avg: null, min: null, max: null },
+      acustica: { avg: null, min: null, max: null },
     };
   }
 
@@ -86,10 +86,10 @@ const finalizeSummary = (aggregator) => {
       min: aggregator.co2Min,
       max: aggregator.co2Max,
     },
-    sonido: {
-      avg: aggregator.sonidoSum / aggregator.count,
-      min: aggregator.sonidoMin,
-      max: aggregator.sonidoMax,
+    acustica: {
+      avg: aggregator.acusticaSum / aggregator.count,
+      min: aggregator.acusticaMin,
+      max: aggregator.acusticaMax,
     },
   };
 };

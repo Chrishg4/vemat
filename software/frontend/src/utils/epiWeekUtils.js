@@ -57,7 +57,7 @@ export const getFullEpiWeeksForYear = (year) => {
       temperatura: null,
       humedad: null,
       co2: null,
-      sonido: null,
+      acustica: null,
     });
     currentWeekStart.setDate(currentWeekStart.getDate() + 7); // Avanzar a la siguiente semana
   }
@@ -66,7 +66,7 @@ export const getFullEpiWeeksForYear = (year) => {
 
 /**
  * Agrupa y agrega datos por semana epidemiológica, asegurando que todas las 52 semanas estén presentes.
- * Asume que los datos tienen una propiedad 'fecha' y propiedades numéricas como 'temperatura', 'humedad', 'co2', 'sonido'.
+ * Asume que los datos tienen una propiedad 'fecha' y propiedades numéricas como 'temperatura', 'humedad', 'co2', 'acustica'.
  * Calcula el promedio para cada métrica por semana epidemiológica.
  *
  * @param {Array<Object>} rawData Los datos brutos a agrupar. Cada objeto debe tener una propiedad 'fecha' (string o Date).\n * @returns {Array<Object>} Los datos agregados por semana epidemiológica, incluyendo todas las 52 semanas.
@@ -98,7 +98,7 @@ export const aggregateByEpiWeek = (rawData) => {
         temperaturaSum: 0,
         humedadSum: 0,
         co2Sum: 0,
-        sonidoSum: 0,
+        acusticaSum: 0,
       };
     }
 
@@ -106,7 +106,7 @@ export const aggregateByEpiWeek = (rawData) => {
     aggregated[key].temperaturaSum += parseFloat(item.temperatura);
     aggregated[key].humedadSum += parseFloat(item.humedad);
     aggregated[key].co2Sum += parseFloat(item.co2);
-    aggregated[key].sonidoSum += parseFloat(item.sonido);
+    aggregated[key].acusticaSum += parseFloat(item.acustica);
   });
 
   // Generar todas las 52 semanas para el año principal
@@ -121,7 +121,7 @@ export const aggregateByEpiWeek = (rawData) => {
         temperatura: existingData.temperaturaSum / existingData.count,
         humedad: existingData.humedadSum / existingData.count,
         co2: existingData.co2Sum / existingData.count,
-        sonido: existingData.sonidoSum / existingData.count,
+        acustica: existingData.acusticaSum / existingData.count,
       };
     } else {
       return fullWeek; // Si no hay datos, devolvemos la semana con valores null

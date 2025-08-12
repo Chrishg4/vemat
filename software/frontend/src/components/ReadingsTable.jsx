@@ -30,7 +30,7 @@ export default function ReadingsTable({ limit, showTitle = true, title = "Histor
               <th className="px-4 py-3 text-left text-cyan-400">Temperatura</th>
               <th className="px-4 py-3 text-left text-cyan-400">Humedad</th>
               <th className="px-4 py-3 text-left text-cyan-400">CO₂</th>
-              <th className="px-4 py-3 text-left text-cyan-400">Sonido</th>
+              <th className="px-4 py-3 text-left text-cyan-400">Acustica</th>
               <th className="px-4 py-3 text-left text-cyan-400">Ciudad</th>
             </tr>
           </thead>
@@ -45,7 +45,7 @@ export default function ReadingsTable({ limit, showTitle = true, title = "Histor
                 <td className="px-4 py-3">{lectura.temperatura} °C</td>
                 <td className="px-4 py-3">{lectura.humedad} %</td>
                 <td className="px-4 py-3">{lectura.co2} ppm</td>
-                <td className="px-4 py-3">{lectura.sonido} Hz</td>
+                <td className="px-4 py-3">{lectura.acustica} Hz</td>
                 <td className="px-4 py-3">Cañas</td>
               </tr>
             ))}

@@ -20,7 +20,7 @@ const EpiWeekSummaryTable = ({ data }) => {
             <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">Temperatura (°C)</th>
             <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">Humedad (%)</th>
             <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">CO2 (ppm)</th>
-            <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">Sonido (dB)</th>
+            <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">Acustica (dB)</th>
           </tr>
           <tr>
             <th className="py-2 px-3 border-b border-gray-600 text-center text-xs font-medium text-gray-400">Prom.</th>
@@ -53,10 +53,10 @@ const EpiWeekSummaryTable = ({ data }) => {
               <td className="py-3 px-4 whitespace-nowrap text-center text-gray-300">{formatValue(week.co2.avg, 0)}</td>
               <td className="py-3 px-4 whitespace-nowrap text-center text-blue-400">{formatValue(week.co2.min, 0)}</td>
               <td className="py-3 px-4 whitespace-nowrap text-center text-red-400">{formatValue(week.co2.max, 0)}</td>
-              {/* Sonido */}
-              <td className="py-3 px-4 whitespace-nowrap text-center text-gray-300">{formatValue(week.sonido.avg)}</td>
-              <td className="py-3 px-4 whitespace-nowrap text-center text-blue-400">{formatValue(week.sonido.min)}</td>
-              <td className="py-3 px-4 whitespace-nowrap text-center text-red-400">{formatValue(week.sonido.max)}</td>
+              {/* Acustica */}
+              <td className="py-3 px-4 whitespace-nowrap text-center text-gray-300">{formatValue(week.acustica.avg)}</td>
+              <td className="py-3 px-4 whitespace-nowrap text-center text-blue-400">{formatValue(week.acustica.min)}</td>
+              <td className="py-3 px-4 whitespace-nowrap text-center text-red-400">{formatValue(week.acustica.max)}</td>
             </tr>
           ))}
         </tbody>

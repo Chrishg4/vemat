@@ -58,7 +58,7 @@ const EpiWeekDashboardWidget = () => {
         <MetricDisplay label="Temperatura" data={currentWeekData.temperatura} unit="°C" />
         <MetricDisplay label="Humedad" data={currentWeekData.humedad} unit="%" />
         <MetricDisplay label="CO2" data={currentWeekData.co2} unit=" ppm" />
-        <MetricDisplay label="Sonido" data={currentWeekData.sonido} unit=" dB" />
+        <MetricDisplay label="Acustica" data={currentWeekData.acustica} unit=" dB" />
       </div>
     </div>
   );
