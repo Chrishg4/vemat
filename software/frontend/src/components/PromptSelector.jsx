@@ -47,7 +47,7 @@ const PromptSelector = ({ onSelectPrompt }) => {
             <span className="mr-2 text-2xl">{getCategoryIcon(categoria)}</span>
             {categoria}
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3">
             {promptsPorCategoria[categoria].map(prompt => (
               <button
                 key={prompt.id}
