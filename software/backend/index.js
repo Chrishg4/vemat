@@ -5,11 +5,10 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger/swagger');
+
 const lecturasRoute = require('./routes/lecturas');
 const geoRoute = require('./routes/geo');
-const datosLecturaRoute = require('./routes/datosLectura');
-// const nodosRoute = require('./routes/nodos');        // TODO: Crear archivo
-// const alertasRoute = require('./routes/alertas');    // TODO: Crear archivo
+const datosLecturaRoute = require('./routes/datosLectura');  // ← AGREGAR ESTA LÍNEA
 
 
 const app = express();
@@ -52,11 +51,10 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Rutas API
+
 app.use('/api/lecturas', lecturasRoute);
 app.use('/api/geo', geoRoute);
-app.use('/api/datosLectura', datosLecturaRoute);
-// app.use('/api/nodos', nodosRoute);         // TODO: Crear archivo nodos.js
-// app.use('/api/alertas', alertasRoute);     // TODO: Crear archivo alertas.js
+app.use('/api/datosLectura', datosLecturaRoute);  // ← AGREGAR ESTA LÍNEA
 
 
 // Ruta base
@@ -70,9 +68,7 @@ app.get('/', (req, res) => {
       health: '/health',
       lecturas: '/api/lecturas',
       geo: '/api/geo',
-      datosLectura: '/api/datosLectura',
-      // nodos: '/api/nodos',           // TODO: Implementar
-      // alertas: '/api/alertas',       // TODO: Implementar
+      datosLectura: '/api/datosLectura',  // ← AGREGAR ESTA LÍNEA
       swagger: '/api-docs'
     }
   });

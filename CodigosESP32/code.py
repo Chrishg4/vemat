@@ -11,7 +11,7 @@ import json
 
 
 # Configura el ID de tu nodo
-NODO_ID = "node-01"
+NODO_ID = "node-07"
 
 # Coordenadas fijas de Cañas, Costa Rica
 LATITUD_CANAS = 10.43079
