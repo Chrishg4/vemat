@@ -1,6 +1,6 @@
 // src/components/MainDashboard.jsx
 import React, { useState } from "react";
-import CurrentReadings from "./CurrentReadings";
+import GaugeDisplay from "./GaugeDisplay"; // Reemplaza a CurrentReadings
 import TempHumidityChart from "./TempHumidityChart";
 import MapView from "./MapView";
 import ReadingsTable from "./ReadingsTable";
@@ -30,12 +30,12 @@ export default function MainDashboard() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Fila 1: Lecturas Actuales */}
-        <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
-          <CurrentReadings lectura={latest} />
+        {/* Fila 1: Lecturas Actuales con Medidores */}
+        <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
+          <GaugeDisplay />
         </div>
 
-        {/* Fila 2: Historial de Lecturas (movido y con formato de ancho completo) */}
+        {/* Fila 2: Historial de Lecturas */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
           <ReadingsTable limit={5} showTitle={true} title="Lecturas Recientes" />
         </div>
@@ -55,7 +55,7 @@ export default function MainDashboard() {
             >
               <option value="line">Líneas</option>
               <option value="bar">Barras</option>
-              <option value="epiWeek">Semana Epidemiológica</option>
+              <option value="area">Área</option>
             </select>
           </div>
           <TempHumidityChart chartMode={chartMode} />

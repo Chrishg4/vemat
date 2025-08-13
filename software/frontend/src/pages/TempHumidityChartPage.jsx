@@ -1,29 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import TempHumidityChart from "../components/TempHumidityChart";
+import { useDashboardData } from "../context/DashboardContext";
 
 export default function TempHumidityChartPage() {
-  const dummyChartData = {
-    labels: ["14:00", "15:00", "16:00", "17:00"],
-    datasets: [
-      {
-        label: "Temperatura (°C)",
-        data: [25.4, 26.1, 27.3, 26.7],
-        borderColor: "rgba(255, 99, 132, 1)",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-      },
-      {
-        label: "Humedad (%)",
-        data: [75, 78, 72, 74],
-        borderColor: "rgba(54, 162, 235, 1)",
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-      },
-    ],
-  };
+  const { data } = useDashboardData();
+  const [chartMode, setChartMode] = useState('line'); // Estado para el modo del gráfico
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Historial de Temperatura y Humedad</h2>
-      <TempHumidityChart data={dummyChartData} />
+    <div className="p-4 space-y-4">
+      <h2 className="text-white text-2xl font-bold mb-4">Gráfica de Datos Históricos</h2>
+      <div className="flex justify-end mb-4">
+        <select
+          value={chartMode}
+          onChange={(e) => setChartMode(e.target.value)}
+          className="bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        >
+          <option value="line">Líneas</option>
+          <option value="bar">Barras</option>
+          <option value="area">Área</option>
+        </select>
+      </div>
+      <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
+        <TempHumidityChart chartMode={chartMode} data={data} />
+      </div>
     </div>
   );
 }

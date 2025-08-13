@@ -6,7 +6,7 @@ const metricOptions = {
   temperatura: { label: 'Temperatura', unit: '°C' },
   humedad: { label: 'Humedad', unit: '%' },
   co2: { label: 'CO2', unit: 'ppm' },
-  acustica: { label: 'Acustica', unit: 'dB' },
+  acustica: { label: 'Bioacustica', unit: 'Hz' },
 };
 
 const EpiWeekSummaryChart = ({ data }) => {

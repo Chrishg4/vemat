@@ -3,8 +3,9 @@ import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import CurrentReadings from "./CurrentReadings";
+import CurrentReadingsPage from "../pages/CurrentReadingsPage";
 import TempHumidityChart from "./TempHumidityChart";
+import TempHumidityChartPage from "../pages/TempHumidityChartPage";
 import ReadingsTable from "./ReadingsTable";
 import MapView from "./MapView";
 import MainDashboard from "./MainDashboard";
@@ -40,8 +41,8 @@ export default function Dashboard() {
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<MainDashboard />} />
-              <Route path="/lecturas-actuales" element={<CurrentReadings lectura={latest} />} />
-              <Route path="/grafica" element={<TempHumidityChart datos={data} />} />
+              <Route path="/lecturas-actuales" element={<CurrentReadingsPage />} />
+              <Route path="/grafica" element={<TempHumidityChartPage />} />
               <Route path="/mapa" element={<MapView coordenadas={coordenadasSensor} />} />
               <Route path="/historial" element={<ReadingsTable showTitle={true} title="Historial de Lecturas" />} />
               <Route path="/alertas" element={<AlertHistoryPage />} />

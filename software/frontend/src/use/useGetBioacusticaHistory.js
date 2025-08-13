@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { getAllReadings } from '../services/readingsService';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 
-export const useGetAcusticaHistory = () => {
+export const useGetBioacusticaHistory = () => {
   const [soundHistory, setSoundHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const { error, handleApiError, clearError } = useErrorHandler();
