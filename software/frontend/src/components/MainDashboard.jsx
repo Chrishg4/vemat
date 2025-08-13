@@ -55,6 +55,7 @@ export default function MainDashboard() {
             >
               <option value="line">Líneas</option>
               <option value="bar">Barras</option>
+              <option value="area">Área</option>
             </select>
           </div>
           <TempHumidityChart chartMode={chartMode} />

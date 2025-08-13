@@ -5,6 +5,8 @@ import {
   Line,
   BarChart,
   Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -35,8 +37,8 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
     }
   });
 
-  const ChartComponent = chartMode === 'bar' ? BarChart : LineChart;
-  const ChartElement = chartMode === 'bar' ? Bar : Line;
+  const ChartComponent = chartMode === 'bar' ? BarChart : (chartMode === 'area' ? AreaChart : LineChart);
+  const ChartElement = chartMode === 'bar' ? Bar : (chartMode === 'area' ? Area : Line);
 
   return (
     <div className="chart-container bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
@@ -65,7 +67,7 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
             type={chartMode === 'line' ? "monotone" : undefined}
             dataKey="temperatura"
             stroke="#ff7300"
-            fill="#ff7300"
+            fill={chartMode === 'area' ? "rgba(255, 115, 0, 0.3)" : "#ff7300"}
             dot={chartMode === 'line' ? false : undefined}
             name="Temperatura (°C)"
           />
@@ -74,7 +76,7 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
             type={chartMode === 'line' ? "monotone" : undefined}
             dataKey="humedad"
             stroke="#387908"
-            fill="#387908"
+            fill={chartMode === 'area' ? "rgba(56, 121, 8, 0.3)" : "#387908"}
             dot={chartMode === 'line' ? false : undefined}
             name="Humedad (%)"
           />
@@ -83,7 +85,7 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
             type={chartMode === 'line' ? "monotone" : undefined}
             dataKey="co2"
             stroke="#0088FE"
-            fill="#0088FE"
+            fill={chartMode === 'area' ? "rgba(0, 136, 254, 0.3)" : "#0088FE"}
             dot={chartMode === 'line' ? false : undefined}
             name="CO₂ (ppm)"
           />
@@ -92,7 +94,7 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
             type={chartMode === 'line' ? "monotone" : undefined}
             dataKey="acustica"
             stroke="#FF0000"
-            fill="#FF0000"
+            fill={chartMode === 'area' ? "rgba(255, 0, 0, 0.3)" : "#FF0000"}
             dot={chartMode === 'line' ? false : undefined}
             name="Bioacustica (Hz)"
           />
