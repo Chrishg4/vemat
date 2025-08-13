@@ -63,8 +63,10 @@ router.post('/', async (req, res) => {
     let contexto = {};
     if (incluir_contexto) {
       contexto = await obtenerContextoDatos(nodo_id);
+      console.log('🔍 Contexto obtenido:', JSON.stringify(contexto, null, 2));
     }
 
+    console.log('📤 Enviando a IA:', { prompt: prompt.substring(0, 50) + '...', contexto_disponible: Object.keys(contexto).length > 0 });
     const respuestaIA = await assistant.procesarConsulta(prompt, contexto);
 
     // Registrar consulta para estadísticas
@@ -102,6 +104,12 @@ async function obtenerContextoDatos(nodo_id = null) {
     const params = nodo_id ? [nodo_id] : [];
 
     pool.query(queryActual, params, (err, resultados) => {
+      console.log('🗄️ Query resultados:', { 
+        error: err?.message, 
+        count: resultados?.length,
+        query: queryActual.replace(/\s+/g, ' ').trim()
+      });
+      
       if (err || resultados.length === 0) {
         console.warn('⚠️ No se pudo obtener contexto de datos:', err?.message);
         return resolve({});

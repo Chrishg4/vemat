@@ -24,8 +24,15 @@ class VEMATAssistant {
    * Procesa consulta del usuario con contexto de VEMAT
    */
   async procesarConsulta(prompt, datosContexto = {}) {
+    console.log('🔍 VematAssistant - Procesando consulta:', { 
+      prompt: prompt.substring(0, 50) + '...', 
+      contexto_disponible: Object.keys(datosContexto).length > 0,
+      datos_actuales: datosContexto.actual ? 'Sí' : 'No',
+      modo: this.demoMode ? 'DEMO' : 'PRODUCTION'
+    });
+
     if (this.demoMode) {
-      return this.respuestDemo(prompt);
+      return this.respuestDemo(prompt, datosContexto);
     }
 
     try {
@@ -110,12 +117,44 @@ RESPUESTA (máximo 500 palabras):`;
   /**
    * Respuesta demo cuando no hay API key
    */
-  respuestDemo(prompt) {
+  respuestDemo(prompt, datosContexto = {}) {
+    console.log('🤖 Modo Demo - Contexto disponible:', JSON.stringify(datosContexto, null, 2));
+    
+    // Si hay datos reales, usarlos
+    if (datosContexto.actual) {
+      const { temperatura, humedad, co2, sonido, timestamp } = datosContexto.actual;
+      const nodo = datosContexto.actual.nodo_id || 'N/A';
+      
+      return {
+        success: true,
+        respuesta: `🤖 [MODO DEMO] Análisis basado en datos reales del sensor:
+
+📊 **Estado Actual - Nodo ${nodo}:**
+• Temperatura: ${temperatura || 'N/A'}°C
+• Humedad: ${humedad || 'N/A'}%
+• CO2: ${co2 || 'N/A'} ppm
+• Sonido: ${sonido || 'N/A'} Hz
+• Última lectura: ${new Date(timestamp).toLocaleString('es-CR')}
+
+🦟 **Análisis Vectorial:**
+${this.analizarRiesgoDemo(temperatura, humedad)}
+
+💡 **Recomendaciones:**
+${this.obtenerRecomendacionesDemo(prompt, temperatura, humedad)}
+
+⚠️ **Nota:** Esta es una respuesta simulada con datos reales. Configure GEMINI_API_KEY para análisis completo con IA.`,
+        contexto_usado: datosContexto,
+        modo: "demo",
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    // Respuesta básica sin datos
     const respuestasDemo = {
       "riesgo": "Según las condiciones simuladas, el riesgo vectorial es MEDIO. La temperatura de 28°C y humedad del 65% están en rango favorable para Aedes aegypti. Se recomienda eliminar agua estancada y usar repelente durante las horas de mayor actividad (6-10 AM y 4-8 PM).",
       "tendencia": "Los datos muestran una tendencia ascendente en temperatura y humedad, lo que podría incrementar el riesgo vectorial en las próximas 24-48 horas. Recomiendo intensificar las medidas preventivas.",
       "recomendaciones": "Para las condiciones actuales en Cañas, recomiendo: 1) Eliminar recipientes con agua estancada, 2) Usar repelente con DEET, 3) Instalar mallas en puertas y ventanas, 4) Reportar síntomas febriles inmediatamente.",
-      "default": "Esta es una respuesta demo del asistente VEMAT. Para obtener análisis real con IA, configure la API key de Google Gemini en las variables de entorno."
+      "default": "🤖 [MODO DEMO] No se detectaron datos de sensores en la consulta. Asegúrese de que los dispositivos ESP32 estén enviando datos. Para obtener análisis real con IA, configure la API key de Google Gemini."
     };
 
     const palabraClave = prompt.toLowerCase();
@@ -132,6 +171,64 @@ RESPUESTA (máximo 500 palabras):`;
       timestamp: new Date().toISOString(),
       modelo: "demo-mode"
     };
+  }
+
+  /**
+   * Analizar riesgo vectorial basado en temperatura y humedad
+   */
+  analizarRiesgoDemo(temperatura, humedad) {
+    if (!temperatura || !humedad) {
+      return "Sin datos suficientes para análisis de riesgo.";
+    }
+
+    let riesgo = "BAJO";
+    let descripcion = "";
+
+    // Análisis de temperatura (rango óptimo Aedes aegypti: 25-30°C)
+    if (temperatura >= 25 && temperatura <= 30) {
+      if (humedad >= 60) {
+        riesgo = "ALTO";
+        descripcion = "Condiciones ÓPTIMAS para reproducción de Aedes aegypti.";
+      } else {
+        riesgo = "MEDIO";
+        descripcion = "Temperatura favorable, pero humedad baja limita reproducción.";
+      }
+    } else if (temperatura > 30) {
+      riesgo = humedad >= 70 ? "MEDIO" : "BAJO";
+      descripcion = "Temperatura alta puede reducir actividad vectorial.";
+    } else {
+      riesgo = "BAJO";
+      descripcion = "Temperatura subóptima para desarrollo vectorial.";
+    }
+
+    return `• Nivel de riesgo: **${riesgo}**\n• ${descripcion}`;
+  }
+
+  /**
+   * Obtener recomendaciones contextualizadas
+   */
+  obtenerRecomendacionesDemo(prompt, temperatura, humedad) {
+    const recomendaciones = [];
+
+    // Recomendaciones basadas en condiciones
+    if (temperatura >= 25 && humedad >= 60) {
+      recomendaciones.push("Eliminar URGENTEMENTE agua estancada");
+      recomendaciones.push("Intensificar uso de repelente");
+      recomendaciones.push("Inspeccionar contenedores semanalmente");
+    }
+
+    // Recomendaciones específicas por consulta
+    if (prompt.toLowerCase().includes('co2')) {
+      recomendaciones.push("Monitorear ventilación en espacios cerrados");
+    }
+
+    if (prompt.toLowerCase().includes('sonido')) {
+      recomendaciones.push("Niveles de ruido pueden indicar actividad urbana que favorece criaderos");
+    }
+
+    return recomendaciones.length > 0 
+      ? recomendaciones.map((r, i) => `${i + 1}. ${r}`).join('\n')
+      : "Mantener medidas preventivas generales contra vectores.";
   }
 
   /**
