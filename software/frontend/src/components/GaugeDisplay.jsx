@@ -1,6 +1,7 @@
 // src/components/GaugeDisplay.jsx
 import React from 'react';
-import { FaTemperatureHigh, FaTint, FaWind, FaRegGrinBeam } from 'react-icons/fa'; // Usando un ícono más representativo para CO2
+import { FaTemperatureHigh, FaTint, FaVolumeUp } from 'react-icons/fa';
+import Co2Icon from './Co2Icon'; // Importar el icono personalizado
 import { useGetReadings } from '../use/useGetReadings';
 
 const GaugeCard = ({ icon, title, value, unit, color }) => {
@@ -8,7 +9,7 @@ const GaugeCard = ({ icon, title, value, unit, color }) => {
   return (
     <div className={`bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col items-center justify-center text-white border border-gray-700`}>
       <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full" style={{ backgroundColor: color }}>
-        <IconComponent className="text-white text-3xl" />
+        <IconComponent className="w-10 h-10" />
       </div>
       <h3 className="text-lg font-semibold text-gray-300">{title}</h3>
       <p className="text-4xl font-bold text-white">
@@ -40,7 +41,7 @@ export default function GaugeDisplay() {
     },
     {
       id: 'co2',
-      icon: FaRegGrinBeam,
+      icon: Co2Icon, // Usar el icono personalizado
       title: 'CO₂',
       value: parseFloat(latest.co2).toFixed(0),
       unit: 'ppm',
@@ -48,8 +49,8 @@ export default function GaugeDisplay() {
     },
     {
       id: 'acustica',
-      icon: FaWind,
-      title: 'Acústica',
+      icon: FaVolumeUp,
+      title: 'Bioacustica',
       value: parseFloat(latest.acustica).toFixed(0),
       unit: 'Hz',
       color: '#FF0000',
@@ -71,7 +72,7 @@ export default function GaugeDisplay() {
           Lecturas Actuales
         </h2>
         <div className="text-right">
-          <p className="text-gray-400 text-sm">ID del Nodo: <span className="font-semibold text-gray-200">{latest.id_nodo || 'N/A'}</span></p>
+          <p className="text-gray-400 text-sm">ID del Nodo: <span className="font-semibold text-gray-200">{latest.nodo_id || 'N/A'}</span></p>
           <p className="text-gray-400 text-sm">Fecha: <span className="font-semibold text-gray-200">{formattedDate}</span></p>
         </div>
       </div>

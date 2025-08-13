@@ -55,7 +55,7 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
           <YAxis
             yAxisId="right"
             orientation="right"
-            label={{ value: "CO₂ ppm / Acustica (Hz)", angle: 90, position: "insideRight", fill: "#ccc" }}
+            label={{ value: "CO₂ ppm / Bioacustica (Hz)", angle: 90, position: "insideRight", fill: "#ccc" }}
             tick={{ fill: "#ccc" }}
           />
           <Tooltip />
@@ -94,7 +94,7 @@ export default function TempHumidityChart({ chartMode = 'line' }) {
             stroke="#FF0000"
             fill="#FF0000"
             dot={chartMode === 'line' ? false : undefined}
-            name="Acustica (Hz)"
+            name="Bioacustica (Hz)"
           />
         </ChartComponent>
       </ResponsiveContainer>

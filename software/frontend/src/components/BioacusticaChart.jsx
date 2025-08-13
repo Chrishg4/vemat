@@ -1,4 +1,4 @@
-// src/components/AcusticaChart.jsx
+// src/components/BioacusticaChart.jsx
 import React from 'react';
 import {
   LineChart,
@@ -11,7 +11,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-export default function AcusticaChart({ data }) {
+export default function BioacusticaChart({ data }) {
   const chartData = data.map(item => ({
     name: new Date(item.fecha).toLocaleString('es-CR', {
       timeZone: 'UTC',
@@ -21,9 +21,7 @@ export default function AcusticaChart({ data }) {
 
   return (
     <div className="chart-container bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
-      <h2 className="text-white text-xl font-semibold mb-4">
-        Gráfico de Acustica (Hz)
-      </h2>
+      <h2 className="text-white text-xl font-semibold mb-4">Gráfico de Bioacustica (Hz)</h2>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#444" />
@@ -39,7 +37,7 @@ export default function AcusticaChart({ data }) {
             dataKey="acustica"
             stroke="#8884d8"
             dot={false}
-            name="Acustica (Hz)"
+            name="Bioacustica (Hz)"
           />
         </LineChart>
       </ResponsiveContainer>

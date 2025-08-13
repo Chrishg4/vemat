@@ -20,7 +20,7 @@ const EpiWeekSummaryTable = ({ data }) => {
             <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">Temperatura (°C)</th>
             <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">Humedad (%)</th>
             <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">CO2 (ppm)</th>
-            <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">Acustica (dB)</th>
+            <th className="py-3 px-4 border-b border-gray-600 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider" colSpan="3">Bioacustica (Hz)</th>
           </tr>
           <tr>
             <th className="py-2 px-3 border-b border-gray-600 text-center text-xs font-medium text-gray-400">Prom.</th>

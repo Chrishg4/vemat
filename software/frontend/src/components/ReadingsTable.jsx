@@ -30,7 +30,7 @@ export default function ReadingsTable({ limit, showTitle = true, title = "Histor
               <th className="px-4 py-3 text-left text-cyan-400">Temperatura</th>
               <th className="px-4 py-3 text-left text-cyan-400">Humedad</th>
               <th className="px-4 py-3 text-left text-cyan-400">CO₂</th>
-              <th className="px-4 py-3 text-left text-cyan-400">Acustica</th>
+              <th className="px-4 py-3 text-left text-cyan-400">Bioacustica</th>
               <th className="px-4 py-3 text-left text-cyan-400">Ciudad</th>
             </tr>
           </thead>
