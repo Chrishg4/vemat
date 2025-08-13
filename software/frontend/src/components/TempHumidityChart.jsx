@@ -13,43 +13,27 @@ import {
   ResponsiveContainer
 } from "recharts";
 import { useDashboardData } from "../context/DashboardContext";
-import { aggregateByEpiWeek } from "../utils/epiWeekUtils";
-
 export default function TempHumidityChart({ chartMode = 'line' }) {
   const { data, soundHistory } = useDashboardData();
 
   let processedChartData;
   let xAxisLabel = 'Fecha/Hora';
 
-  if (chartMode === 'epiWeek') {
-    processedChartData = aggregateByEpiWeek(data.map(item => {
-      const soundReading = soundHistory.find(s => {
-          if (!s.fecha || !item.fecha) return false;
-          return new Date(s.fecha).getTime() === new Date(item.fecha).getTime();
-      });
-      return {
-          ...item,
-          acustica: typeof soundReading?.acustica === 'number' ? soundReading.acustica : 0,
-      };
-    }));
-    xAxisLabel = 'Semana Epidemiológica';
-  } else {
-    processedChartData = data.map((item) => {
-      const soundReading = soundHistory.find(s => {
-          if (!s.fecha || !item.fecha) return false;
-          return new Date(s.fecha).getTime() === new Date(item.fecha).getTime();
-      });
-      return {
-          name: new Date(item.fecha).toLocaleString("es-CR", {
-          timeZone: "UTC",
-          }),
-          temperatura: parseFloat(item.temperatura),
-          humedad: parseFloat(item.humedad),
-          co2: parseFloat(item.co2),
-          acustica: typeof soundReading?.acustica === 'number' ? soundReading.acustica : 0,
-      }
+  processedChartData = data.map((item) => {
+    const soundReading = soundHistory.find(s => {
+        if (!s.fecha || !item.fecha) return false;
+        return new Date(s.fecha).getTime() === new Date(item.fecha).getTime();
     });
-  }
+    return {
+        name: new Date(item.fecha).toLocaleString("es-CR", {
+        timeZone: "UTC",
+        }),
+        temperatura: parseFloat(item.temperatura),
+        humedad: parseFloat(item.humedad),
+        co2: parseFloat(item.co2),
+        acustica: typeof soundReading?.acustica === 'number' ? soundReading.acustica : 0,
+    }
+  });
 
   const ChartComponent = chartMode === 'bar' ? BarChart : LineChart;
   const ChartElement = chartMode === 'bar' ? Bar : Line;
