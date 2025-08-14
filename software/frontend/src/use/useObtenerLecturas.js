@@ -57,20 +57,14 @@ export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 3600000
       const latestReading = await getLatestReading();
       let processedAllReadings = []; // Initialize here
       
-      // Expects 'id_nodo' to be present in each reading object from the API.
-      // If 'id_nodo' is not displayed, verify the API response structure.
+      
+      
       if (Array.isArray(allReadings) && allReadings.length > 0) {
-        // Determinar el año más reciente en los datos
-        const latestYear = Math.max(...allReadings.map(reading => new Date(reading.fecha).getFullYear()));
-
-        // Filtrar los datos para incluir solo el año más reciente
-        const filteredReadings = allReadings.filter(reading => new Date(reading.fecha).getFullYear() === latestYear);
-
-        processedAllReadings = filteredReadings.map(reading => ({
+        processedAllReadings = allReadings.map(reading => ({
           ...reading,
-          acustica: reading.sonido // Map 'sonido' from API to 'acustica'
+          acustica: reading.sonido 
         }));
-        setData([...processedAllReadings].reverse()); // orden descendente
+        setData([...processedAllReadings].reverse()); 
       }
       
       if (latestReading) {
