@@ -1,5 +1,6 @@
 // src/components/historialAlertas.jsx
 import React from "react";
+import UbicacionFromCoordenadas from "./ubicacióndeCoordenadas";
 
 export default function HistorialAlertas({ alertas }) {
   return (
@@ -15,6 +16,8 @@ export default function HistorialAlertas({ alertas }) {
               <th className="px-4 py-2">Valor</th>
               <th className="px-4 py-2">Rango Normal</th>
               <th className="px-4 py-2">Estado</th>
+              <th className="px-4 py-2">Coordenadas</th>
+              <th className="px-4 py-2">Ubicación</th>
             </tr>
           </thead>
           <tbody className="text-gray-300">
@@ -24,18 +27,25 @@ export default function HistorialAlertas({ alertas }) {
                   <td className="px-4 py-2 text-blue-400">{alerta.tipo}</td>
                   <td className="px-4 py-2 text-blue-400">
                     {alerta.valor}
-                    {alerta.tipo === 'temperatura' ? '°C' : 
-                     alerta.tipo === 'humedad' ? '%' : 
+                    {alerta.tipo === 'temperatura' ? '°C' :
+                     alerta.tipo === 'humedad' ? '%' :
                      alerta.tipo === 'co2' ? ' ppm' : ''}
                   </td>
                   <td className="px-4 py-2">{alerta.rangoNormal}</td>
                   <td className="px-4 py-2">
                     <span className={`px-2 py-1 rounded-full text-xs ${
-                      alerta.estado === 'enviado' ? 'bg-green-500/20 text-green-400' : 
+                      alerta.estado === 'enviado' ? 'bg-green-500/20 text-green-400' :
                       'bg-red-500/20 text-red-400'
                     }`}>
                       {alerta.estado}
                     </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    {alerta.latitud && alerta.longitud ? 
+                      `${alerta.latitud.toFixed(5)}, ${alerta.longitud.toFixed(5)}` : 'N/A'}
+                  </td>
+                  <td className="px-4 py-2">
+                    <UbicacionFromCoordenadas lat={alerta.latitud} lon={alerta.longitud} />
                   </td>
                 </tr>
               );

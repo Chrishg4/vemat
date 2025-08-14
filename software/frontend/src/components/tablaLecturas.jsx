@@ -1,12 +1,13 @@
 import React from "react";
 import { useContextoTablero } from "../context/contextoTablero";
+import UbicacionFromCoordenadas from "./ubicacióndeCoordenadas";
 
 export default function TablaLecturas({ limit, showTitle = true, title = "Historial de Lecturas" }) {
   // Función para descargar los datos filtrados como CSV
   const descargarCSV = () => {
     if (!datosFiltrados.length) return;
     const encabezados = [
-      'Fecha', 'ID de Nodo', 'Temperatura', 'Humedad', 'CO₂', 'Bioacústica', 'Ciudad'
+      'Fecha', 'ID de Nodo', 'Temperatura', 'Humedad', 'CO₂', 'Bioacústica', 'Coordenadas', 'Ciudad'
     ];
     // Usar punto y coma como delimitador para compatibilidad con Excel en español
     const delimiter = ';';
@@ -17,7 +18,8 @@ export default function TablaLecturas({ limit, showTitle = true, title = "Histor
       `${lectura.humedad} %`,
       `${lectura.co2} ppm`,
       `${lectura.acustica} Hz`,
-      'Cañas'
+      lectura.latitud && lectura.longitud ? `${lectura.latitud.toFixed(5)}, ${lectura.longitud.toFixed(5)}` : 'N/A',
+      '' // Placeholder for city, will be fetched dynamically
     ].map(valor => {
       // Eliminar solo caracteres de control, permitir ñ y tildes
       return String(valor).replace(/[\u0000-\u001f\u007f]/g, '');
@@ -152,6 +154,7 @@ export default function TablaLecturas({ limit, showTitle = true, title = "Histor
               <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Humedad</th>
               <th className="px-5 py-4 text-left text-cyan-400 font-semibold">CO₂</th>
               <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Bioacústica</th>
+              <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Coordenadas</th>
               <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Ciudad</th>
             </tr>
           </thead>
@@ -167,7 +170,13 @@ export default function TablaLecturas({ limit, showTitle = true, title = "Histor
                 <td className="px-5 py-3 whitespace-nowrap text-blue-300 font-semibold">{lectura.humedad} %</td>
                 <td className="px-5 py-3 whitespace-nowrap text-green-300 font-semibold">{lectura.co2} ppm</td>
                 <td className="px-5 py-3 whitespace-nowrap text-purple-300 font-semibold">{lectura.acustica} Hz</td>
-                <td className="px-5 py-3 whitespace-nowrap text-gray-300">Cañas</td>
+                <td className="px-5 py-3 whitespace-nowrap text-gray-300">
+                  {lectura.latitud && lectura.longitud ? 
+                    `Lat: ${lectura.latitud.toFixed(5)}, Lon: ${lectura.longitud.toFixed(5)}` : 'N/A'}
+                </td>
+                <td className="px-5 py-3 whitespace-nowrap text-gray-300">
+                  <UbicacionFromCoordenadas lat={lectura.latitud} lon={lectura.longitud} />
+                </td>
               </tr>
             ))}
           </tbody>

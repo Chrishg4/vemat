@@ -50,7 +50,9 @@ export const useObtenerHistorialAlertas = () => {
               tipo: 'Condiciones Favorables',
               valor: favorableAlertMessage,
               rangoNormal: 'Ver detalles', // Or a more descriptive text
-              estado: 'enviado'
+              estado: 'enviado',
+              latitud: sortedReadings[i].latitud,
+              longitud: sortedReadings[i].longitud
             });
           }
         }
