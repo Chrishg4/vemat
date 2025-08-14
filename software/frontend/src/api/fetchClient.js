@@ -14,7 +14,8 @@ const fetchClient = {
    */
   get: async () => {
     try {
-      const response = await fetch(API_URL, {
+      
+      const response = await fetch(`${API_URL}?limit=1000`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
