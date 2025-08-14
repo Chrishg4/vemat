@@ -10,73 +10,15 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { useContextoTablero } from "../context/contextoTablero";
-import { getEpiWeek } from "../utils/utilidadesSemanaEpi";
-
-// Helper function to generate all 52 epidemiological weeks for a given year
-const getFullEpiWeeks = (year) => {
-  const weeks = [];
-  // Determine the start of Epi Week 1 for the given year
-  // For 2025, Jan 1 is a Wednesday, so Epi Week 1 starts on Dec 29, 2024
-  let currentWeekStart = new Date(`${year - 1}-12-29T00:00:00`); // Start of Epi Week 1, 2025
-
-  for (let i = 1; i <= 52; i++) {
-    const weekName = `SE ${i}/${year}`;
-    weeks.push({
-      name: weekName,
-      co2: null,
-      temperatura: null,
-      humedad: null,
-      acustica: null,
-      // Store the weekKey for easy lookup
-      weekKey: `${year}-${String(i).padStart(2, '0')}`
-    });
-    currentWeekStart.setDate(currentWeekStart.getDate() + 7); // Move to the start of the next week
-  }
-  return weeks;
-};
+import { aggregateByEpiWeek } from "../utils/utilidadesSemanaEpi";
 
 export default function CO2EpiWeekChart() {
   const { data } = useContextoTablero();
 
-  const groupedData = data.reduce((acc, item) => {
-    const epiWeek = getEpiWeek(new Date(item.fecha));
-    const weekKey = `${epiWeek.year}-${String(epiWeek.week).padStart(2, '0')}`;
+  const chartData = aggregateByEpiWeek(data);
 
-    if (!acc[weekKey]) {
-      acc[weekKey] = { 
-        totalCo2: 0, 
-        totalTemp: 0, 
-        totalHum: 0, 
-        totalSound: 0, 
-        count: 0, 
-        name: `SE ${epiWeek.week}/${epiWeek.year}` 
-      };
-    }
-    acc[weekKey].totalCo2 += parseFloat(item.co2);
-    acc[weekKey].totalTemp += parseFloat(item.temperatura);
-    acc[weekKey].totalHum += parseFloat(item.humedad);
-    acc[weekKey].totalSound += parseFloat(item.acustica);
-    acc[weekKey].count += 1;
-    return acc;
-  }, {});
-
-  // Generate all 52 weeks for 2025
-  const fullEpiWeeksData = getFullEpiWeeks(2025);
-
-  // Merge actual data with the full list of weeks
-  const chartData = fullEpiWeeksData.map(fullWeek => {
-    const actualWeekData = groupedData[fullWeek.weekKey];
-    if (actualWeekData) {
-      return {
-        name: actualWeekData.name,
-        co2: actualWeekData.totalCo2 / actualWeekData.count,
-        temperatura: actualWeekData.totalTemp / actualWeekData.count,
-        humedad: actualWeekData.totalHum / actualWeekData.count,
-        acustica: actualWeekData.totalSound / actualWeekData.count,
-      };
-    }
-    return fullWeek; // Return week with nulls if no data
-  });
+  // Function to format numbers to one decimal place
+  const formatNumber = (value) => value.toFixed(1);
 
   return (
     <div className="chart-container bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
@@ -97,8 +39,9 @@ export default function CO2EpiWeekChart() {
             orientation="right"
             label={{ value: "CO₂ ppm / Bioacustica (Hz)", angle: 90, position: "insideRight", fill: "#ccc" }}
             tick={{ fill: "#ccc" }}
+            tickFormatter={formatNumber}
           />
-          <Tooltip />
+          <Tooltip formatter={formatNumber} />
           <Legend />
           <Line
             yAxisId="left"
