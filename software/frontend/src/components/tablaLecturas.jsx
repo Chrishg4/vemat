@@ -101,7 +101,7 @@ export default function TablaLecturas({ limit, showTitle = true, title = "Histor
         <button
           className="px-4 py-2 rounded-lg bg-cyan-600 text-white font-semibold shadow hover:bg-cyan-700 transition"
           onClick={descargarCSV}
-        >Descargar CSV</button>
+        >Descargar Tabla</button>
       </div>
       <div className="mb-6 flex flex-wrap gap-3 items-center">
         <span className="text-gray-400 font-semibold mr-2">Filtrar por:</span>
