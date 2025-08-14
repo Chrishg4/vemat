@@ -1,4 +1,69 @@
-Dependencia para iconos de react
+Dependencias del Proyecto Frontend Vemat
 
-    * npm install react-icons --save
+Este archivo lista todas las dependencias de producción y desarrollo utilizadas en el proyecto frontend, junto con sus comandos de instalación.
 
+---
+
+### Dependencias de Producción (`dependencies`)
+
+Estas dependencias son necesarias para que la aplicación funcione correctamente en un entorno de producción.
+
+*   `@emailjs/browser@^4.4.1`
+    Comando de instalación: `npm install @emailjs/browser@^4.4.1`
+*   `chart.js@^4.5.0`
+    Comando de instalación: `npm install chart.js@^4.5.0`
+*   `leaflet@^1.9.4`
+    Comando de instalación: `npm install leaflet@^1.9.4`
+*   `react@^18.2.0`
+    Comando de instalación: `npm install react@^18.2.0`
+*   `react-chartjs-2@^5.3.0`
+    Comando de instalación: `npm install react-chartjs-2@^5.3.0`
+*   `react-dom@^18.2.0`
+    Comando de instalación: `npm install react-dom@^18.2.0`
+*   `react-icons@^5.5.0`
+    Comando de instalación: `npm install react-icons@^5.5.0`
+*   `react-leaflet@^4.2.1`
+    Comando de instalación: `npm install react-leaflet@^4.2.1`
+*   `react-router-dom@^6.30.1`
+    Comando de instalación: `npm install react-router-dom@^6.30.1`
+*   `recharts@^3.1.1`
+    Comando de instalación: `npm install recharts@^3.1.1`
+*   `chartjs-adapter-date-fns@^3.0.0`
+    Comando de instalación: `npm install chartjs-adapter-date-fns@^3.0.0`
+
+### Dependencias de Desarrollo (`devDependencies`)
+
+Estas dependencias son necesarias solo durante el desarrollo del proyecto (por ejemplo, herramientas de testing, linting, bundling).
+
+*   `@eslint/js@^9.30.1`
+    Comando de instalación: `npm install @eslint/js@^9.30.1 --save-dev`
+*   `@types/leaflet@^1.9.20`
+    Comando de instalación: `npm install @types/leaflet@^1.9.20 --save-dev`
+*   `@types/react@^19.1.8`
+    Comando de instalación: `npm install @types/react@^19.1.8 --save-dev`
+*   `@types/react-dom@^19.1.6`
+    Comando de instalación: `npm install @types/react-dom@^19.1.6 --save-dev`
+*   `@vitejs/plugin-react@^4.6.0`
+    Comando de instalación: `npm install @vitejs/plugin-react@^4.6.0 --save-dev`
+*   `autoprefixer@^10.4.21`
+    Comando de instalación: `npm install autoprefixer@^10.4.21 --save-dev`
+*   `eslint@^9.30.1`
+    Comando de instalación: `npm install eslint@^9.30.1 --save-dev`
+*   `eslint-plugin-react-hooks@^5.2.0`
+    Comando de instalación: `npm install eslint-plugin-react-hooks@^5.2.0 --save-dev`
+*   `eslint-plugin-react-refresh@^0.4.20`
+    Comando de instalación: `npm install eslint-plugin-react-refresh@^0.4.20 --save-dev`
+*   `globals@^16.3.0`
+    Comando de instalación: `npm install globals@^16.3.0 --save-dev`
+*   `postcss@^8.5.6`
+    Comando de instalación: `npm install postcss@^8.5.6 --save-dev`
+*   `tailwindcss@^3.4.17`
+    Comando de instalación: `npm install tailwindcss@^3.4.17 --save-dev`
+*   `vite@^7.0.4`
+    Comando de instalación: `npm install vite@^7.0.4 --save-dev`
+
+---
+
+Para instalar todas las dependencias de una vez, navega a la carpeta `c:\Users\danny\Documents\GitHub\vemat\software\frontend` en tu terminal y ejecuta:
+
+`npm install`

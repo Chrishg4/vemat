@@ -53,22 +53,26 @@ const pool = require('../db/connection');
 router.post('/', (req, res) => {
   const { nodo_id, temperatura, humedad, co2, sonido, timestamp } = req.body;
   
-  // Primero crear/verificar que el nodo existe
-  const createNodeQuery = `
-    INSERT INTO nodos (id, activo) 
-    VALUES (?, 1) 
-    ON DUPLICATE KEY UPDATE activo = activo
-  `;
+  // Verificar que el nodo existe (no lo creamos aquí)
+  const checkNodeQuery = 'SELECT id FROM nodos WHERE id = ?';
   
-  pool.query(createNodeQuery, [nodo_id], (nodeErr, nodeResults) => {
-    if (nodeErr) {
-      console.error(' Error creando/verificando nodo:', nodeErr);
-      return res.status(400).json({ error: 'Error al crear nodo: ' + nodeErr.message });
+  pool.query(checkNodeQuery, [nodo_id], (checkErr, checkResults) => {
+    if (checkErr) {
+      console.error(' Error verificando nodo:', checkErr);
+      return res.status(500).json({ error: 'Error interno del servidor' });
     }
     
-    console.log(' Nodo verificado/creado:', nodo_id);
+    if (checkResults.length === 0) {
+      console.error(' Nodo no encontrado:', nodo_id);
+      return res.status(400).json({ 
+        error: 'El nodo no existe. Debe registrarse primero en /api/geo',
+        nodo_id: nodo_id 
+      });
+    }
     
-    // Ahora insertar la lectura
+    console.log(' Nodo verificado:', nodo_id);
+    
+    // Insertar la lectura
     const lecturaQuery = 'INSERT INTO lecturas (nodo_id, temperatura, humedad, co2, sonido, timestamp) VALUES (?, ?, ?, ?, ?, ?)';
     
     pool.query(lecturaQuery, [nodo_id, temperatura, humedad, co2, sonido, timestamp || new Date()], (err, results) => {
@@ -79,7 +83,7 @@ router.post('/', (req, res) => {
       
       console.log(' Lectura guardada exitosamente:', { nodo_id, id: results.insertId });
       res.status(201).json({ 
-        message: 'Lectura guardada', 
+        message: 'Lectura guardada exitosamente', 
         id: results.insertId,
         nodo_id: nodo_id 
       });

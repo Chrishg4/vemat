@@ -51,8 +51,6 @@ const pool = require('../db/connection');
  *                         type: number
  *                       longitud:
  *                         type: number
- *                       ubicacion:
- *                         type: string
  *                       fecha:
  *                         type: string
  *                         format: date-time
@@ -76,7 +74,6 @@ router.get('/', (req, res) => {
       n.id as nodo_id,
       n.latitud,
       n.longitud,
-      n.ubicacion,
       l.timestamp as fecha,
       l.co2,
       l.temperatura,
