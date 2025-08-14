@@ -40,11 +40,15 @@ export const getEpiWeek = (date) => {
  */
 export const getFullEpiWeeksForYear = (year) => {
   const weeks = [];
-  // Para 2025, el 1 de enero es miércoles. El domingo más cercano es el 29 de diciembre de 2024.
-  // Asumimos que la semana 1 de un año comienza el domingo más cercano al 1 de enero de ese año.
-  // Esto puede variar ligeramente según la definición exacta de la semana epidemiológica.
-  // Aquí, para 2025, la semana 1 comienza el 29 de diciembre de 2024.
-  let currentWeekStart = new Date(`${year - 1}-12-29T00:00:00`); 
+  const yearStart = new Date(Date.UTC(year, 0, 1)); // Enero 1 del año dado
+
+  let firstSunday = new Date(yearStart);
+  // Encuentra el primer domingo del año
+  while (firstSunday.getUTCDay() !== 0) {
+    firstSunday.setUTCDate(firstSunday.getUTCDate() + 1);
+  }
+
+  let currentWeekStart = new Date(firstSunday); // La semana 1 comienza en el primer domingo
 
   for (let i = 1; i <= 52; i++) {
     const weekName = `SE ${i}/${year}`;
@@ -57,7 +61,7 @@ export const getFullEpiWeeksForYear = (year) => {
       co2: null,
       acustica: null,
     });
-    currentWeekStart.setDate(currentWeekStart.getDate() + 7); // Avanzar a la siguiente semana
+    currentWeekStart.setUTCDate(currentWeekStart.getUTCDate() + 7); // Avanzar a la siguiente semana
   }
   return weeks;
 };
@@ -71,7 +75,13 @@ export const getFullEpiWeeksForYear = (year) => {
  */
 export const aggregateByEpiWeek = (rawData) => {
   const aggregated = {};
-  let yearToProcess = 2025; // Asumimos 2025 como el año principal a procesar
+  let yearToProcess;
+
+  if (rawData.length > 0) {
+    yearToProcess = new Date(rawData[0].fecha).getFullYear();
+  } else {
+    yearToProcess = new Date().getFullYear(); // Default to current year if no data
+  }
 
   // Primero, agregamos los datos existentes
   rawData.forEach(item => {
