@@ -61,3 +61,24 @@ const fetchClient = {
 };
 
 export default fetchClient;
+
+export const obtenerDatosGeo = async () => {
+  const API_URL_GEO = 'https://vemat.onrender.com/api/datosGeo';
+  try {
+    const response = await fetch(API_URL_GEO, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error en la petición API para datos geo:', error);
+    throw error;
+  }
+};
