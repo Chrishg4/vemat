@@ -13,6 +13,17 @@ import json
 # Configura el ID de tu nodo
 NODO_ID = "node-07"
 
+# Coordenadas fijas de Cañas, Costa Rica
+LATITUD_CANAS = 10.43079
+LONGITUD_CANAS = -85.08499
+
+# URLs de la API
+API_URL = "https://vemat.onrender.com/api/lecturas"
+GEO_URL = "https://vemat.onrender.com/api/geo"
+
+# Variable para registrar el nodo solo una vez
+nodo_registrado = False
+
 # Inicializar pines
 co2_simulado = analogio.AnalogIn(board.IO36)       # VP / GPIO36
 humedad_simulada = analogio.AnalogIn(board.IO39)   # VN / GPIO39
@@ -47,8 +58,6 @@ pool = socketpool.SocketPool(wifi.radio)
 ssl_context = ssl.create_default_context()
 requests = adafruit_requests.Session(pool, ssl_context)
 
-API_URL = "https://vemat.onrender.com/api/lecturas"
-
 
 
 def mapear_voltaje_a_ppm(voltaje):
@@ -74,6 +83,25 @@ def clasificar_sonido(frecuencia_hz):
         return "Alta frecuencia"
 
 while True:
+    # 1. REGISTRAR NODO (solo la primera vez)
+    if not nodo_registrado:
+        geo_data = {
+            "nodo_id": NODO_ID,
+            "latitud": LATITUD_CANAS,
+            "longitud": LONGITUD_CANAS
+        }
+        print("🌍 Registrando ubicación del nodo:", geo_data)
+        try:
+            geo_response = requests.post(GEO_URL, json=geo_data)
+            print("✅ Nodo registrado:", geo_response.status_code, geo_response.text)
+            nodo_registrado = True
+        except Exception as geo_error:
+            print("❌ Error registrando nodo:", geo_error)
+            print("⏳ Reintentando en 10 segundos...")
+            time.sleep(10)
+            continue
+    
+    # 2. LEER SENSORES
     v_co2 = leer_voltaje(co2_simulado)
     v_humedad = leer_voltaje(humedad_simulada)
     temp = leer_temperatura(temperatura)
@@ -94,6 +122,7 @@ while True:
     except Exception:
         timestamp = None
 
+    # 3. ENVIAR LECTURA
     data = {
         "nodo_id": NODO_ID,
         "temperatura": round(temp, 2),
@@ -103,13 +132,13 @@ while True:
         "timestamp": timestamp
     }
 
-    print("Enviando datos:", data)
+    print("📊 Enviando lectura:", data)
     print("📊 Sonido: {:.1f} Hz ({})".format(sonido_hz, clasificacion_sonido))
     try:
         response = requests.post(API_URL, json=data)
-        print("Respuesta:", response.status_code, response.text)
+        print("✅ Lectura enviada:", response.status_code, response.text)
     except Exception as e:
-        print("Error al enviar:", e)
+        print("❌ Error enviando lectura:", e)
 
     print("––––––––––––––––––––––––––")
     time.sleep(60)

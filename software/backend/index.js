@@ -9,22 +9,43 @@ const swaggerSpec = require('./swagger/swagger');
 const lecturasRoute = require('./routes/lecturas');
 const geoRoute = require('./routes/geo');
 const datosLecturaRoute = require('./routes/datosLectura');  // ← AGREGAR ESTA LÍNEA
+const latlogRoute = require('./routes/lat&loglecturas'); // ← AGREGAR ESTA LÍNEA
 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración CORS para producción
+// Configuración CORS mejorada para desarrollo y producción
+const allowedOrigins = [
+  'https://vemat-frontend.onrender.com',  // Frontend en Render
+  'https://vemat.onrender.com',           // Backend en Render (para llamadas internas)
+  'http://localhost:5173',                // Vite dev server
+  'http://127.0.0.1:5173',               // Alternativa localhost
+  'http://localhost:4173',               // Vite preview
+  'http://127.0.0.1:4173'                // Alternativa localhost preview
+];
+
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://vemat-frontend.onrender.com', 'https://vemat-api.onrender.com', 'http://vemat-api.onrender.com'] 
-    : '*',
+  origin: (origin, callback) => {
+    // Permitir requests sin origin (Postman, curl, apps móviles)
+    if (!origin) return callback(null, true);
+    
+    // Verificar si el origin está en la lista permitida
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    return callback(new Error('No permitido por CORS'), false);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With']
 };
 
 app.use(cors(corsOptions));
+
+// Manejar preflight requests explícitamente
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // Documentación Swagger
@@ -35,6 +56,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/lecturas', lecturasRoute);
 app.use('/api/geo', geoRoute);
 app.use('/api/datosLectura', datosLecturaRoute);  // ← AGREGAR ESTA LÍNEA
+app.use('/api/latlog', latlogRoute); // ← AGREGAR ESTA LÍNEA
 
 
 // Ruta base
@@ -49,6 +71,7 @@ app.get('/', (req, res) => {
       lecturas: '/api/lecturas',
       geo: '/api/geo',
       datosLectura: '/api/datosLectura',  // ← AGREGAR ESTA LÍNEA
+      latlog: '/api/latlog', // ← AGREGAR ESTA LÍNEA
       swagger: '/api-docs'
     }
   });
