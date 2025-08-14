@@ -20,12 +20,12 @@ const pool = mysql.createPool({
 // Test de conexión
 pool.getConnection((err, connection) => {
   if (err) {
-    console.error(' Error conectando a la base de datos:', err.message);
+    console.error(' ❌ Error conectando a la base de datos:', err.message);
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-      console.error(' Conexión perdida, reintentando...');
+      console.error(' 🔄 Conexión perdida, reintentando...');
     }
   } else {
-    console.log(' Conectado exitosamente a la base de datos Aiven');
+    console.log(' ✅ Conectado exitosamente a la base de datos Aiven');
     connection.release();
   }
 });
