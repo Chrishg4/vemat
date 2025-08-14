@@ -14,6 +14,7 @@ const datosGeoRoute = require('./routes/datosGeo');
 const consultaRoute = require('./routes/consulta');
 const statusRoute = require('./routes/status');
 const promptsRoute = require('./routes/prompts');
+const diagnosticoRoute = require('./routes/diagnostico');
 
 
 const app = express();
@@ -26,13 +27,20 @@ const allowedOrigins = [
   'http://localhost:5173',                // Vite dev server
   'http://127.0.0.1:5173',               // Alternativa localhost
   'http://localhost:4173',               // Vite preview
-  'http://127.0.0.1:4173'                // Alternativa localhost preview
+  'http://127.0.0.1:4173',               // Alternativa localhost preview
+  'http://localhost:3000',               // Backend local para pruebas
+  'http://127.0.0.1:3000'                // Alternativa localhost backend
 ];
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Permitir requests sin origin (Postman, curl, apps móviles)
+    // Permitir requests sin origin (Postman, curl, apps móviles) 
     if (!origin) return callback(null, true);
+    
+    // En desarrollo, ser más permisivo
+    if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+      return callback(null, true);
+    }
     
     // Verificar si el origin está en la lista permitida
     if (allowedOrigins.includes(origin)) {
@@ -66,6 +74,7 @@ app.use('/api/datosGeo', datosGeoRoute);
 app.use('/api/consulta', consultaRoute);
 app.use('/api/status', statusRoute);
 app.use('/api/prompts', promptsRoute);
+app.use('/api/diagnostico', diagnosticoRoute);
 
 
 // Ruta base
@@ -85,6 +94,7 @@ app.get('/', (req, res) => {
       consulta: '/api/consulta',
       status: '/api/status',
       prompts: '/api/prompts',
+      diagnostico: '/api/diagnostico',
       swagger: '/api-docs'
     }
   });
