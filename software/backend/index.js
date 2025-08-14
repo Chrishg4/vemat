@@ -10,6 +10,10 @@ const lecturasRoute = require('./routes/lecturas');
 const geoRoute = require('./routes/geo');
 const datosLecturaRoute = require('./routes/datosLectura');
 const datosGeoRoute = require('./routes/datosGeo');
+// Rutas IA
+const consultaRoute = require('./routes/consulta');
+const statusRoute = require('./routes/status');
+const promptsRoute = require('./routes/prompts');
 
 
 const app = express();
@@ -58,6 +62,10 @@ app.use('/api/lecturas', lecturasRoute);
 app.use('/api/geo', geoRoute);
 app.use('/api/datosLectura', datosLecturaRoute);
 app.use('/api/datosGeo', datosGeoRoute);
+// Rutas IA
+app.use('/api/consulta', consultaRoute);
+app.use('/api/status', statusRoute);
+app.use('/api/prompts', promptsRoute);
 
 
 // Ruta base
@@ -71,9 +79,13 @@ app.get('/', (req, res) => {
       health: '/health',
       lecturas: '/api/lecturas',
       geo: '/api/geo',
-      datosLectura: '/api/datosLectura',  // ← AGREGAR ESTA LÍNEA
-  datosGeo: '/api/datosGeo',
-  swagger: '/api-docs'
+      datosLectura: '/api/datosLectura',
+      datosGeo: '/api/datosGeo',
+      // Endpoints IA
+      consulta: '/api/consulta',
+      status: '/api/status',
+      prompts: '/api/prompts',
+      swagger: '/api-docs'
     }
   });
 });
