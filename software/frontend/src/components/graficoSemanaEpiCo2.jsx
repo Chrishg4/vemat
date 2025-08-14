@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   LineChart,
   Line,
@@ -14,17 +14,45 @@ import { aggregateByEpiWeek } from "../utils/utilidadesSemanaEpi";
 
 export default function CO2EpiWeekChart() {
   const { data } = useContextoTablero();
+  const [selectedYear, setSelectedYear] = useState(null);
 
-  const chartData = aggregateByEpiWeek(data);
+  const years = [...new Set(data.map(item => new Date(item.fecha).getFullYear()))].sort((a, b) => b - a);
+  const mostRecentYear = years.length > 0 ? years[0] : null;
+
+  if (selectedYear === null && mostRecentYear !== null) {
+    setSelectedYear(mostRecentYear);
+  }
+
+  const filteredData = selectedYear ? data.filter(item => new Date(item.fecha).getFullYear() === selectedYear) : [];
+
+  const chartData = aggregateByEpiWeek(filteredData);
 
   // Function to format numbers to one decimal place
   const formatNumber = (value) => value.toFixed(1);
 
   return (
     <div className="chart-container bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
-      <h2 className="text-white text-xl font-semibold mb-4">
-        Evolución de Datos por Semana Epidemiológica
-      </h2>
+      <div className="flex flex-col items-start mb-4">
+        <h2 className="text-white text-xl font-semibold mb-4">
+          Evolución de Datos por Semana Epidemiológica
+        </h2>
+        <div className="flex items-center">
+          <span className="text-gray-400 font-semibold mr-2">Filtrar por año:</span>
+          {years.length > 0 && (
+            <select
+              value={selectedYear || ''}
+              onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
+              className="px-3 py-2 rounded-lg font-semibold transition focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow bg-gray-800 text-cyan-300 hover:bg-cyan-700"
+            >
+              {years.map(year => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      </div>
       <ResponsiveContainer width="100%" height={320}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#444" />
