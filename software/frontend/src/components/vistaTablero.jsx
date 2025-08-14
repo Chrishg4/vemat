@@ -35,9 +35,22 @@ export default function VistaTablero() {
           <IndicadorGauge />
         </div>
 
-        {/* Fila 2: Historial de Lecturas */}
+        {/* Fila 2: Lecturas Recientes (solo últimas 5, sin tabla paginada) */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
-          <TablaLecturas limit={5} showTitle={true} title="Lecturas Recientes" />
+          <h2 className="text-white text-xl font-semibold mb-4">Lecturas Recientes</h2>
+          <ul className="divide-y divide-gray-700">
+            {[...(data || [])].slice(-5).reverse().map((lectura, idx) => (
+              <li key={idx} className="py-2 flex flex-wrap justify-between items-center">
+                <span className="text-gray-300 text-sm font-medium mr-2">{new Date(lectura.fecha).toLocaleString('es-CR', { timeZone: 'UTC' })}</span>
+                <span className="text-cyan-400 text-sm mr-2">Nodo: {lectura.nodo_id}</span>
+                <span className="text-gray-300 text-sm mr-2">Temp: {lectura.temperatura} °C</span>
+                <span className="text-gray-300 text-sm mr-2">Hum: {lectura.humedad} %</span>
+                <span className="text-gray-300 text-sm mr-2">CO₂: {lectura.co2} ppm</span>
+                <span className="text-gray-300 text-sm mr-2">Bioacústica: {lectura.acustica} Hz</span>
+                <span className="text-gray-300 text-sm">Ciudad: Cañas</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* Fila 3: Mapa */}
