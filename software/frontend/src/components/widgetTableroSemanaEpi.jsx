@@ -40,9 +40,8 @@ const WidgetTableroSemanaEpi = () => {
   }
 
   const summarizedData = resumirPorSemanaEpi(rawData);
-  const currentEpiWeekObj = getEpiWeek(new Date());
-  const currentYear = currentEpiWeekObj.year;
-  const currentWeek = currentEpiWeekObj.week;
+  const currentWeek = getEpiWeek(new Date());
+  const currentYear = new Date().getFullYear();
   const currentWeekKey = `${currentYear}-EW${String(currentWeek).padStart(2, '0')}`;
 
   const currentWeekData = summarizedData.find(week => week.key === currentWeekKey);

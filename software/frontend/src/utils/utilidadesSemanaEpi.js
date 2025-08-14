@@ -20,14 +20,15 @@ export const getEpiWeek = (date) => {
   }
 
   if (d < firstSunday) {
+    // Si la fecha es anterior al primer domingo del año, pertenece a la última semana del año anterior.
+    // Calculamos la semana epidemiológica para el último día del año anterior.
     const prevYearLastDay = new Date(Date.UTC(d.getFullYear() - 1, 11, 31));
-    const prevWeek = getEpiWeek(prevYearLastDay);
-    return { year: d.getFullYear() - 1, week: prevWeek.week };
+    return getEpiWeek(prevYearLastDay); // Debería devolver solo el número de semana
   }
 
   const diffDays = Math.floor((d - firstSunday) / (1000 * 60 * 60 * 24));
   const week = Math.floor(diffDays / 7) + 1;
-  return { year: d.getFullYear(), week };
+  return week;
 };
 
 /**
