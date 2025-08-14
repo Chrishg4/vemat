@@ -4,7 +4,7 @@ const pool = require('../db/connection');
 
 /**
  * @swagger
- * /api/latlog:
+ * /api/datosGeo:
  *   get:
  *     summary: Obtener id, latitud y longitud de todos los nodos
  *     tags: [Vistas]
@@ -31,14 +31,14 @@ const pool = require('../db/connection');
  *                         type: number
  */
 router.get('/', (req, res) => {
-	const query = 'SELECT id, latitud, longitud FROM nodos';
-	pool.query(query, (err, results) => {
-		if (err) {
-			console.error('❌ Error en consulta lat&log:', err);
-			return res.status(500).json({ success: false, error: 'Error al obtener datos', details: err.message });
-		}
-		res.json({ success: true, data: results });
-	});
+  const query = 'SELECT id, latitud, longitud FROM nodos';
+  pool.query(query, (err, results) => {
+    if (err) {
+      console.error('❌ Error en consulta datosGeo:', err);
+      return res.status(500).json({ success: false, error: 'Error al obtener datos', details: err.message });
+    }
+    res.json({ success: true, data: results });
+  });
 });
 
 module.exports = router;
