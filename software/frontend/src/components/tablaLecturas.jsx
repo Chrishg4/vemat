@@ -144,33 +144,33 @@ export default function TablaLecturas({ limit, showTitle = true, title = "Histor
           </span>
         )}
       </div>
-      <div className="overflow-auto rounded-xl border border-gray-700">
-        <table className="min-w-full text-sm text-gray-300">
-          <thead className="text-xs bg-gray-800 border-b border-gray-700 sticky top-0 z-10">
+  <div className="overflow-auto rounded-xl border border-[#232b36]">
+  <table className="min-w-full text-sm text-gray-100">
+          <thead className="text-xs bg-[#232b36] border-b border-[#232b36] sticky top-0 z-10">
             <tr>
-              <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Fecha</th>
-              <th className="px-5 py-4 text-left text-cyan-400 font-semibold">ID de Nodo</th>
-              <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Temperatura</th>
-              <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Humedad</th>
-              <th className="px-5 py-4 text-left text-cyan-400 font-semibold">CO₂</th>
-              <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Bioacústica</th>
-              <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Coordenadas</th>
-              <th className="px-5 py-4 text-left text-cyan-400 font-semibold">Ciudad</th>
+              <th className="px-5 py-4 text-left text-white font-semibold">Fecha</th>
+              <th className="px-5 py-4 text-left text-white font-semibold">ID de Nodo</th>
+              <th className="px-5 py-4 text-left text-[#ff9100] font-semibold">Temperatura</th>
+              <th className="px-5 py-4 text-left text-[#43a047] font-semibold">Humedad</th>
+              <th className="px-5 py-4 text-left text-[#2196f3] font-semibold">CO₂</th>
+              <th className="px-5 py-4 text-left text-[#f44336] font-semibold">Bioacústica</th>
+              <th className="px-5 py-4 text-left text-white font-semibold">Coordenadas</th>
+              <th className="px-5 py-4 text-left text-gray-300 font-semibold">Ciudad</th>
             </tr>
           </thead>
           <tbody>
             {datosPagina.map((lectura, index) => (
               <tr
                 key={index}
-                className="border-b border-gray-800 hover:bg-gray-900 transition duration-150"
+                className="border-b border-[#232b36] hover:bg-[#232b36] transition duration-150"
               >
-                <td className="px-5 py-3 whitespace-nowrap text-gray-200 font-medium">{new Date(lectura.fecha).toLocaleString('es-CR', { timeZone: 'UTC' })}</td>
-                <td className="px-5 py-3 whitespace-nowrap text-cyan-300 font-semibold">{lectura.nodo_id}</td>
-                <td className="px-5 py-3 whitespace-nowrap text-orange-300 font-semibold">{lectura.temperatura} °C</td>
-                <td className="px-5 py-3 whitespace-nowrap text-blue-300 font-semibold">{lectura.humedad} %</td>
-                <td className="px-5 py-3 whitespace-nowrap text-green-300 font-semibold">{lectura.co2} ppm</td>
-                <td className="px-5 py-3 whitespace-nowrap text-purple-300 font-semibold">{lectura.acustica} Hz</td>
-                <td className="px-5 py-3 whitespace-nowrap text-gray-300">
+                <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{new Date(lectura.fecha).toLocaleString('es-CR', { timeZone: 'UTC' })}</td>
+                <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.nodo_id}</td>
+                <td className="px-5 py-3 whitespace-nowrap text-[#ff9100] font-bold">{lectura.temperatura} °C</td>
+                <td className="px-5 py-3 whitespace-nowrap text-[#43a047] font-bold">{lectura.humedad} %</td>
+                <td className="px-5 py-3 whitespace-nowrap text-[#2196f3] font-bold">{lectura.co2} ppm</td>
+                <td className="px-5 py-3 whitespace-nowrap text-[#f44336] font-bold">{lectura.acustica} Hz</td>
+                <td className="px-5 py-3 whitespace-nowrap text-white font-bold">
                   {lectura.latitud && lectura.longitud ? 
                     `Lat: ${lectura.latitud.toFixed(5)}, Lon: ${lectura.longitud.toFixed(5)}` : 'N/A'}
                 </td>
