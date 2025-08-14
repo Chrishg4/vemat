@@ -7,7 +7,8 @@ const ChatInterface = ({
   respuesta,
   historialConsultas,
   statusIA,
-  ESTADOS_IA
+  ESTADOS_IA,
+  onDescargarChat // Nueva prop
 }) => {
   const [consulta, setConsulta] = useState('');
   const messagesEndRef = useRef(null);
@@ -48,6 +49,15 @@ const ChatInterface = ({
   return (
     <div className="mt-6 p-4 bg-gray-800 rounded-lg shadow-md flex flex-col min-h-[400px] max-h-[calc(100vh-200px)]">
       <h2 className="text-xl font-semibold text-white mb-4">Conversación con el Asistente</h2>
+      {/* Botón de descarga */}
+      <div className="flex justify-start mb-4">
+        <button
+          onClick={onDescargarChat}
+          className="px-4 py-2 rounded-lg bg-cyan-600 text-white font-semibold shadow hover:bg-cyan-700 transition"
+        >
+          Descargar Chat
+        </button>
+      </div>
 
       <div className="flex-grow overflow-y-auto pr-2 no-scrollbar">
         {historialConsultas.length === 0 && !respuesta && (

@@ -83,20 +83,52 @@ const AsistenteIA = () => {
     enviarConsulta(promptObj.prompt);
   };
 
+  const descargarHistorialChat = () => {
+    if (historialConsultas.length === 0) {
+      alert("No hay historial de chat para descargar.");
+      return;
+    }
+
+    // Formatear el historial para el archivo de texto
+    const historialFormateado = historialConsultas.map((item, index) => {
+      const pregunta = `Pregunta ${index + 1}: ${item.pregunta}`;
+      const respuesta = `Respuesta ${index + 1}: ${item.respuesta.respuesta}`;
+      return `${pregunta}
+${respuesta}
+--------------------`;
+    }).join('\n\n');
+
+    // Crear un Blob con el contenido
+    const blob = new Blob([historialFormateado], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+
+    // Crear un enlace temporal y simular un clic para la descarga
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = 'historial-chat.txt';
+    document.body.appendChild(enlace);
+    enlace.click();
+
+    // Limpiar el objeto URL y el enlace temporal
+    document.body.removeChild(enlace);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="p-4 bg-gray-900 min-h-screen">
       <h1 className="text-2xl font-bold text-white mb-4">Asistente IA VEMAT</h1>
-  <IndicadorEstadoIA status={statusIA} />
+      <IndicadorEstadoIA status={statusIA} />
 
-  <SelectorPrompt onSelectPrompt={usarPromptSugerido} />
+      <SelectorPrompt onSelectPrompt={usarPromptSugerido} />
 
-  <InterfazChat
+      <InterfazChat
         enviarConsulta={enviarConsulta}
         isLoadingQuery={isLoadingQuery}
         respuesta={respuesta}
         historialConsultas={historialConsultas}
         statusIA={statusIA}
         ESTADOS_IA={ESTADOS_IA}
+        onDescargarChat={descargarHistorialChat}
       />
     </div>
   );
