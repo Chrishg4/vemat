@@ -35,22 +35,43 @@ export default function VistaTablero() {
           <IndicadorGauge />
         </div>
 
-        {/* Fila 2: Lecturas Recientes (solo últimas 5, sin tabla paginada) */}
-        <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
-          <h2 className="text-white text-xl font-semibold mb-4">Lecturas Recientes</h2>
-          <ul className="divide-y divide-gray-700">
-            {[...(data || [])].slice(-5).reverse().map((lectura, idx) => (
-              <li key={idx} className="py-2 flex flex-wrap justify-between items-center">
-                <span className="text-gray-300 text-sm font-medium mr-2">{new Date(lectura.fecha).toLocaleString('es-CR', { timeZone: 'UTC' })}</span>
-                <span className="text-cyan-400 text-sm mr-2">Nodo: {lectura.nodo_id}</span>
-                <span className="text-gray-300 text-sm mr-2">Temp: {lectura.temperatura} °C</span>
-                <span className="text-gray-300 text-sm mr-2">Hum: {lectura.humedad} %</span>
-                <span className="text-gray-300 text-sm mr-2">CO₂: {lectura.co2} ppm</span>
-                <span className="text-gray-300 text-sm mr-2">Bioacústica: {lectura.acustica} Hz</span>
-                <span className="text-gray-300 text-sm">Ciudad: Cañas</span>
-              </li>
-            ))}
-          </ul>
+        {/* Fila 2: Lecturas Recientes con estilo de tabla */}
+  <div className="bg-[#232b36] p-6 rounded-2xl shadow-2xl w-full border border-[#232b36] md:col-span-2">
+          <h2 className="text-white text-2xl font-bold mb-6 tracking-wide">Lecturas Recientes</h2>
+          <div className="overflow-auto rounded-xl border border-[#232b36]">
+            <table className="min-w-full text-sm text-gray-100">
+              <thead className="text-xs bg-[#232b36] border-b border-[#232b36] sticky top-0 z-10">
+                <tr>
+                  <th className="px-5 py-4 text-left text-white font-semibold">Fecha</th>
+                  <th className="px-5 py-4 text-left text-[#00bcd4] font-semibold">ID de Nodo</th>
+                  <th className="px-5 py-4 text-left text-[#ff9100] font-semibold">Temperatura</th>
+                  <th className="px-5 py-4 text-left text-[#43a047] font-semibold">Humedad</th>
+                  <th className="px-5 py-4 text-left text-[#2196f3] font-semibold">CO₂</th>
+                  <th className="px-5 py-4 text-left text-[#f44336] font-semibold">Bioacústica</th>
+                  <th className="px-5 py-4 text-left text-white font-semibold">Coordenadas</th>
+                  <th className="px-5 py-4 text-left text-gray-300 font-semibold">Ciudad</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...(data || [])].slice(-5).reverse().map((lectura, idx) => (
+                  <tr key={idx} className="border-b border-[#232b36] hover:bg-[#232b36] transition duration-150">
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{new Date(lectura.fecha).toLocaleString('es-CR', { timeZone: 'UTC' })}</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.nodo_id}</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-[#ff9100] font-bold">{lectura.temperatura} °C</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-[#43a047] font-bold">{lectura.humedad} %</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-[#2196f3] font-bold">{lectura.co2} ppm</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-[#f44336] font-bold">{lectura.acustica} Hz</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">
+                      {lectura.latitud && lectura.longitud
+                        ? `${lectura.latitud}, ${lectura.longitud}`
+                        : <span className="text-gray-500 italic">No disponible</span>}
+                    </td>
+                    <td className="px-5 py-3 whitespace-nowrap text-gray-300">Cañas</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Fila 3: Mapa */}
