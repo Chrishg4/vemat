@@ -39,17 +39,22 @@ export default function CO2EpiWeekChart() {
         <div className="flex items-center">
           <span className="text-gray-400 font-semibold mr-2">Filtrar por año:</span>
           {years.length > 0 && (
-            <select
-              value={selectedYear || ''}
-              onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
-              className="px-3 py-2 rounded-lg font-semibold transition focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow bg-gray-800 text-cyan-300 hover:bg-cyan-700"
-            >
-              {years.map(year => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
+            <div className="relative inline-block w-[140px]">
+              <select
+                value={selectedYear || ''}
+                onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
+                className="appearance-none border border-cyan-500 rounded-lg px-3 py-2 pr-8 bg-gray-800 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow cursor-pointer transition duration-150 w-full"
+              >
+                {years.map(year => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute top-1/2 right-3 transform -translate-y-1/2 text-white">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+              </span>
+            </div>
           )}
         </div>
       </div>

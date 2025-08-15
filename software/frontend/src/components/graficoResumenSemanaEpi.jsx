@@ -50,16 +50,21 @@ const GraficoResumenSemanaEpi = ({ data }) => {
       </h2>
       <div className="mb-4 flex items-center">
         <label htmlFor="metric-select" className="mr-2 font-semibold text-gray-300">Seleccionar Métrica:</label>
-        <select
-          id="metric-select"
-          value={selectedMetric}
-          onChange={(e) => setSelectedMetric(e.target.value)}
-          className="px-3 py-2 rounded-lg font-semibold transition focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow bg-gray-800 text-cyan-300 hover:bg-cyan-700"
-        >
-          {Object.keys(metricOptions).map(key => (
-            <option key={key} value={key}>{metricOptions[key].label}</option>
-          ))}
-        </select>
+        <div className="relative inline-block w-[140px]">
+          <select
+            id="metric-select"
+            value={selectedMetric}
+            onChange={(e) => setSelectedMetric(e.target.value)}
+            className="appearance-none border border-cyan-500 rounded-lg px-3 py-2 pr-8 bg-gray-800 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow cursor-pointer transition duration-150 w-full"
+          >
+            {Object.keys(metricOptions).map(key => (
+              <option key={key} value={key}>{metricOptions[key].label}</option>
+            ))}
+          </select>
+          <span className="pointer-events-none absolute top-1/2 right-3 transform -translate-y-1/2 text-cyan-400">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-white"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+          </span>
+        </div>
       </div>
       <ResponsiveContainer width="100%" height={320}>
         <LineChart data={chartData}>
@@ -70,7 +75,7 @@ const GraficoResumenSemanaEpi = ({ data }) => {
             tick={{ fill: "#ccc" }}
             tickFormatter={formatNumber}
           />
-          <Tooltip formatter={(value) => [`${formatNumber(value)} ${currentMetric.unit}`, '']}/>
+          <Tooltip formatter={(value) => [`${formatNumber(value)} ${currentMetric.unit}`, '']} />
           <Legend />
           <Line
             type="monotone"
@@ -83,16 +88,16 @@ const GraficoResumenSemanaEpi = ({ data }) => {
           <Line
             type="monotone"
             dataKey="min"
-            stroke="#8884d8" // A different color for min
-            strokeDasharray="5 5" // Dashed line for min
+            stroke="#8884d8"
+            strokeDasharray="5 5"
             dot={false}
             name={`Mínimo ${currentMetric.label}`}
           />
           <Line
             type="monotone"
             dataKey="max"
-            stroke="#82ca9d" // A different color for max
-            strokeDasharray="5 5" // Dashed line for max
+            stroke="#82ca9d"
+            strokeDasharray="5 5"
             dot={false}
             name={`Máximo ${currentMetric.label}`}
           />

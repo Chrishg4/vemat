@@ -82,15 +82,20 @@ export default function VistaTablero() {
         {/* Fila 4: Gráfica */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
           <div className="flex justify-end mb-4">
-            <select
-              value={chartMode}
-              onChange={(e) => setChartMode(e.target.value)}
-              className="bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-            >
-              <option value="line">Líneas</option>
-              <option value="bar">Barras</option>
-              <option value="area">Área</option>
-            </select>
+            <div className="relative inline-block w-[140px]">
+              <select
+                value={chartMode}
+                onChange={(e) => setChartMode(e.target.value)}
+                className="appearance-none border border-cyan-500 rounded-lg px-3 py-2 pr-8 bg-gray-800 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow cursor-pointer transition duration-150 w-full"
+              >
+                <option value="line">Líneas</option>
+                <option value="bar">Barras</option>
+                <option value="area">Área</option>
+              </select>
+              <span className="pointer-events-none absolute top-1/2 right-3 transform -translate-y-1/2 text-white">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+              </span>
+            </div>
           </div>
           <GraficoTempHumedad chartMode={chartMode} />
         </div>
