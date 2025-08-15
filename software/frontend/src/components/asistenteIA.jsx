@@ -83,53 +83,41 @@ const AsistenteIA = () => {
     enviarConsulta(promptObj.prompt);
   };
 
-  const descargarHistorialChat = () => {
-    if (historialConsultas.length === 0) {
-      alert("No hay historial de chat para descargar.");
-      return;
-    }
-
-    // Formatear el historial para el archivo de texto
-    const historialFormateado = historialConsultas.map((item, index) => {
-      const pregunta = `Pregunta ${index + 1}: ${item.pregunta}`;
-      const respuesta = `Respuesta ${index + 1}: ${item.respuesta.respuesta}`;
-      return `${pregunta}
-${respuesta}
---------------------`;
-    }).join('\n\n');
-
-    // Crear un Blob con el contenido
-    const blob = new Blob([historialFormateado], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-
-    // Crear un enlace temporal y simular un clic para la descarga
-    const enlace = document.createElement('a');
-    enlace.href = url;
-    enlace.download = 'historial-chat.txt';
-    document.body.appendChild(enlace);
-    enlace.click();
-
-    // Limpiar el objeto URL y el enlace temporal
-    document.body.removeChild(enlace);
-    URL.revokeObjectURL(url);
-  };
-
   return (
-    <div className="p-4 bg-gray-900 min-h-screen">
-      <h1 className="text-2xl font-bold text-white mb-4">Asistente IA VEMAT</h1>
-      <IndicadorEstadoIA status={statusIA} />
+    <div className="p-4 bg-gray-900 min-h-screen flex flex-col items-center">
+      <div className="w-full max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-white mb-2">Asistente IA VEMAT</h1>
+        <div className="border-b border-cyan-600 mb-6"></div>
+        <IndicadorEstadoIA status={statusIA} />
 
-      <SelectorPrompt onSelectPrompt={usarPromptSugerido} />
+        {/* Prompts rápidos en tarjetas tipo grid */}
+        <div className="bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
+          <h2 className="text-lg font-semibold text-white mb-4">Prompts Rápidos</h2>
+          <SelectorPrompt
+            onSelectPrompt={usarPromptSugerido}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+            cardStyle="bg-gray-900 text-gray-100 rounded-xl shadow-md p-6 flex items-center gap-4 transition-transform hover:-translate-y-1 hover:shadow-xl border border-gray-700 cursor-pointer"
+            iconStyle="text-3xl mr-3"
+          />
+        </div>
 
-      <InterfazChat
-        enviarConsulta={enviarConsulta}
-        isLoadingQuery={isLoadingQuery}
-        respuesta={respuesta}
-        historialConsultas={historialConsultas}
-        statusIA={statusIA}
-        ESTADOS_IA={ESTADOS_IA}
-        onDescargarChat={descargarHistorialChat}
-      />
+        {/* Panel de conversación con burbujas y sombra */}
+        <div className="bg-gray-800 rounded-2xl shadow-lg p-6">
+          <h2 className="text-lg font-semibold text-white mb-4">Conversación con el Asistente</h2>
+          <InterfazChat
+            enviarConsulta={enviarConsulta}
+            isLoadingQuery={isLoadingQuery}
+            respuesta={respuesta}
+            historialConsultas={historialConsultas}
+            statusIA={statusIA}
+            ESTADOS_IA={ESTADOS_IA}
+            bubbleStyle="rounded-xl px-4 py-3 mb-2 shadow-md bg-gray-900 text-gray-100 animate-fade-in"
+            inputStyle="rounded-lg px-4 py-2 bg-gray-900 text-white border border-cyan-600 shadow focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            sendButtonStyle="rounded-lg px-4 py-2 bg-cyan-600 text-white font-semibold shadow hover:bg-cyan-700 transition ml-2"
+            downloadButtonStyle="rounded-lg px-4 py-2 bg-cyan-600 text-white font-semibold shadow hover:bg-cyan-700 transition mb-4 flex items-center gap-2"
+          />
+        </div>
+      </div>
     </div>
   );
 };
