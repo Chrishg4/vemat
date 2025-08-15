@@ -53,7 +53,7 @@ const ChatInterface = ({
       <div className="flex justify-start mb-4">
         <button
           onClick={onDescargarChat}
-          className="px-4 py-2 rounded-lg bg-cyan-600 text-white font-semibold shadow hover:bg-cyan-700 transition"
+          className="px-6 py-3 rounded-lg bg-cyan-600 text-white font-semibold shadow hover:bg-cyan-700 transition"
         >
           Descargar Chat
         </button>
