@@ -64,10 +64,10 @@ export default function VistaTablero() {
                     <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{new Date(lectura.fecha).toLocaleDateString('es-CR', { timeZone: 'UTC' })}</td>
                     <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{new Date(lectura.fecha).toLocaleTimeString('es-CR', { timeZone: 'UTC' })}</td>
                     <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.nodo_id}</td>
-                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.temperatura} °C</td>
-                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.humedad} %</td>
-                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.co2} ppm</td>
-                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.acustica} Hz</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-[#ff9100] font-bold">{lectura.temperatura} °C</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-[#43a047] font-bold">{lectura.humedad} %</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-[#2196f3] font-bold">{lectura.co2} ppm</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-[#f44336] font-bold">{lectura.acustica} Hz</td>
                     <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.latitud !== undefined ? Number(lectura.latitud).toFixed(5) : 'N/A'}</td>
                     <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.longitud !== undefined ? Number(lectura.longitud).toFixed(5) : 'N/A'}</td>
                     <td className="px-5 py-3 whitespace-nowrap text-gray-300"><UbicacionFromCoordenadas lat={lectura.latitud} lon={lectura.longitud} /></td>
