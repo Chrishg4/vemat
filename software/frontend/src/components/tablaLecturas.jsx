@@ -7,19 +7,20 @@ export default function TablaLecturas({ limit, showTitle = true, title = "Histor
   const descargarCSV = () => {
     if (!datosFiltrados.length) return;
     const encabezados = [
-      'Fecha', 'ID de Nodo', 'Temperatura', 'Humedad', 'CO₂', 'Bioacústica', 'Coordenadas', 'Ciudad'
+      'Fecha', 'ID de Nodo', 'Temperatura', 'Humedad', 'CO₂', 'Bioacústica', 'Latitud', 'Longitud', 'Ciudad'
     ];
     // Usar punto y coma como delimitador para compatibilidad con Excel en español
     const delimiter = ';';
     const filas = datosFiltrados.map(lectura => [
-      new Date(lectura.fecha).toLocaleString('es-CR', { timeZone: 'UTC' }),
-      lectura.nodo_id,
-      `${lectura.temperatura} °C`,
-      `${lectura.humedad} %`,
-      `${lectura.co2} ppm`,
-      `${lectura.acustica} Hz`,
-      lectura.latitud && lectura.longitud ? `${lectura.latitud.toFixed(5)}, ${lectura.longitud.toFixed(5)}` : 'N/A',
-      '' // Placeholder for city, will be fetched dynamically
+  new Date(lectura.fecha).toLocaleString('es-CR', { timeZone: 'UTC' }),
+  lectura.nodo_id,
+  `${lectura.temperatura} °C`,
+  `${lectura.humedad} %`,
+  `${lectura.co2} ppm`,
+  `${lectura.acustica} Hz`,
+  lectura.latitud !== undefined ? lectura.latitud.toFixed(5) : 'N/A',
+  lectura.longitud !== undefined ? lectura.longitud.toFixed(5) : 'N/A',
+  '' // Placeholder for city, will be fetched dynamically
     ].map(valor => {
       // Eliminar solo caracteres de control, permitir ñ y tildes
       return String(valor).replace(/[\u0000-\u001f\u007f]/g, '');
@@ -154,7 +155,8 @@ export default function TablaLecturas({ limit, showTitle = true, title = "Histor
               <th className="px-5 py-4 text-left text-[#43a047] font-semibold">Humedad</th>
               <th className="px-5 py-4 text-left text-[#2196f3] font-semibold">CO₂</th>
               <th className="px-5 py-4 text-left text-[#f44336] font-semibold">Bioacústica</th>
-              <th className="px-5 py-4 text-left text-white font-semibold">Coordenadas</th>
+              <th className="px-5 py-4 text-left text-white font-semibold">Latitud</th>
+              <th className="px-5 py-4 text-left text-white font-semibold">Longitud</th>
               <th className="px-5 py-4 text-left text-gray-300 font-semibold">Ciudad</th>
             </tr>
           </thead>
@@ -171,8 +173,10 @@ export default function TablaLecturas({ limit, showTitle = true, title = "Histor
                 <td className="px-5 py-3 whitespace-nowrap text-[#2196f3] font-bold">{lectura.co2} ppm</td>
                 <td className="px-5 py-3 whitespace-nowrap text-[#f44336] font-bold">{lectura.acustica} Hz</td>
                 <td className="px-5 py-3 whitespace-nowrap text-white font-bold">
-                  {lectura.latitud && lectura.longitud ? 
-                    `Lat: ${lectura.latitud.toFixed(5)}, Lon: ${lectura.longitud.toFixed(5)}` : 'N/A'}
+                  {lectura.latitud !== undefined ? lectura.latitud.toFixed(5) : 'N/A'}
+                </td>
+                <td className="px-5 py-3 whitespace-nowrap text-white font-bold">
+                  {lectura.longitud !== undefined ? lectura.longitud.toFixed(5) : 'N/A'}
                 </td>
                 <td className="px-5 py-3 whitespace-nowrap text-gray-300">
                   <UbicacionFromCoordenadas lat={lectura.latitud} lon={lectura.longitud} />

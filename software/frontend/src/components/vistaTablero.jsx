@@ -48,7 +48,8 @@ export default function VistaTablero() {
                   <th className="px-5 py-4 text-left text-[#43a047] font-semibold">Humedad</th>
                   <th className="px-5 py-4 text-left text-[#2196f3] font-semibold">CO₂</th>
                   <th className="px-5 py-4 text-left text-[#f44336] font-semibold">Bioacústica</th>
-                  <th className="px-5 py-4 text-left text-white font-semibold">Coordenadas</th>
+                  <th className="px-5 py-4 text-left text-white font-semibold">Latitud</th>
+                  <th className="px-5 py-4 text-left text-white font-semibold">Longitud</th>
                   <th className="px-5 py-4 text-left text-gray-300 font-semibold">Ciudad</th>
                 </tr>
               </thead>
@@ -62,9 +63,10 @@ export default function VistaTablero() {
                     <td className="px-5 py-3 whitespace-nowrap text-[#2196f3] font-bold">{lectura.co2} ppm</td>
                     <td className="px-5 py-3 whitespace-nowrap text-[#f44336] font-bold">{lectura.acustica} Hz</td>
                     <td className="px-5 py-3 whitespace-nowrap text-white font-bold">
-                      {lectura.latitud && lectura.longitud
-                        ? `${lectura.latitud}, ${lectura.longitud}`
-                        : <span className="text-gray-500 italic">No disponible</span>}
+                      {lectura.latitud !== undefined ? lectura.latitud : <span className="text-gray-500 italic">N/A</span>}
+                    </td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">
+                      {lectura.longitud !== undefined ? lectura.longitud : <span className="text-gray-500 italic">N/A</span>}
                     </td>
                     <td className="px-5 py-3 whitespace-nowrap text-gray-300">Cañas</td>
                   </tr>
