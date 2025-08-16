@@ -56,7 +56,7 @@ export default function FormularioInicioSesion() {
             <p className="text-base text-gray-400 mt-0 mb-0">Accede al sistema de monitoreo</p>
           </div>
           <div className="flex-shrink-0 ml-4">
-            <img src="/src/assets/img/vemat3.png" alt="Logo VEMAT" style={{ width: '170px', height: 'auto' }} />
+            <img src="/vemat3.png" alt="Logo VEMAT" style={{ width: '170px', height: 'auto' }} />
           </div>
         </div>
 
