@@ -13,7 +13,7 @@ export default function Encabezado() {
         <h1 className="text-xl font-bold flex-1 text-center mx-auto flex items-center justify-center">
           
           <GiAmberMosquito className="mr-2 text-yellow-400 text-2xl" />
-          Sistema de monitoreo ecoepidemiológico de los mosquitos
+          Sistema de Vigilancia Eco-epidemiológico de Mosquitos
         </h1>
         
         <div className="w-48">{/* Espacio para mantener el título centrado */}</div>

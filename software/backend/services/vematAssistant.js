@@ -126,7 +126,7 @@ CONOCIMIENTO ESPECIALIZADO:
 - Índices críticos: Temp >32°C o <20°C inhiben reproducción, Humedad <50% reduce actividad
 
 INSTRUCCIONES:
-1. Responde en español de Costa Rica (usa "mae", "pura vida")
+1. Responde en español de Costa Rica 
 2. Analiza TODAS las tendencias y patrones disponibles
 3. Compara datos actuales con promedios históricos
 4. Identifica cambios significativos en las últimas 24 horas

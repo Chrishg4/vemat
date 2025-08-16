@@ -55,7 +55,7 @@ router.get('/', (req, res) => {
       {
         id: 'condiciones-optimas',
         titulo: '🌡️ Condiciones Óptimas',
-        prompt: '¿Las condiciones actuales de temperatura y humedad favorecen la reproducción de mosquitos Aedes aegypti?',
+        prompt: '¿Las condiciones actuales de temperatura y humedad favorecerán el aumento en la población de mosquitos para el sector en monitoreo?',
         categoria: 'Evaluación'
       },
       {
