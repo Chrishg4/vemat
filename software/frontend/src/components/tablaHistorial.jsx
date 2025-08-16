@@ -14,7 +14,7 @@ export default function HistoryTable({ historial }) {
           </tr>
         </thead>
         <tbody>
-          {historial.map((item, index) => (
+          {[...historial].reverse().map((item, index) => (
             <tr
               key={index}
               className="border-b border-gray-200 hover:bg-gray-100 transition"
