@@ -2,7 +2,7 @@
 
 ## 1. Información del Proyecto
 
-**Nombre del Proyecto:** VEMAT (Vigilancia Ecológica de Mosquitos con Asistencia Tecnológica)
+**Nombre del Proyecto:** VEMAT (Vigilancia Eco-epidemiológica de Mosquitos con Asistencia Tecnológica)
 
 **Título Completo:** "MONITORIZACIÓN AMBIENTAL INTELIGENTE PARA LA PREVENCIÓN DE ENFERMEDADES VECTORIALES: DETECCIÓN DE HÁBITATS DE MOSQUITOS EN ALCANTARILLADOS URBANOS UTILIZANDO ARDUINO Y SENSORES"
 
@@ -21,36 +21,37 @@
 ## 2. Descripción y Justificación
 
 **Problema que se aborda:**
-Las enfermedades transmitidas por mosquitos (dengue, zika, chikungunya, etc.) representan un problema de salud pública significativo en entornos urbanos. Los sistemas de alcantarillado, tanto pluvial como sanitario, son conocidos por ser refugios ideales para la reproducción y supervivencia de estos vectores debido a sus condiciones ambientales específicas. La falta de información en tiempo real sobre estas condiciones dificulta la implementación de estrategias de control y prevención efectivas.
+Problema que se aborda: Las enfermedades transmitidas por mosquitos (Dengue, Zika, Chikungunya, entre otras) representan un problema de salud pública significativo en entornos urbanos. Los sistemas de alcantarillado, tanto pluvial como sanitario, son conocidos por ser refugios ideales para la reproducción y supervivencia de estos vectores debido a sus condiciones ambientales específicas. La falta de información en tiempo real sobre estas condiciones dificulta la implementación de estrategias de control y prevención efectivas.
 
 **Importancia y contexto:**
-Los mosquitos transmisores de enfermedades encuentran en los alcantarillados urbanos las condiciones perfectas para su proliferación: alta humedad, temperaturas estables, materia orgánica y refugio. El monitoreo continuo de estas condiciones ambientales permite predecir y prevenir brotes de enfermedades vectoriales, protegiendo la salud pública.
+Los mosquitos son transmisores de enfermedades arbovirales, y utilizan durante el día los alcantarillados urbanos como refugios debido a las condiciones de temperaturas y humedad relativa que podrían imperar en esos sitios lo cual los hace idóneos. El monitoreo continuo de estas condiciones ambientales permitiría, predecir y prevenir brotes de enfermedades vectoriales principalmente en entornos urbanos, protegiendo la salud de las personas y maximizando los recursos económicos y humanos en salud pública destinados al control de vectores.
 
 **Usuarios/beneficiarios:**
 - Autoridades de salud pública
 - Gobiernos locales y municipales
 - Comunidades urbanas en riesgo
-- Investigadores en epidemiología y control vectorial
+- Investigadores en epidemiología y control vectorial universitarios 
 - Organizaciones de prevención sanitaria
 
 ## 3. Objetivos del Proyecto
 
 **Objetivo General:**
-Desarrollar un sistema de monitoreo ambiental basado en tecnología Arduino y sensores para identificar y predecir condiciones ambientales propicias para la proliferación de mosquitos transmisores de enfermedades en alcantarillados urbanos, con el fin de mejorar las estrategias de prevención y control.
+Objetivo General: Desarrollar un sistema de monitoreo ambiental basado en el uso de tecnología Arduino y sensores para la identificación y predicción de las condiciones ambientales que influyen directamente en la proliferación de las poblaciones mosquitos transmisores de enfermedades vectoriales presentes en alcantarillados urbanos, como estrategia de prevención y control.
 
 **Objetivos Específicos:**
-1. Diseñar e implementar estaciones de monitoreo autónomas utilizando ESP32/Arduino para la recolección de datos ambientales clave (temperatura, humedad relativa, dióxido de carbono y gases relevantes) en salidas de alcantarillas urbanas
-2. Desarrollar una API REST para recepción, almacenamiento y gestión de datos de sensores ambientales
-3. Crear una base de datos para almacenar y gestionar la información ambiental recolectada
-4. Desarrollar un modelo de predicción que correlacione las variables ambientales con la probabilidad de presencia y proliferación de mosquitos vectores
-5. Generar visualizaciones y reportes de las condiciones ambientales y las predicciones de riesgo para facilitar la toma de decisiones por parte de las autoridades de salud
-6. Evaluar la viabilidad y efectividad del sistema en un entorno urbano real
+1.	Diseñar estaciones de monitoreo autónomas utilizando ESP32/Arduino para la recolección de datos ambientales clave (temperatura, bioacuática de vuelo, humedad relativa, dióxido de carbono y gases relevantes) en salidas de alcantarillas urbanas. 
+2.	Construir una API REST para la recepción, almacenamiento y gestión de datos de sensores ambientales registrados 
+3.	Crear una base de datos para el almacenamiento y gestión de la información ambiental registrada a través del sensor 
+4.	Desarrollar un modelo de predicción que correlacione las variables ambientales para la determinación de presencia de mosquitos vectores
+5.	Generar visualizaciones y reportes de las condiciones ambientales presentes en los sitios de monitoreo para la predicción del nivel riesgo que facilite la toma de decisiones por parte de las autoridades de salud pública. 
+6.	Evaluar la viabilidad y efectividad operativa del sistema en un entorno urbano bajo condiciones ambientales reales. 
+
 
 ## 4. Requisitos Iniciales
 
 Lista de lo que el sistema debe lograr:
 
-**Requisito 1:** El sistema debe monitorear temperatura, humedad relativa, CO2 y gases volátiles en tiempo real en estaciones ubicadas en salidas de alcantarillas urbanas
+**Requisito 1:** El sistema debe tener la capacidad de registrar datos temperatura de aire, humedad relativa, CO2, bioacuática de vuelo y gases volátiles en tiempo real en estaciones ubicadas en salidas de alcantarillas urbanas
 **Requisito 2:** Las estaciones deben ser autónomas, resistentes al agua y transmitir datos vía WiFi a un sistema central
 **Requisito 3:** La API debe almacenar datos ambientales en base de datos MySQL y proporcionar endpoints REST documentados para análisis
 **Requisito 4:** El sistema debe generar alertas automáticas cuando las condiciones ambientales indiquen alto riesgo de proliferación de mosquitos vectores
@@ -103,7 +104,7 @@ Lista de lo que el sistema debe lograr:
 | 2 | Desarrollo de API REST y documentación | Semana 2-3 | ✅ Completado |
 | 3 | Integración de sensores y recolección de datos | Semana 3-4 | ✅ Completado |
 | 4 | Implementación de geolocalización | Semana 4 | ✅ Completado |
-| 5 | Dashboard para autoridades de salud pública | Semana 5-6 | 🔄 En progreso |
+| 5 | Dashboard para autoridades de salud pública | Semana 5-6 | ✅ Completado |
 | 6 | Modelo predictivo de riesgo vectorial | Semana 6-7 | 📋 Planeado |
 | 7 | Instalación piloto en alcantarillas urbanas | Semana 7-8 | 📋 Planeado |
 | 8 | Validación con datos entomológicos | Semana 8-9 | 📋 Planeado |
