@@ -105,9 +105,8 @@ Lista de lo que el sistema debe lograr:
 | 3 | Integración de sensores y recolección de datos | Semana 3-4 | ✅ Completado |
 | 4 | Implementación de geolocalización | Semana 4 | ✅ Completado |
 | 5 | Dashboard para autoridades de salud pública | Semana 5-6 | ✅ Completado |
-| 6 | Modelo predictivo de riesgo vectorial | Semana 6-7 | 📋 Planeado |
-| 7 | Instalación piloto en alcantarillas urbanas | Semana 7-8 | 📋 Planeado |
-| 8 | Validación con datos entomológicos | Semana 8-9 | 📋 Planeado |
+| 6 | Modelo predictivo de riesgo vectorial | Semana 6-7 | ✅ Completado |
+|
 
 **Riesgos identificados y mitigaciones:**
 
