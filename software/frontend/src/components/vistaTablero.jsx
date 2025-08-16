@@ -1,6 +1,7 @@
 // src/components/vistaTablero.jsx
 import React, { useState } from "react";
 import IndicadorGauge from "./indicadorGauge";
+import UbicacionFromCoordenadas from "./ubicacióndeCoordenadas";
 import GraficoTempHumedad from "./graficoTempHumedad";
 import VistaMapa from "./vistaMapa";
 import TablaLecturas from "./tablaLecturas";
@@ -37,13 +38,14 @@ export default function VistaTablero() {
 
         {/* Fila 2: Lecturas Recientes con estilo de tabla */}
   <div className="bg-[#232b36] p-6 rounded-2xl shadow-2xl w-full border border-[#232b36] md:col-span-2">
-          <h2 className="text-white text-2xl font-bold mb-6 tracking-wide">Lecturas Recientes</h2>
-          <div className="overflow-auto rounded-xl border border-[#232b36]">
+          <h2 className="text-white text-2xl font-bold tracking-wide mb-4">Lecturas Recientes</h2>
+          <div className="overflow-auto rounded-xl border border-[#232b36] bg-[#232b36]">
             <table className="min-w-full text-sm text-gray-100">
               <thead className="text-xs bg-[#232b36] border-b border-[#232b36] sticky top-0 z-10">
-                <tr>
+                <tr className="bg-[#232b36] border-b border-[#232b36]">
                   <th className="px-5 py-4 text-left text-white font-semibold">Fecha</th>
-                  <th className="px-5 py-4 text-left text-[#00bcd4] font-semibold">ID de Nodo</th>
+                  <th className="px-5 py-4 text-left text-white font-semibold">Hora</th>
+                  <th className="px-5 py-4 text-left text-white font-semibold">ID de Nodo</th>
                   <th className="px-5 py-4 text-left text-[#ff9100] font-semibold">Temperatura</th>
                   <th className="px-5 py-4 text-left text-[#43a047] font-semibold">Humedad</th>
                   <th className="px-5 py-4 text-left text-[#2196f3] font-semibold">CO₂</th>
@@ -55,20 +57,20 @@ export default function VistaTablero() {
               </thead>
               <tbody>
                 {[...(data || [])].slice(-5).reverse().map((lectura, idx) => (
-                  <tr key={idx} className="border-b border-[#232b36] hover:bg-[#232b36] transition duration-150">
-                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{new Date(lectura.fecha).toLocaleString('es-CR', { timeZone: 'UTC' })}</td>
+                  <tr
+                    key={idx}
+                    className="text-center border-b border-gray-800 bg-[#1a2232] hover:bg-[#232b36] transition duration-150"
+                  >
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{new Date(lectura.fecha).toLocaleDateString('es-CR', { timeZone: 'UTC' })}</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{new Date(lectura.fecha).toLocaleTimeString('es-CR', { timeZone: 'UTC' })}</td>
                     <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.nodo_id}</td>
-                    <td className="px-5 py-3 whitespace-nowrap text-[#ff9100] font-bold">{lectura.temperatura} °C</td>
-                    <td className="px-5 py-3 whitespace-nowrap text-[#43a047] font-bold">{lectura.humedad} %</td>
-                    <td className="px-5 py-3 whitespace-nowrap text-[#2196f3] font-bold">{lectura.co2} ppm</td>
-                    <td className="px-5 py-3 whitespace-nowrap text-[#f44336] font-bold">{lectura.acustica} Hz</td>
-                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">
-                      {lectura.latitud !== undefined ? lectura.latitud : <span className="text-gray-500 italic">N/A</span>}
-                    </td>
-                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">
-                      {lectura.longitud !== undefined ? lectura.longitud : <span className="text-gray-500 italic">N/A</span>}
-                    </td>
-                    <td className="px-5 py-3 whitespace-nowrap text-gray-300">Cañas</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.temperatura} °C</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.humedad} %</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.co2} ppm</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.acustica} Hz</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.latitud !== undefined ? Number(lectura.latitud).toFixed(5) : 'N/A'}</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-white font-bold">{lectura.longitud !== undefined ? Number(lectura.longitud).toFixed(5) : 'N/A'}</td>
+                    <td className="px-5 py-3 whitespace-nowrap text-gray-300"><UbicacionFromCoordenadas lat={lectura.latitud} lon={lectura.longitud} /></td>
                   </tr>
                 ))}
               </tbody>

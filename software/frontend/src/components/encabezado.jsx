@@ -1,4 +1,3 @@
-// src/components/encabezado.jsx
 import React from "react";
 import { GiAmberMosquito } from "react-icons/gi";
 
