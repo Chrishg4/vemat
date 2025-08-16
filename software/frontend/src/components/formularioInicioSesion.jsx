@@ -1,7 +1,8 @@
 // src/components/formularioInicioSesion.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useInicioSesion } from '../use/useInicioSesion';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 
 export default function FormularioInicioSesion() {
   const {
@@ -16,28 +17,52 @@ export default function FormularioInicioSesion() {
     toggleMostrarContrasena
   } = useInicioSesion();
 
+  // Toaster state
+  const [showToast, setShowToast] = useState(false);
+  const [toastType, setToastType] = useState(''); // 'success' | 'error'
+  const [toastMsg, setToastMsg] = useState('');
+
+  useEffect(() => {
+    if (loginExitoso) {
+      setToastType('success');
+      setToastMsg('¡Login exitoso! Cargando sistema...');
+      setShowToast(true);
+    } else if (error) {
+      setToastType('error');
+      setToastMsg(error);
+      setShowToast(true);
+    }
+  }, [loginExitoso, error]);
   return (
-    <div className="flex items-center justify-center p-4">
-      <div className="relative p-8 rounded-xl shadow-2xl w-full max-w-xl text-gray-200 bg-white/10 backdrop-blur-lg border border-white/20">
-        
-        <div className="text-center mb-10">
-          <p className="text-xl mt-2">Vigilancia Ecológica</p>
-          <p className="text-base text-gray-400">Accede al sistema de monitoreo</p>
+    <div className="flex items-center justify-center min-h-screen">
+      {/* Toaster flotante arriba derecha */}
+      {showToast && (
+        <div className={`fixed top-6 right-8 z-50 min-w-[260px] p-3 rounded-xl shadow-xl flex items-center gap-3 ${toastType === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'} animate-fade-in`}>
+          <span className="text-2xl">
+            {toastType === 'success' ? <MdCheckCircle /> : <MdError />}
+          </span>
+          <span className="font-semibold text-base">{toastMsg}</span>
+          <button
+            className="ml-auto text-white text-lg font-bold bg-transparent hover:text-red-400 focus:outline-none"
+            onClick={() => setShowToast(false)}
+            aria-label="Cerrar notificación"
+          >×</button>
+        </div>
+      )}
+      <div className="relative py-10 px-12 rounded-3xl shadow-2xl w-full max-w-xl text-gray-200 bg-white/10 backdrop-blur-lg border border-white/20 flex flex-col justify-center">
+  <div className="flex flex-row items-center justify-between mb-2">
+          <div className="text-left">
+            <p className="text-4xl font-bold text-black-400 mb-0 mt-0">¡Bienvenido!</p>
+            <p className="text-base text-gray-400 mt-0 mb-0">Accede al sistema de monitoreo</p>
+          </div>
+          <div className="flex-shrink-0 ml-4">
+            <img src="/vemat3.png" alt="Logo VEMAT" style={{ width: '170px', height: 'auto' }} />
+          </div>
         </div>
 
-        {loginExitoso && (
-          <div className="p-3 mb-4 rounded text-center text-sm font-medium bg-green-600 text-white">
-            ¡Login exitoso! Cargando sistema...
-          </div>
-        )}
+  {/* Mensajes ahora se muestran como toaster flotante */}
 
-        {error && (
-          <div className="p-3 mb-4 rounded text-center text-sm font-medium bg-red-600 text-white">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="mt-8">
           <div className="mb-4">
             <label htmlFor="usuario" className="block text-sm font-medium mb-2">Usuario o Email</label>
             <input
@@ -68,7 +93,7 @@ export default function FormularioInicioSesion() {
               {mostrarContrasena ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
-          <div className="flex items-center justify-between mb-10 text-sm">
+          <div className="flex items-center justify-between mb-6 text-sm">
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -81,19 +106,12 @@ export default function FormularioInicioSesion() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500/70 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300"
+            className="w-full bg-blue-500/70 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300"
           >
             Iniciar Sesión
           </button>
-        </form>
 
-        <div className="mt-12 text-center text-gray-400 text-sm">
-          <p className="mb-2 text-gray-300">ITI UTN</p>
-          <p>Credenciales de prueba:</p>
-          <ul className="list-disc list-inside text-left mx-auto max-w-fit">
-            <li>admin@vemat.com / admin123</li>
-          </ul>
-        </div>
+        </form>
       </div>
     </div>
   );

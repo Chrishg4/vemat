@@ -21,7 +21,7 @@ export default function HistorialAlertas({ alertas }) {
             </tr>
           </thead>
           <tbody className="text-gray-300">
-            {alertas.map((alerta, index) => {
+            {[...alertas].reverse().map((alerta, index) => {
               return (
                 <tr key={index} className="text-center border-t border-gray-800 hover:bg-gray-800">
                   <td className="px-4 py-2 text-blue-400">{alerta.tipo}</td>
