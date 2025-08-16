@@ -1,4 +1,5 @@
 import React from 'react';
+import { MdCheckCircle, MdError, MdAutorenew, MdWarning, MdPsychology } from 'react-icons/md';
 
 const IAStatusIndicator = ({ status }) => {
   const [showLoading, setShowLoading] = React.useState(true);
@@ -15,55 +16,55 @@ const IAStatusIndicator = ({ status }) => {
   let bgColor = 'bg-gray-400';
   let textColor = 'text-gray-800';
   let statusText = 'Desconocido';
-  let icon = '❓';
+  let icon = <MdError />;
 
   switch (status?.estado) {
     case 'CARGANDO':
       bgColor = 'bg-ia-info';
       textColor = 'text-white';
       statusText = 'Conectando con asistente...';
-      icon = '🔄';
+      icon = <MdAutorenew className="animate-spin" />;
       break;
     case 'DISPONIBLE':
       bgColor = 'bg-ia-primary';
       textColor = 'text-white';
-      statusText = 'Asistente IA listo 🤖';
-      icon = '✅';
+      statusText = 'Asistente IA listo';
+      icon = <MdCheckCircle />;
       break;
     case 'DEMO':
       bgColor = 'bg-ia-warning';
       textColor = 'text-white';
       statusText = 'Modo demo activo (respuestas simuladas)';
-      icon = '⚠️';
+      icon = <MdWarning />;
       break;
     case 'ERROR':
       bgColor = 'bg-ia-danger';
       textColor = 'text-white';
       statusText = 'Asistente no disponible';
-      icon = '❌';
+      icon = <MdError />;
       break;
     case 'PROCESANDO':
       bgColor = 'bg-ia-info';
       textColor = 'text-white';
       statusText = 'Analizando datos ambientales...';
-      icon = '🧠';
+      icon = <MdPsychology />;
       break;
     default:
       if (status?.error) {
         bgColor = 'bg-ia-danger';
         textColor = 'text-white';
         statusText = `Error: ${status.error}`;
-        icon = '❌';
+        icon = <MdError />;
       } else if (status?.disponible === false) {
         bgColor = 'bg-ia-danger';
         textColor = 'text-white';
         statusText = 'Asistente no disponible';
-        icon = '❌';
+        icon = <MdError />;
       } else if (status?.disponible === true) {
         bgColor = 'bg-ia-primary';
         textColor = 'text-white';
-        statusText = 'Asistente IA listo 🤖';
-        icon = '✅';
+        statusText = 'Asistente IA listo';
+        icon = <MdCheckCircle />;
       }
       break;
   }
@@ -74,8 +75,8 @@ const IAStatusIndicator = ({ status }) => {
       {/* Toaster de carga o procesando */}
       {showLoading && (['CARGANDO', 'PROCESANDO'].includes(status?.estado)) && (
         <div className={`fixed top-6 right-8 z-50 min-w-[260px] p-3 rounded-xl shadow-xl flex items-center gap-3 bg-ia-info text-white animate-fade-in`}>
-          <span className="text-2xl">{status?.estado === 'PROCESANDO' ? '🧠' : '🔄'}</span>
-          <span className="font-semibold text-base">{status?.estado === 'PROCESANDO' ? 'Analizando datos ambientales...' : 'Conectando con asistente...'}</span>
+          <span className="text-2xl">{icon}</span>
+          <span className="font-semibold text-base">{statusText}</span>
           <button
             className="ml-auto text-white text-lg font-bold bg-transparent hover:text-red-400 focus:outline-none"
             onClick={() => setShowLoading(false)}
@@ -86,8 +87,8 @@ const IAStatusIndicator = ({ status }) => {
       {/* Toaster de listo */}
       {showReady && status?.estado === 'DISPONIBLE' && (
         <div className={`fixed top-24 right-8 z-40 min-w-[260px] p-3 rounded-xl shadow-lg flex items-center gap-3 bg-ia-primary text-white`}>
-          <span className="text-2xl">✅</span>
-          <span className="font-semibold text-base">Asistente IA listo 🤖</span>
+          <span className="text-2xl">{icon}</span>
+          <span className="font-semibold text-base">{statusText}</span>
           <button
             className="ml-auto text-white text-lg font-bold bg-transparent hover:text-red-400 focus:outline-none"
             onClick={() => setShowReady(false)}
