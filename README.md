@@ -183,12 +183,13 @@ router.post('/monitoreo-vectorial', (req, res) => {
 -  **Base de datos especializada:** MySQL con tablas `nodos` (estaciones) y `lecturas` (datos vectoriales)
 -  **Geolocalización de estaciones:** Mapeo automático de ubicaciones de monitoreo
 -  **Análisis vectorial:** Correlación de datos ambientales con condiciones propicias para mosquitos
--  **Dashboard epidemiológico:** En desarrollo para autoridades de salud
+-  **Dashboard epidemiológico(Sitio WEB):** https://vemat-frontend.onrender.com
 
 ## Documentación Técnica
 
 **Sistema de Monitoreo Vectorial:**
-**URL:** https://vemat.onrender.com/api-docs/
+**URL-API:** https://vemat.onrender.com/api-docs/
+**WEB:** https://vemat-frontend.onrender.com
 
 ### Rutas:
 - `POST /api/lecturas` - Recibir datos ambientales de estaciones (ESP32/Arduino)
