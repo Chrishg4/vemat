@@ -10,7 +10,7 @@ import { sendAlertEmail } from '../services/servicioAlertas';
  * @param {number} refreshInterval - Intervalo de refresco en ms
  * @returns {Object} - Estado y funciones para las lecturas
  */
-export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 3600000) => { // Aumentado a 1 hora
+export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 60000) => { // Intervalo de 1 minuto
   const [latest, setLatest] = useState({});
   const [data, setData] = useState([]);
   const [alertHistory, setAlertHistory] = useState([]);

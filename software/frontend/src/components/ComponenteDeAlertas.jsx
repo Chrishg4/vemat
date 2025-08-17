@@ -43,7 +43,7 @@ const ComponenteDeAlertas = () => {
       {gruposDeAlerta.length > 0 ? (
         <ul>
           {gruposDeAlerta.map((grupo, index) => (
-            <li key={index} className="text-yellow-400">
+            <li key={index} className="text-red-500">
               <strong>Alerta {index + 1}:</strong> Se encontraron 9 lecturas consecutivas cumpliendo las condiciones de temperatura, humedad y CO2.
             </li>
           ))}

@@ -104,6 +104,11 @@ export const resumirPorSemanaEpi = (rawData) => {
     return [];
   }
 
+  // Ordenar los datos por fecha descendente para asegurar que procesamos los más recientes primero
+  const sortedData = [...rawData].sort((a, b) => {
+    return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+  });
+
   const aggregated = {};
 
   rawData.forEach(item => {
