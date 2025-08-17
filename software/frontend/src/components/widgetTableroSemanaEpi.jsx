@@ -40,9 +40,8 @@ const WidgetTableroSemanaEpi = () => {
   }
 
   const summarizedData = resumirPorSemanaEpi(rawData);
-  const currentWeek = getEpiWeek(new Date());
-  const currentYear = new Date().getFullYear();
-  const currentWeekKey = `${currentYear}-EW${String(currentWeek).padStart(2, '0')}`;
+  const { week: currentEpiWeek, year: currentEpiYear } = getEpiWeek(new Date());
+  const currentWeekKey = `${currentEpiYear}-EW${String(currentEpiWeek).padStart(2, '0')}`;
 
   // Buscar datos de la semana actual
   let currentWeekData = summarizedData.find(week => week.key === currentWeekKey);
@@ -62,7 +61,7 @@ const WidgetTableroSemanaEpi = () => {
   if (!currentWeekData) {
     return (
       <div className="p-4 bg-gray-800 rounded-lg shadow-xl text-white">
-        <h3 className="text-xl font-bold mb-2">Resumen de la Semana Actual (SE{currentWeek}/{currentYear})</h3>
+        <h3 className="text-xl font-bold mb-2">Resumen de la Semana Actual (SE{currentEpiWeek}/{currentEpiYear})</h3>
         <p>Aún no hay datos disponibles para la semana epidemiológica actual.</p>
       </div>
     );
@@ -80,7 +79,7 @@ const WidgetTableroSemanaEpi = () => {
         }
         {!isCurrentWeek && (
           <span className="block text-sm text-yellow-400 mt-1">
-            No hay datos para la semana actual (SE{currentWeek}/{currentYear})
+            No hay datos para la semana actual (SE{currentEpiWeek}/{currentEpiYear})
           </span>
         )}
       </h3>

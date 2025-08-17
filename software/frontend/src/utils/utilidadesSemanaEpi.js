@@ -6,7 +6,7 @@
  * Las semanas comienzan el lunes.
  *
  * @param {Date} date La fecha para la que se calculará la semana epidemiológica.
- * @returns {number} El número de la semana epidemiológica (1-53).
+ * @returns {{week: number, year: number}} Un objeto con el número de la semana epidemiológica (1-53) y el año epidemiológico.
  */
 export const getEpiWeek = (date) => {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -15,12 +15,15 @@ export const getEpiWeek = (date) => {
   // +3 para llegar al Jueves.
   d.setUTCDate(d.getUTCDate() + 3 - (d.getUTCDay() + 6) % 7);
 
+  // El año del Jueves es el año epidemiológico
+  const epiYear = d.getFullYear();
+
   // Enero 4 siempre está en la semana 1.
-  const yearStart = new Date(Date.UTC(d.getFullYear(), 0, 4));
+  const yearStart = new Date(Date.UTC(epiYear, 0, 4));
   // Calcular semanas completas hasta el inicio del año (Enero 4)
   const weekNo = Math.ceil(((d - yearStart) / 86400000) / 7) + 1;
 
-  return weekNo;
+  return { week: weekNo, year: epiYear };
 };
 
 /**
@@ -74,21 +77,20 @@ export const aggregateByEpiWeek = (rawData) => {
   // Primero, agregamos los datos existentes
   rawData.forEach(item => {
     const date = new Date(item.fecha);
-    const year = date.getFullYear();
-    const epiWeek = getEpiWeek(date);
-    const key = `${year}-EW${String(epiWeek).padStart(2, '0')}`;
+    const { week: epiWeek, year: epiYear } = getEpiWeek(date);
+    const key = `${epiYear}-EW${String(epiWeek).padStart(2, '0')}`;
 
     // Si el año de la fecha es diferente al año principal, ajustamos el año a procesar
     // Esto es para manejar casos donde la semana 1 del año siguiente empieza en el año anterior
-    if (year !== yearToProcess && epiWeek === 1 && date.getMonth() === 11) { // Diciembre
-      yearToProcess = year + 1;
-    } else if (year !== yearToProcess && epiWeek > 50 && date.getMonth() === 0) { // Enero
-      yearToProcess = year - 1;
+    if (epiYear !== yearToProcess && epiWeek === 1 && date.getMonth() === 11) { // Diciembre
+      yearToProcess = epiYear;
+    } else if (epiYear !== yearToProcess && epiWeek > 50 && date.getMonth() === 0) { // Enero
+      yearToProcess = epiYear;
     }
 
     if (!aggregated[key]) {
       aggregated[key] = {
-        year,
+        year: epiYear,
         epiWeek,
         count: 0,
         temperaturaSum: 0,

@@ -113,13 +113,12 @@ export const resumirPorSemanaEpi = (rawData) => {
 
   rawData.forEach(item => {
     const date = new Date(item.fecha);
-    const year = date.getFullYear();
-    const epiWeek = getEpiWeek(date);
-    const key = `${year}-EW${String(epiWeek).padStart(2, '0')}`;
+    const { week: epiWeek, year: epiYear } = getEpiWeek(date);
+    const key = `${epiYear}-EW${String(epiWeek).padStart(2, '0')}`;
 
     if (!aggregated[key]) {
       aggregated[key] = createInitialAggregator();
-      aggregated[key].year = year;
+      aggregated[key].year = epiYear;
       aggregated[key].epiWeek = epiWeek;
     }
 
