@@ -90,8 +90,9 @@ export const generateAlertMessage = (readings, allReadings) => {
 };
 
 /**
- * Envía un correo electrónico de alerta
+ * Envía un correo electrónico de alerta con sistema de reintentos
  * @param {Object} readings - Objeto con las lecturas
+ * @param {Array} allReadings - Todas las lecturas disponibles
  * @returns {Promise} - Promesa con el resultado del envío
  */
 export const sendAlertEmail = async (readings, allReadings) => {
@@ -102,23 +103,46 @@ export const sendAlertEmail = async (readings, allReadings) => {
   const templateParams = {
     email: 'danny24mm11@gmail.com',
     name: 'Danny',
-    subject: '¡ALERTA! Valores anormales detectados',
+    subject: '¡ALERTA! Condiciones favorables detectadas',
     message: `Condiciones favorables para proliferación de mosquitos detectadas:\n${alertMessages.join('\n')}\nUbicación: ${readings.ubicacion || 'Cañas'}\nFecha: ${readings.fecha || readings.date || new Date().toISOString()}`
   };
 
-  try {
-    const response = await emailjs.send(
-      EMAIL_CONFIG.serviceId,
-      EMAIL_CONFIG.templateId,
-      templateParams
-    );
-    
-    console.log('Alerta enviada con éxito:', response);
-    return response;
-  } catch (error) {
-    console.error('Error al enviar la alerta:', error);
-    return error;
+  // Configuración de reintentos
+  const maxRetries = 3;
+  let retryCount = 0;
+  let lastError = null;
+
+  while (retryCount < maxRetries) {
+    try {
+      // Esperar un tiempo entre reintentos (excepto en el primer intento)
+      if (retryCount > 0) {
+        const delayMs = 2000 * retryCount; // Incrementar el tiempo de espera con cada reintento
+        console.log(`Reintentando envío de alerta (${retryCount}/${maxRetries}) después de ${delayMs}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+      }
+
+      const response = await emailjs.send(
+        EMAIL_CONFIG.serviceId,
+        EMAIL_CONFIG.templateId,
+        templateParams
+      );
+      
+      console.log('Alerta enviada con éxito:', response);
+      return response;
+    } catch (error) {
+      lastError = error;
+      console.error(`Error al enviar la alerta (intento ${retryCount + 1}/${maxRetries}):`, error);
+      retryCount++;
+      
+      // Si es el último intento, no seguir intentando
+      if (retryCount >= maxRetries) {
+        console.error('Se alcanzó el número máximo de reintentos. No se pudo enviar la alerta.');
+        break;
+      }
+    }
   }
+
+  return lastError;
 };
 
 /**
