@@ -1,56 +1,47 @@
 // src/utils/epiWeekUtils.js
 
 /**
- * Calcula la semana epidemiológica para una fecha dada.
- * La semana epidemiológica 1 comienza el primer domingo del año.
- * Si el 1 de enero es domingo, esa es la semana 1.
- * Si el 1 de enero no es domingo, la semana 1 comienza el primer domingo después del 1 de enero.
- * Los días antes del primer domingo del año pertenecen a la última semana epidemiológica del año anterior.
+ * Calcula la semana epidemiológica para una fecha dada, siguiendo una lógica similar a ISO 8601.
+ * La semana 1 es la primera semana que contiene el primer jueves del año.
+ * Las semanas comienzan el lunes.
  *
  * @param {Date} date La fecha para la que se calculará la semana epidemiológica.
- * @returns {number} El número de la semana epidemiológica (1-53).
+ * @returns {{week: number, year: number}} Un objeto con el número de la semana epidemiológica (1-53) y el año epidemiológico.
  */
 export const getEpiWeek = (date) => {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const yearStart = new Date(Date.UTC(d.getFullYear(), 0, 1));
+  // Ajustar a Jueves en la misma semana (para determinar la semana ISO)
+  // (d.getUTCDay() + 6) % 7 convierte Domingo(0) a 6, Lunes(1) a 0, etc. para semana que empieza en Lunes.
+  // +3 para llegar al Jueves.
+  d.setUTCDate(d.getUTCDate() + 3 - (d.getUTCDay() + 6) % 7);
 
-  let firstSunday = new Date(yearStart);
-  while (firstSunday.getUTCDay() !== 0) {
-    firstSunday.setUTCDate(firstSunday.getUTCDate() + 1);
-  }
+  // El año del Jueves es el año epidemiológico
+  const epiYear = d.getFullYear();
 
-  if (d < firstSunday) {
-    // Si la fecha es anterior al primer domingo del año, pertenece a la última semana del año anterior.
-    // Calculamos la semana epidemiológica para el último día del año anterior.
-    const prevYearLastDay = new Date(Date.UTC(d.getFullYear() - 1, 11, 31));
-    return getEpiWeek(prevYearLastDay); // Debería devolver solo el número de semana
-  }
+  // Enero 4 siempre está en la semana 1.
+  const yearStart = new Date(Date.UTC(epiYear, 0, 4));
+  // Calcular semanas completas hasta el inicio del año (Enero 4)
+  const weekNo = Math.ceil(((d - yearStart) / 86400000) / 7) + 1;
 
-  const diffDays = Math.floor((d - firstSunday) / (1000 * 60 * 60 * 24));
-  const week = Math.floor(diffDays / 7) + 1;
-  return week;
+  return { week: weekNo, year: epiYear };
 };
 
 /**
  * Genera una lista completa de las 52 semanas epidemiológicas para un año dado,
- * inicializando los valores de datos a null.
+ * inicializando los valores de datos a null, siguiendo la lógica ISO 8601.
+ * Las semanas comienzan el lunes.
  *
  * @param {number} year El año para el que se generarán las semanas epidemiológicas.
  * @returns {Array<Object>} Una lista de objetos, cada uno representando una semana epidemiológica.
  */
 export const getFullEpiWeeksForYear = (year) => {
   const weeks = [];
-  const yearStart = new Date(Date.UTC(year, 0, 1)); // Enero 1 del año dado
+  // Encontrar el Lunes de la semana que contiene el 4 de Enero del año dado
+  const jan4 = new Date(Date.UTC(year, 0, 4));
+  let currentWeekStart = new Date(jan4);
+  currentWeekStart.setUTCDate(jan4.getUTCDate() - (jan4.getUTCDay() + 6) % 7); // Ajustar al Lunes de esa semana
 
-  let firstSunday = new Date(yearStart);
-  // Encuentra el primer domingo del año
-  while (firstSunday.getUTCDay() !== 0) {
-    firstSunday.setUTCDate(firstSunday.getUTCDate() + 1);
-  }
-
-  let currentWeekStart = new Date(firstSunday); // La semana 1 comienza en el primer domingo
-
-  for (let i = 1; i <= 52; i++) {
+  for (let i = 1; i <= 52; i++) { // Asumiendo 52 semanas, algunos años tienen 53
     const weekName = `SE ${i}/${year}`;
     const weekKey = `${year}-EW${String(i).padStart(2, '0')}`;
     weeks.push({
@@ -61,7 +52,7 @@ export const getFullEpiWeeksForYear = (year) => {
       co2: null,
       acustica: null,
     });
-    currentWeekStart.setUTCDate(currentWeekStart.getUTCDate() + 7); // Avanzar a la siguiente semana
+    currentWeekStart.setUTCDate(currentWeekStart.getUTCDate() + 7); // Avanzar al Lunes de la siguiente semana
   }
   return weeks;
 };
@@ -86,21 +77,20 @@ export const aggregateByEpiWeek = (rawData) => {
   // Primero, agregamos los datos existentes
   rawData.forEach(item => {
     const date = new Date(item.fecha);
-    const year = date.getFullYear();
-    const epiWeek = getEpiWeek(date);
-    const key = `${year}-EW${String(epiWeek).padStart(2, '0')}`;
+    const { week: epiWeek, year: epiYear } = getEpiWeek(date);
+    const key = `${epiYear}-EW${String(epiWeek).padStart(2, '0')}`;
 
     // Si el año de la fecha es diferente al año principal, ajustamos el año a procesar
     // Esto es para manejar casos donde la semana 1 del año siguiente empieza en el año anterior
-    if (year !== yearToProcess && epiWeek === 1 && date.getMonth() === 11) { // Diciembre
-      yearToProcess = year + 1;
-    } else if (year !== yearToProcess && epiWeek > 50 && date.getMonth() === 0) { // Enero
-      yearToProcess = year - 1;
+    if (epiYear !== yearToProcess && epiWeek === 1 && date.getMonth() === 11) { // Diciembre
+      yearToProcess = epiYear;
+    } else if (epiYear !== yearToProcess && epiWeek > 50 && date.getMonth() === 0) { // Enero
+      yearToProcess = epiYear;
     }
 
     if (!aggregated[key]) {
       aggregated[key] = {
-        year,
+        year: epiYear,
         epiWeek,
         count: 0,
         temperaturaSum: 0,

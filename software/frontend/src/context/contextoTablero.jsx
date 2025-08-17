@@ -6,8 +6,8 @@ import { useObtenerHistorialBioacustica } from "../use/useObtenerHistorialBioacu
 export const ContextoTablero = createContext();
 
 export function ProveedorContextoTablero({ children }) {
-  // Utilizamos el hook useGetReadings para obtener los datos con intervalo de 2 minutos
-  const { latest, data, alertHistory, loading, error, refreshData } = useObtenerLecturas(true, 120000);
+  // Utilizamos el hook useGetReadings para verificar datos nuevos cada 10 segundos
+  const { latest, data, alertHistory, loading, error, refreshData, hasNewData, lastUpdateTime } = useObtenerLecturas(true, 10000);
   const { soundHistory } = useObtenerHistorialBioacustica();
 
   return (
@@ -18,7 +18,9 @@ export function ProveedorContextoTablero({ children }) {
       soundHistory,
       loading,
       error,
-      refreshData
+      refreshData,
+      hasNewData,
+      lastUpdateTime
     }}>
       {children}
     </ContextoTablero.Provider>

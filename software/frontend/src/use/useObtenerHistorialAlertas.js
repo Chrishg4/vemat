@@ -1,63 +1,59 @@
-// src/use/useGetAlertHistory.js
+// src/use/useObtenerHistorialAlertas.js
 import { useState, useEffect } from 'react';
-import { getAlertHistory, checkAndGenerateFavorableConditionsAlert } from '../services/servicioAlertas';
+import { getAllReadings } from '../services/servicioLecturas'; // Changed import
+import { validarLecturasParaAlerta } from '../utils/utilidadesValidacion'; // New import
 import { useManejadorErrores } from '../hooks/useManejadorErrores';
 
-/**
- * Hook para obtener y manejar el historial de alertas
- * @returns {Object} - Estado y funciones para el historial de alertas
- */
 export const useObtenerHistorialAlertas = () => {
   const [alertHistory, setAlertHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const { error, handleApiError, clearError } = useManejadorErrores();
 
-  /**
-   * Carga el historial de alertas desde la API
-   */
   const fetchAlertHistory = async () => {
     clearError();
     setLoading(true);
     
     try {
-      const response = await getAlertHistory(); 
-      if (response && response.data) {
-        const rawReadings = response.data; // Assuming response.data is an array of raw reading objects
-        const processedAlerts = [];
+      // 1. Get all readings
+      const todasLasLecturas = await getAllReadings();
 
-        // Iterate through raw readings and generate alerts
-        // We need to pass all readings to checkAndGenerateFavorableConditionsAlert
-        // This might require fetching all readings if getAlertHistory only returns a subset
-        // For now, let's assume rawReadings contains enough context or we'll adjust
-        
-        // A more robust solution would involve the backend returning pre-processed alerts
-        // or a dedicated endpoint for historical alerts.
-        // For now, we'll re-process on the frontend based on the current logic.
+      // 2. Define the validation criteria
+      const criterios = [
+        { campo: 'temperatura', operador: 'entre', umbral: 26, umbralMax: 30 },
+        { campo: 'humedad', operador: '>=', umbral: 65 },
+        { campo: 'co2', operador: 'entre', umbral: 50, umbralMax: 200 }
+      ];
 
-        // To correctly check the last 9 measurements for each reading,
-        // we need to pass the full array of readings to checkAndGenerateFavorableConditionsAlert.
-        // This means we need to ensure rawReadings is sorted by date.
-        const sortedReadings = [...rawReadings].sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+      // 3. Validate the readings
+      const gruposDeAlerta = validarLecturasParaAlerta(todasLasLecturas, criterios);
 
-        for (let i = 0; i < sortedReadings.length; i++) {
-          // For each reading, consider it as the latest and check the preceding 8 readings
-          const relevantReadings = sortedReadings.slice(Math.max(0, i - 8), i + 1);
-          const favorableAlertMessage = checkAndGenerateFavorableConditionsAlert(relevantReadings);
+      // 4. Transform the data for the history component
+      const processedAlerts = gruposDeAlerta.map(grupo => {
+        const ultimaLectura = grupo[grupo.length - 1]; // Get the last reading of the group
+        const promedios = grupo.reduce((acc, lectura) => {
+            acc.temp += lectura.temperatura;
+            acc.hum += lectura.humedad;
+            acc.co2 += lectura.co2;
+            return acc;
+        }, { temp: 0, hum: 0, co2: 0 });
 
-          if (favorableAlertMessage) {
-            processedAlerts.push({
-              fecha: sortedReadings[i].fecha, // Use the date of the reading that triggered the alert
-              tipo: 'Condiciones Favorables',
-              valor: favorableAlertMessage,
-              rangoNormal: 'Ver detalles', // Or a more descriptive text
-              estado: 'enviado',
-              latitud: sortedReadings[i].latitud,
-              longitud: sortedReadings[i].longitud
-            });
-          }
-        }
-        setAlertHistory(processedAlerts);
-      }
+        const avgTemp = (promedios.temp / grupo.length).toFixed(1);
+        const avgHum = (promedios.hum / grupo.length).toFixed(1);
+        const avgCO2 = (promedios.co2 / grupo.length).toFixed(1);
+
+        return {
+          fecha: ultimaLectura.fecha,
+          tipo: 'Condiciones Favorables',
+          valor: `Condiciones favorables para proliferación de mosquitos detectadas. Fecha: ${new Date(ultimaLectura.fecha).toLocaleDateString('es-CR')}, Hora: ${new Date(ultimaLectura.fecha).toLocaleTimeString('es-CR')}. Promedios (últimas 9 mediciones): Temp: ${avgTemp}°C, Hum: ${avgHum}%, CO2: ${avgCO2}ppm.`,
+          rangoNormal: 'Ver detalles',
+          estado: 'enviado',
+          latitud: ultimaLectura.latitud,
+          longitud: ultimaLectura.longitud
+        };
+      });
+
+      setAlertHistory(processedAlerts);
+
     } catch (err) {
       handleApiError(err);
     } finally {
@@ -65,7 +61,6 @@ export const useObtenerHistorialAlertas = () => {
     }
   };
 
-  // Cargar datos al montar el componente
   useEffect(() => {
     fetchAlertHistory();
   }, []);

@@ -40,24 +40,49 @@ const WidgetTableroSemanaEpi = () => {
   }
 
   const summarizedData = resumirPorSemanaEpi(rawData);
-  const currentWeek = getEpiWeek(new Date());
-  const currentYear = new Date().getFullYear();
-  const currentWeekKey = `${currentYear}-EW${String(currentWeek).padStart(2, '0')}`;
+  const { week: currentEpiWeek, year: currentEpiYear } = getEpiWeek(new Date());
+  const currentWeekKey = `${currentEpiYear}-EW${String(currentEpiWeek).padStart(2, '0')}`;
 
-  const currentWeekData = summarizedData.find(week => week.key === currentWeekKey);
+  // Buscar datos de la semana actual
+  let currentWeekData = summarizedData.find(week => week.key === currentWeekKey);
+  
+  // Si no hay datos para la semana actual, buscar la última semana con datos
+  if (!currentWeekData && summarizedData.length > 0) {
+    // Ordenar por fecha descendente para obtener la más reciente
+    const sortedData = [...summarizedData].sort((a, b) => {
+      // Comparar por año y luego por semana
+      if (a.year !== b.year) return b.year - a.year;
+      return b.epiWeek - a.epiWeek;
+    });
+    
+    currentWeekData = sortedData[0]; // Tomar la semana más reciente con datos
+  }
 
   if (!currentWeekData) {
     return (
       <div className="p-4 bg-gray-800 rounded-lg shadow-xl text-white">
-        <h3 className="text-xl font-bold mb-2">Resumen de la Semana Actual (SE{currentWeek}/{currentYear})</h3>
+        <h3 className="text-xl font-bold mb-2">Resumen de la Semana Actual (SE{currentEpiWeek}/{currentEpiYear})</h3>
         <p>Aún no hay datos disponibles para la semana epidemiológica actual.</p>
       </div>
     );
   }
 
+  // Determinar si estamos mostrando la semana actual o una semana anterior
+  const isCurrentWeek = currentWeekData.key === currentWeekKey;
+  
   return (
     <div className="p-4 bg-gray-800 rounded-lg shadow-xl text-white">
-      <h3 className="text-xl font-bold mb-4">Resumen de la Semana Actual ({currentWeekData.name})</h3>
+      <h3 className="text-xl font-bold mb-4">
+        {isCurrentWeek 
+          ? `Resumen de la Semana Actual (${currentWeekData.name})` 
+          : `Resumen de la Semana Más Reciente (${currentWeekData.name})`
+        }
+        {!isCurrentWeek && (
+          <span className="block text-sm text-yellow-400 mt-1">
+            No hay datos para la semana actual (SE{currentEpiWeek}/{currentEpiYear})
+          </span>
+        )}
+      </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricDisplay label="Temperatura" data={currentWeekData.temperatura} unit="°C" icon={FaTemperatureHigh} color="#ff7300" />
         <MetricDisplay label="Humedad" data={currentWeekData.humedad} unit="%" icon={FaTint} color="#387908" />
