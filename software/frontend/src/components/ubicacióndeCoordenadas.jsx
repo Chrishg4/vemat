@@ -9,7 +9,12 @@ export default function UbicacionFromCoordenadas({ lat, lon }) {
     const fetchCiudad = async () => {
       setLoading(true);
       const result = await obtenerCiudadDeCoordenadas(lat, lon);
-      setCiudad(result);
+      // Check if the result indicates an error
+      if (result.startsWith('Error')) {
+        setCiudad('Ubicación no disponible'); // More user-friendly message
+      } else {
+        setCiudad(result);
+      }
       setLoading(false);
     };
 

@@ -9,6 +9,7 @@ import HistorialAlertas from "./historialAlertas";
 import WidgetTableroSemanaEpi from "./widgetTableroSemanaEpi";
 import { useObtenerLecturas } from "../use/useObtenerLecturas";
 import { useObtenerHistorialAlertas } from "../use/useObtenerHistorialAlertas";
+import ComponenteDeAlertas from "./ComponenteDeAlertas";
 
 export default function VistaTablero() {
   const { latest, data } = useObtenerLecturas();
@@ -24,6 +25,10 @@ export default function VistaTablero() {
     <div className="p-4 space-y-4">
       <div className="flex items-center mb-6">
         <h1 className="text-2xl font-bold text-white">Panel Principal de Control</h1>
+      </div>
+
+      <div className="mb-4">
+        <ComponenteDeAlertas />
       </div>
 
       <div className="mb-4">
