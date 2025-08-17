@@ -96,28 +96,41 @@ export const generateAlertMessage = (readings, allReadings) => {
  */
 export const sendAlertEmail = async (readings, allReadings) => {
   const alertMessages = generateAlertMessage(readings, allReadings);
-  
-  if (alertMessages.length === 0) return null;
+  if (alertMessages.length === 0) return { status: 'no-alert', message: 'No hay condiciones favorables.' };
 
+  // Control de envío: solo una alerta por día
+  const today = new Date().toISOString().slice(0, 10);
+  const lastSent = localStorage.getItem('lastAlertSentDate');
+  if (lastSent === today) {
+    return { status: 'already-sent', message: 'Ya se envió una alerta hoy.' };
+  }
+
+  // Parámetros para plantilla HTML en EmailJS
   const templateParams = {
-    email: 'danny24mm11@gmail.com',
-    name: 'Danny',
-    subject: '¡ALERTA! Valores anormales detectados',
-    message: `Condiciones favorables para proliferación de mosquitos detectadas:\n${alertMessages.join('\n')}\nUbicación: ${readings.ubicacion || 'Cañas'}\nFecha: ${readings.fecha || readings.date || new Date().toISOString()}`
+    email: 'compu2025178@gmail.com', // <-- Cambia aquí el correo destinatario
+    name: 'Jefferson Rodriguez',
+    subject: '¡ALERTA! Condiciones favorables detectadas',
+    ubicacion: readings.ubicacion || 'Cañas',
+    fecha: readings.fecha || readings.date || new Date().toLocaleDateString(),
+    hora: readings.hora || new Date().toLocaleTimeString(),
+    promedio_temp: readings.promedio_temp || '',
+    promedio_hum: readings.promedio_hum || '',
+    promedio_co2: readings.promedio_co2 || '',
+    mensaje: alertMessages.join('<br>'), // HTML para la plantilla
   };
 
   try {
     const response = await emailjs.send(
       EMAIL_CONFIG.serviceId,
-      EMAIL_CONFIG.templateId,
+      'template_v4c7kye', // <-- Coloca aquí el ID de tu nueva plantilla
       templateParams
     );
-    
+    localStorage.setItem('lastAlertSentDate', today);
     console.log('Alerta enviada con éxito:', response);
-    return response;
+    return { status: 'success', message: 'Alerta enviada con éxito.', response };
   } catch (error) {
     console.error('Error al enviar la alerta:', error);
-    return error;
+    return { status: 'error', message: 'Error al enviar la alerta.', error };
   }
 };
 

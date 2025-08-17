@@ -4,7 +4,7 @@ import emailjs from '@emailjs/browser';
 // Configuración de EmailJS
 export const EMAIL_CONFIG = {
   serviceId: 'service_l2q9dcd',
-  templateId: 'template_6npom6e',
+  templateId: 'TU_NUEVO_TEMPLATE_ID', // <-- Coloca aquí el ID de tu nueva plantilla
   publicKey: '6BJbsgj3nrrqffvyI',
   toEmail: 'danny24mm11@gmail.com'
 };
