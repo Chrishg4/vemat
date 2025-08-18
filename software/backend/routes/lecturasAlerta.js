@@ -6,7 +6,7 @@ const pool = require('../db/connection');
  * @swagger
  * /api/lecturas/alertas:
  *   get:
- *     summary: Obtener lecturas que superan umbrales de alerta
+ *     summary: Obtener alertas registradas
  *     tags: [lecturasAlerta]
  *     parameters:
  *       - in: query
@@ -22,7 +22,7 @@ const pool = require('../db/connection');
  *         description: Número máximo de registros a retornar
  *     responses:
  *       200:
- *         description: Lista de lecturas de alerta
+ *         description: Lista de alertas
  *         content:
  *           application/json:
  *             schema:
@@ -35,46 +35,40 @@ const pool = require('../db/connection');
  *                   items:
  *                     type: object
  *                     properties:
+ *                       id:
+ *                         type: integer
  *                       nodo_id:
  *                         type: string
- *                       fecha:
+ *                       fecha_envio:
  *                         type: string
- *                       co2:
- *                         type: number
- *                       temperatura:
- *                         type: number
- *                       humedad:
- *                         type: number
- *                       sonido:
+ *                         format: date-time
+ *                       tipo:
+ *                         type: string
+ *                       detalles:
  *                         type: string
  */
 router.get('/', (req, res) => {
   const { nodo_id, limit = 50 } = req.query;
 
-  // Umbrales por defecto (ajustables)
-  const UMbralCO2 = 1000; // ppm
-  const UMbralTemp = 35; // °C
-  const UMbralHumedad = 80; // %
-
   let query = `
-    SELECT l.nodo_id, l.timestamp as fecha, l.co2, l.temperatura, l.humedad, l.sonido
-    FROM lecturas l
-    WHERE (l.co2 >= ? OR l.temperatura >= ? OR l.humedad >= ?)
+    SELECT id, nodo_id, fecha_envio, tipo, detalles
+    FROM alertas
+    WHERE 1=1
   `;
 
-  const params = [UMbralCO2, UMbralTemp, UMbralHumedad];
+  const params = [];
 
   if (nodo_id) {
-    query += ` AND l.nodo_id = ?`;
+    query += ` AND nodo_id = ?`;
     params.push(nodo_id);
   }
 
-  query += ` ORDER BY l.timestamp DESC LIMIT ?`;
+  query += ` ORDER BY fecha_envio DESC LIMIT ?`;
   params.push(parseInt(limit));
 
   pool.query(query, params, (err, results) => {
     if (err) {
-      console.error(' Error en consulta alertas:', err);
+      console.error(' Error en consulta lecturasAlertas:', err);
       return res.status(500).json({ success: false, error: 'Error al obtener alertas', details: err.message });
     }
 
