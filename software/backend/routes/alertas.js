@@ -310,9 +310,9 @@ cron.schedule('0 14 * * *', async () => {
   scheduled: true
 });
 
-// ALERTA 2: 5:00 PM Costa Rica = 23:00 (11:00 PM) UTC
-cron.schedule('0 23 * * *', async () => {
-  console.log('🕐 Ejecutando análisis programado vespertino (5:00 PM Costa Rica / 11:00 PM UTC)...');
+// ALERTA 2: 5:10 PM Costa Rica = 23:10 (11:10 PM) UTC - PRUEBA
+cron.schedule('10 23 * * *', async () => {
+  console.log('🕐 Ejecutando análisis programado vespertino (5:10 PM Costa Rica / 11:10 PM UTC)...');
   console.log('🕐 Hora servidor UTC:', new Date().toISOString());
   console.log('🕐 Hora Costa Rica:', new Date().toLocaleString('es-CR', {timeZone: 'America/Costa_Rica'}));
   await analyzeAndAlert();
@@ -320,8 +320,16 @@ cron.schedule('0 23 * * *', async () => {
   scheduled: true
 });
 
+// MANTENER SERVIDOR ACTIVO: ping cada 10 minutos para evitar que Render se duerma
+cron.schedule('*/10 * * * *', async () => {
+  console.log('🏃 Keep-alive ping - servidor activo');
+}, {
+  scheduled: true
+});
+
 console.log('📧 Sistema de alertas automáticas inicializado');
-console.log('📧 Sistema programado: 8:00 AM y 5:00 PM (Costa Rica)');
+console.log('📧 Sistema programado: 8:00 AM y 5:10 PM (Costa Rica) - PRUEBA');
+console.log('📧 Keep-alive: cada 10 minutos');
 console.log('📧 Destinatarios: 5 correos configurados');
 console.log('📧 Cooldown entre alertas: 10 minutos');
 
