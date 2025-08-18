@@ -4,10 +4,10 @@ const pool = require('../db/connection');
 
 /**
  * @swagger
- * /api/alertas:
+ * /api/lecturas/alertas:
  *   get:
  *     summary: Obtener lecturas que superan umbrales de alerta
- *     tags: [Alertas]
+ *     tags: [lecturasAlerta]
  *     parameters:
  *       - in: query
  *         name: nodo_id
