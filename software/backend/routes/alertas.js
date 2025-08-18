@@ -131,7 +131,7 @@ async function sendEmailAlert(data) {
       to: [
         'chrishg2004@gmail.com',
         'danny24mm11@gmail.com', 
-        'jorodriguezce@est.utn.ac.cr',
+        'Centenopablo97@gmail.com',
         'rodriguezgonzalezjefferson@gmail.com'
       ].join(','),
       subject: '🚨 VEMAT ALERTA: Condiciones Favorables para Mosquitos Detectadas',
@@ -295,12 +295,12 @@ console.log('📧 Sistema de alertas cada 5 minutos ACTIVADO');
 console.log('📧 Cooldown entre alertas: 10 minutos');
 */
 
-// OPCIÓN 2: SISTEMA PROGRAMADO DIARIO A LAS 10:20 AM (PRUEBA)
+// OPCIÓN 2: SISTEMA PROGRAMADO DIARIO A LAS 10:25 AM (PRUEBA)
 // Comentar estas líneas para desactivar sistema diario
 // IMPORTANTE: Render usa UTC, Costa Rica es UTC-6
-// 10:20 AM Costa Rica = 16:20 (4:20 PM) UTC
-cron.schedule('20 16 * * *', async () => {
-  console.log('🕐 Ejecutando análisis programado diario (10:20 AM Costa Rica / 4:20 PM UTC)...');
+// 10:25 AM Costa Rica = 16:25 (4:25 PM) UTC
+cron.schedule('25 16 * * *', async () => {
+  console.log('🕐 Ejecutando análisis programado diario (10:25 AM Costa Rica / 4:25 PM UTC)...');
   console.log('🕐 Hora servidor UTC:', new Date().toISOString());
   console.log('🕐 Hora Costa Rica:', new Date().toLocaleString('es-CR', {timeZone: 'America/Costa_Rica'}));
   await analyzeAndAlert();
@@ -310,7 +310,7 @@ cron.schedule('20 16 * * *', async () => {
 });
 
 console.log('📧 Sistema de alertas automáticas inicializado');
-console.log('📧 Sistema programado: Diario a las 10:20 AM (Costa Rica)');
+console.log('📧 Sistema programado: Diario a las 10:25 AM (Costa Rica)');
 console.log('📧 Destinatarios: 4 correos configurados');
 console.log('📧 Cooldown entre alertas: 10 minutos');
 
