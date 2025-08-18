@@ -295,18 +295,22 @@ console.log('📧 Sistema de alertas cada 5 minutos ACTIVADO');
 console.log('📧 Cooldown entre alertas: 10 minutos');
 */
 
-// OPCIÓN 2: SISTEMA PROGRAMADO DIARIO A LAS 8:00 AM (ACTIVO)
+// OPCIÓN 2: SISTEMA PROGRAMADO DIARIO A LAS 10:20 AM (PRUEBA)
 // Comentar estas líneas para desactivar sistema diario
-cron.schedule('0 8 * * *', async () => {
-  console.log('🕐 Ejecutando análisis programado diario (8:00 AM)...');
+// IMPORTANTE: Render usa UTC, Costa Rica es UTC-6
+// 10:20 AM Costa Rica = 16:20 (4:20 PM) UTC
+cron.schedule('20 16 * * *', async () => {
+  console.log('🕐 Ejecutando análisis programado diario (10:20 AM Costa Rica / 4:20 PM UTC)...');
+  console.log('🕐 Hora servidor UTC:', new Date().toISOString());
+  console.log('🕐 Hora Costa Rica:', new Date().toLocaleString('es-CR', {timeZone: 'America/Costa_Rica'}));
   await analyzeAndAlert();
 }, {
-  scheduled: true,
-  timezone: "America/Costa_Rica"
+  scheduled: true
+  // Removemos timezone porque Render ignora esta configuración
 });
 
 console.log('📧 Sistema de alertas automáticas inicializado');
-console.log('📧 Sistema programado: Diario a las 8:00 AM (Costa Rica)');
+console.log('📧 Sistema programado: Diario a las 10:20 AM (Costa Rica)');
 console.log('📧 Destinatarios: 4 correos configurados');
 console.log('📧 Cooldown entre alertas: 10 minutos');
 
