@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { getAllReadings, getLatestReading } from '../services/servicioLecturas';
 import { useManejadorErrores } from '../hooks/useManejadorErrores';
-import { sendAlertEmail } from '../services/servicioAlertas';
+import { sendAlertEmail, generateAlertMessage } from '../services/servicioAlertas';
 
 /**
  * Hook para obtener y manejar las lecturas de datos
@@ -19,6 +19,7 @@ export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 10000) 
   const [lastUpdateTime, setLastUpdateTime] = useState(null); // Para rastrear la última actualización de UI
   const [hasNewData, setHasNewData] = useState(false); // Indicador de datos nuevos
   const { error, handleApiError, clearError } = useManejadorErrores();
+  const [isFavorableAlertActive, setIsFavorableAlertActive] = useState(false); // Nuevo estado para controlar la alerta de condiciones favorables
   
   // Referencia para almacenar el último ID conocido
   const lastKnownIdRef = useRef(null);
@@ -36,12 +37,24 @@ export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 10000) 
     }
     
     try {
-      await sendAlertEmail(reading, allReadings);
-      
-      // Actualizar el historial de alertas (assuming sendAlertEmail returns something useful or we just log success)
-      // For now, just log success or handle error
-      console.log('Alerta de condiciones favorables procesada.');
-      
+      const alertMessages = generateAlertMessage(reading, allReadings); // Obtener los mensajes de alerta
+
+      if (alertMessages.length > 0) {
+        if (!isFavorableAlertActive) {
+          await sendAlertEmail(reading, allReadings); // Enviar el correo
+          setIsFavorableAlertActive(true); // Establecer alerta como activa
+          console.log('Alerta de condiciones favorables procesada y enviada.');
+        } else {
+          console.log('Condiciones favorables persistentes, no se envía nueva alerta.');
+        }
+      } else {
+        // Las condiciones ya no son favorables
+        if (isFavorableAlertActive) {
+          setIsFavorableAlertActive(false); // Restablecer el estado de alerta
+          console.log('Condiciones favorables ya no se cumplen. Alerta desactivada.');
+          // Opcionalmente, aquí podrías enviar un correo indicando que las condiciones ya no son favorables
+        }
+      }
     } catch (error) {
       console.error('Error al procesar alerta de condiciones favorables:', error);
     }

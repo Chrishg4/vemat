@@ -3,9 +3,9 @@ import emailjs from '@emailjs/browser';
 
 // Configuración de EmailJS
 export const EMAIL_CONFIG = {
-  serviceId: 'service_l2q9dcd',
-  templateId: 'template_6npom6e',
-  publicKey: '6BJbsgj3nrrqffvyI',
+  serviceId: 'service_4k3x28l',
+  templateId: 'template_4t5w1vj',
+  publicKey: 'aX9DeraiB4wJjdG1H',
   toEmail: 'danny24mm11@gmail.com'
 };
 
