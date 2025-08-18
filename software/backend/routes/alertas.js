@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
+const cron = require('node-cron');
 const connection = require('../db/connection');
 
 // Configuración de Nodemailer con Gmail
@@ -127,7 +128,12 @@ async function sendEmailAlert(data) {
   try {
     const mailOptions = {
       from: process.env.EMAIL_USER || 'vemat.system@gmail.com',
-      to: 'chrishg2004@gmail.com',
+      to: [
+        'chrishg2004@gmail.com',
+        'danny24mm11@gmail.com', 
+        'jorodriguezce@est.utn.ac.cr',
+        'rodriguezgonzalezjefferson@gmail.com'
+      ].join(','),
       subject: '🚨 VEMAT ALERTA: Condiciones Favorables para Mosquitos Detectadas',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -273,14 +279,35 @@ router.get('/history', (req, res) => {
   });
 });
 
-// Configurar análisis automático cada 5 minutos para demostración
+// ========================================
+// SISTEMA DE ALERTAS AUTOMÁTICAS
+// ========================================
+
+// OPCIÓN 1: SISTEMA CADA 5 MINUTOS (para demostración)
+// Descomentar estas líneas para activar sistema continuo cada 5 minutos
+/*
 setInterval(async () => {
   console.log('🔄 Ejecutando análisis automático de alertas...');
   await analyzeAndAlert();
 }, 5 * 60 * 1000); // 5 minutos
 
+console.log('📧 Sistema de alertas cada 5 minutos ACTIVADO');
+console.log('📧 Cooldown entre alertas: 10 minutos');
+*/
+
+// OPCIÓN 2: SISTEMA PROGRAMADO DIARIO A LAS 8:00 AM (ACTIVO)
+// Comentar estas líneas para desactivar sistema diario
+cron.schedule('0 8 * * *', async () => {
+  console.log('🕐 Ejecutando análisis programado diario (8:00 AM)...');
+  await analyzeAndAlert();
+}, {
+  scheduled: true,
+  timezone: "America/Costa_Rica"
+});
+
 console.log('📧 Sistema de alertas automáticas inicializado');
-console.log('📧 Análisis cada 5 minutos');
+console.log('📧 Sistema programado: Diario a las 8:00 AM (Costa Rica)');
+console.log('📧 Destinatarios: 4 correos configurados');
 console.log('📧 Cooldown entre alertas: 10 minutos');
 
 module.exports = router;
