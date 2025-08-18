@@ -3,6 +3,9 @@ import fetchClient from '@/api/fetchClient';
 import emailjs from '@emailjs/browser';
 import { EMAIL_CONFIG } from '@/utils/configuracionEmail';
 
+let lastEmailSentTime = 0; // Variable para controlar el tiempo del último correo enviado
+const MIN_EMAIL_INTERVAL_MS = 5 * 60 * 1000; // 5 minutos en milisegundos
+
 // Umbrales para las alertas
 
 
@@ -96,6 +99,12 @@ export const generateAlertMessage = (readings, allReadings) => {
  * @returns {Promise} - Promesa con el resultado del envío
  */
 export const sendAlertEmail = async (readings, allReadings) => {
+  const currentTime = Date.now();
+  if (currentTime - lastEmailSentTime < MIN_EMAIL_INTERVAL_MS) {
+    console.log('Demasiado pronto para enviar otro correo de alerta. Esperando...');
+    return null; // No enviar el correo si no ha pasado suficiente tiempo
+  }
+
   const alertMessages = generateAlertMessage(readings, allReadings);
   
   if (alertMessages.length === 0) return null;
@@ -128,6 +137,7 @@ export const sendAlertEmail = async (readings, allReadings) => {
       );
       
       console.log('Alerta enviada con éxito:', response);
+      lastEmailSentTime = currentTime; // Actualizar el tiempo del último envío exitoso
       return response;
     } catch (error) {
       lastError = error;
