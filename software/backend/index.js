@@ -73,7 +73,7 @@ app.use('/api/geo', geoRoute);
 app.use('/api/datosLectura', datosLecturaRoute);
 app.use('/api/datosGeo', datosGeoRoute);
 app.use('/api/alertas', alertasRoute);
-app.use('/api/lecturasAlerta', lecturasAlertaRoute);
+app.use('/api/lecturas/alertas', lecturasAlertaRoute);
 // Rutas IA
 app.use('/api/consulta', consultaRoute);
 app.use('/api/status', statusRoute);
@@ -95,7 +95,7 @@ app.get('/', (req, res) => {
       datosLectura: '/api/datosLectura',
       datosGeo: '/api/datosGeo',
       alertas: '/api/alertas',
-      lecturasAlertas: '/api/lecturasAlertas',
+      lecturasAlertas: '/api/lecturas/alertas',
       // Endpoints IA
       consulta: '/api/consulta',
       status: '/api/status',
