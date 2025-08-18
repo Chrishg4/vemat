@@ -258,6 +258,18 @@ router.get('/status', (req, res) => {
 });
 
 /**
+ * GET /api/alertas/ping - Endpoint específico para keep-alive
+ */
+router.get('/ping', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Server is alive',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+/**
  * GET /api/alertas/history - Historial de alertas enviadas
  */
 router.get('/history', (req, res) => {
@@ -322,7 +334,18 @@ cron.schedule('10 23 * * *', async () => {
 
 // MANTENER SERVIDOR ACTIVO: ping cada 10 minutos para evitar que Render se duerma
 cron.schedule('*/10 * * * *', async () => {
-  console.log('🏃 Keep-alive ping - servidor activo');
+  try {
+    const https = require('https');
+    const url = 'https://vemat.onrender.com/api/alertas/ping';
+    
+    https.get(url, (res) => {
+      console.log('🏃 Keep-alive ping exitoso - servidor activo');
+    }).on('error', (err) => {
+      console.log('⚠️ Keep-alive ping falló:', err.message);
+    });
+  } catch (error) {
+    console.log('❌ Error en keep-alive:', error.message);
+  }
 }, {
   scheduled: true
 });
