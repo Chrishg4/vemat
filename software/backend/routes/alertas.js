@@ -132,6 +132,7 @@ async function sendEmailAlert(data) {
         'chrishg2004@gmail.com',
         'danny24mm11@gmail.com', 
         'Centenopablo97@gmail.com',
+        'jurenap@utn.ac.cr',
         'rodriguezgonzalezjefferson@gmail.com'
       ].join(','),
       subject: '🚨 VEMAT ALERTA: Condiciones Favorables para Mosquitos Detectadas',
@@ -295,23 +296,33 @@ console.log('📧 Sistema de alertas cada 5 minutos ACTIVADO');
 console.log('📧 Cooldown entre alertas: 10 minutos');
 */
 
-// OPCIÓN 2: SISTEMA PROGRAMADO DIARIO A LAS 10:30 AM (PRUEBA)
+// OPCIÓN 2: SISTEMA PROGRAMADO DIARIO - DOS HORARIOS (ACTIVO)
 // Comentar estas líneas para desactivar sistema diario
 // IMPORTANTE: Render usa UTC, Costa Rica es UTC-6
-// 10:30 AM Costa Rica = 16:30 (4:30 PM) UTC
-cron.schedule('30 16 * * *', async () => {
-  console.log('🕐 Ejecutando análisis programado diario (10:30 AM Costa Rica / 4:30 PM UTC)...');
+
+// ALERTA 1: 8:00 AM Costa Rica = 14:00 (2:00 PM) UTC
+cron.schedule('0 14 * * *', async () => {
+  console.log('🕐 Ejecutando análisis programado matutino (8:00 AM Costa Rica / 2:00 PM UTC)...');
   console.log('🕐 Hora servidor UTC:', new Date().toISOString());
   console.log('🕐 Hora Costa Rica:', new Date().toLocaleString('es-CR', {timeZone: 'America/Costa_Rica'}));
   await analyzeAndAlert();
 }, {
   scheduled: true
-  // Removemos timezone porque Render ignora esta configuración
+});
+
+// ALERTA 2: 5:00 PM Costa Rica = 23:00 (11:00 PM) UTC
+cron.schedule('0 23 * * *', async () => {
+  console.log('🕐 Ejecutando análisis programado vespertino (5:00 PM Costa Rica / 11:00 PM UTC)...');
+  console.log('🕐 Hora servidor UTC:', new Date().toISOString());
+  console.log('🕐 Hora Costa Rica:', new Date().toLocaleString('es-CR', {timeZone: 'America/Costa_Rica'}));
+  await analyzeAndAlert();
+}, {
+  scheduled: true
 });
 
 console.log('📧 Sistema de alertas automáticas inicializado');
-console.log('📧 Sistema programado: Diario a las 10:30 AM (Costa Rica)');
-console.log('📧 Destinatarios: 4 correos configurados');
+console.log('📧 Sistema programado: 8:00 AM y 5:00 PM (Costa Rica)');
+console.log('📧 Destinatarios: 5 correos configurados');
 console.log('📧 Cooldown entre alertas: 10 minutos');
 
 module.exports = router;
