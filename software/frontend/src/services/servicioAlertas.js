@@ -99,6 +99,9 @@ export const generateAlertMessage = (readings, allReadings) => {
  * @returns {Promise} - Promesa con el resultado del envío
  */
 export const sendAlertEmail = async (readings, allReadings) => {
+  console.log('Envío de alertas por correo electrónico deshabilitado temporalmente.');
+  return null;
+
   const currentTime = Date.now();
   if (currentTime - lastEmailSentTime < MIN_EMAIL_INTERVAL_MS) {
     console.log('Demasiado pronto para enviar otro correo de alerta. Esperando...');
