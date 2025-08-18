@@ -10,6 +10,7 @@ const lecturasRoute = require('./routes/lecturas');
 const geoRoute = require('./routes/geo');
 const datosLecturaRoute = require('./routes/datosLectura');
 const datosGeoRoute = require('./routes/datosGeo');
+const alertasRoute = require('./routes/alertas');
 // Rutas IA
 const consultaRoute = require('./routes/consulta');
 const statusRoute = require('./routes/status');
@@ -70,6 +71,7 @@ app.use('/api/lecturas', lecturasRoute);
 app.use('/api/geo', geoRoute);
 app.use('/api/datosLectura', datosLecturaRoute);
 app.use('/api/datosGeo', datosGeoRoute);
+app.use('/api/alertas', alertasRoute);
 // Rutas IA
 app.use('/api/consulta', consultaRoute);
 app.use('/api/status', statusRoute);
@@ -90,6 +92,7 @@ app.get('/', (req, res) => {
       geo: '/api/geo',
       datosLectura: '/api/datosLectura',
       datosGeo: '/api/datosGeo',
+      alertas: '/api/alertas',
       // Endpoints IA
       consulta: '/api/consulta',
       status: '/api/status',
