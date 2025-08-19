@@ -116,8 +116,15 @@ async function obtenerContextoDatos(nodo_id = null, prompt = '') {
       columnaSQL = 'sonido';
     }
     
-    // Si pide registros específicos de algún sensor
-    if ((promptLower.includes('registro') || promptLower.includes('dato') || promptLower.includes('valor')) && tipoDato) {
+    // Si pide registros específicos de algún sensor (múltiples palabras clave)
+    const pideRegistros = (promptLower.includes('registro') || promptLower.includes('registros') || 
+                          promptLower.includes('dato') || promptLower.includes('datos') || 
+                          promptLower.includes('valor') || promptLower.includes('valores') ||
+                          promptLower.includes('ultimo') || promptLower.includes('ultimos') ||
+                          promptLower.includes('mostrar') || promptLower.includes('dame') ||
+                          promptLower.includes('dar'));
+    
+    if (pideRegistros && tipoDato) {
       console.log(`🔍 Consulta específica ${tipoDato} detectada, límite:`, limite);
       
       const queryEspecifico = `
