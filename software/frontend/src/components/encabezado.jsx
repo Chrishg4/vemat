@@ -25,7 +25,7 @@ export default function Encabezado() {
         
         <h1 className="text-xl font-bold flex-1 text-center mx-auto flex items-center justify-center">
           <GiAmberMosquito className="mr-2 text-yellow-400 text-2xl" />
-          Sistema de Vigilancia Eco-epidemiológico de Mosquitos
+          Sistema de Vigilancia Eco-epidemiológica de Mosquitos
         </h1>
         
         <div className="w-48 flex justify-end items-center">
