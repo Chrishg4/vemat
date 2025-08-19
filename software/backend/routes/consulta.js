@@ -121,19 +121,23 @@ async function obtenerContextoDatos(nodo_id = null) {
       pool.query('SELECT * FROM nodos WHERE id = ?', [nodo_target], (errNodo, nodoResult) => {
         const nodo = nodoResult && nodoResult.length > 0 ? nodoResult[0] : {};
         
-        // Obtener histórico extendido (últimas 50 lecturas)
+        // Obtener histórico extendido DE TODOS LOS NODOS (SIN LÍMITE para contexto completo)
         const queryHistorico = `
           SELECT 
-            temperatura, humedad, co2, sonido, timestamp,
+            nodo_id, temperatura, humedad, co2, sonido, timestamp,
             DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') as fecha_formateada
           FROM lecturas 
-          WHERE nodo_id = ?
+          WHERE timestamp IS NOT NULL
           ORDER BY timestamp DESC
-          LIMIT 50
         `;
 
-        pool.query(queryHistorico, [nodo_target], (errHist, historico) => {
-          // Obtener estadísticas generales
+        pool.query(queryHistorico, [], (errHist, historico) => {
+          console.log('📚 Histórico extendido obtenido:', {
+            error: errHist?.message,
+            count: historico?.length,
+            nodos_incluidos: historico ? [...new Set(historico.map(r => r.nodo_id))] : []
+          });
+          // Obtener estadísticas generales DE TODOS LOS NODOS
           const queryEstadisticas = `
             SELECT 
               COUNT(*) as total_lecturas,
@@ -148,78 +152,152 @@ async function obtenerContextoDatos(nodo_id = null) {
               MAX(co2) as co2_maximo,
               AVG(sonido) as sonido_promedio,
               MIN(timestamp) as primera_lectura,
-              MAX(timestamp) as ultima_lectura
+              MAX(timestamp) as ultima_lectura,
+              COUNT(DISTINCT nodo_id) as total_nodos
             FROM lecturas 
-            WHERE nodo_id = ?
+            WHERE timestamp IS NOT NULL
           `;
 
-          pool.query(queryEstadisticas, [nodo_target], (errEst, estadisticas) => {
-            // Obtener lecturas de las últimas 24 horas
+          pool.query(queryEstadisticas, [], (errEst, estadisticas) => {
+            console.log('📊 Estadísticas generales obtenidas:', {
+              error: errEst?.message,
+              total_lecturas: estadisticas?.[0]?.total_lecturas,
+              total_nodos: estadisticas?.[0]?.total_nodos
+            });
+            // Obtener lecturas de las últimas 24 horas DE TODOS LOS NODOS (SIN LÍMITE)
             const queryUltimas24h = `
               SELECT 
-                temperatura, humedad, co2, sonido, timestamp
+                nodo_id, temperatura, humedad, co2, sonido, timestamp
               FROM lecturas 
-              WHERE nodo_id = ? 
-                AND timestamp >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+              WHERE timestamp >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                AND timestamp IS NOT NULL
               ORDER BY timestamp DESC
             `;
 
-            pool.query(queryUltimas24h, [nodo_target], (err24h, ultimas24h) => {
-              // Obtener lecturas de la última semana
+            pool.query(queryUltimas24h, [], (err24h, ultimas24h) => {
+              console.log('⏰ Lecturas últimas 24h obtenidas:', {
+                error: err24h?.message,
+                count: ultimas24h?.length
+              });
+              
+              // Obtener lecturas de la última semana DE TODOS LOS NODOS
               const querySemana = `
                 SELECT 
                   DATE(timestamp) as fecha,
+                  nodo_id,
                   AVG(temperatura) as temp_promedio_dia,
                   AVG(humedad) as humedad_promedio_dia,
                   AVG(co2) as co2_promedio_dia,
-                  COUNT(*) as lecturas_del_dia
+                  COUNT(*) as lecturas_del_dia,
+                  MIN(temperatura) as temp_min_dia,
+                  MAX(temperatura) as temp_max_dia,
+                  MIN(humedad) as humedad_min_dia,
+                  MAX(humedad) as humedad_max_dia
                 FROM lecturas 
-                WHERE nodo_id = ? 
-                  AND timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-                GROUP BY DATE(timestamp)
-                ORDER BY fecha DESC
+                WHERE timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                GROUP BY DATE(timestamp), nodo_id
+                ORDER BY fecha DESC, nodo_id
               `;
 
-              pool.query(querySemana, [nodo_target], (errSem, semana) => {
-                const contexto = {
-                  nodo: {
-                    id: nodo_target,
-                    tipo_zona: nodo.tipo_zona || 'Zona no especificada',
-                    latitud: nodo.latitud || null,
-                    longitud: nodo.longitud || null,
-                    activo: nodo.activo
-                  },
-                  lectura_actual: {
-                    temperatura: lecturaReciente.temperatura,
-                    humedad: lecturaReciente.humedad,
-                    co2: lecturaReciente.co2,
-                    sonido: lecturaReciente.sonido,
-                    timestamp: lecturaReciente.timestamp
-                  },
-                  estadisticas_generales: estadisticas && estadisticas.length > 0 ? estadisticas[0] : {},
-                  historico_reciente: historico || [],
-                  ultimas_24_horas: ultimas24h || [],
-                  resumen_semanal: semana || [],
-                  metadatos: {
-                    total_datos_disponibles: {
-                      historico_reciente: (historico || []).length,
-                      ultimas_24h: (ultimas24h || []).length,
-                      resumen_semanal: (semana || []).length
-                    },
-                    timestamp_consulta: new Date().toISOString()
-                  }
-                };
-
-                console.log('📊 Contexto completo generado:', {
-                  nodo: contexto.nodo.id,
-                  lectura_actual: !!contexto.lectura_actual,
-                  estadisticas: !!contexto.estadisticas_generales.total_lecturas,
-                  historico_count: contexto.historico_reciente.length,
-                  ultimas24h_count: contexto.ultimas_24_horas.length,
-                  resumen_semanal_count: contexto.resumen_semanal.length
+              pool.query(querySemana, [], (errSem, semana) => {
+                console.log('📅 Resumen semanal obtenido:', {
+                  error: errSem?.message,
+                  count: semana?.length
                 });
+                
+                // Obtener muestra histórica amplia para análisis de tendencias a largo plazo
+                const queryHistoricoAmplio = `
+                  SELECT 
+                    DATE(timestamp) as fecha,
+                    nodo_id,
+                    AVG(temperatura) as temp_promedio_dia,
+                    AVG(humedad) as humedad_promedio_dia,
+                    AVG(co2) as co2_promedio_dia,
+                    MIN(temperatura) as temp_min_dia,
+                    MAX(temperatura) as temp_max_dia,
+                    MIN(humedad) as humedad_min_dia,
+                    MAX(humedad) as humedad_max_dia,
+                    COUNT(*) as lecturas_del_dia
+                  FROM lecturas 
+                  WHERE timestamp IS NOT NULL
+                    AND timestamp >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                  GROUP BY DATE(timestamp), nodo_id
+                  ORDER BY fecha DESC, nodo_id
+                `;
 
-                resolve(contexto);
+                pool.query(queryHistoricoAmplio, [], (errHist30, historico30) => {
+                  console.log('📊 Histórico 30 días obtenido:', {
+                    error: errHist30?.message,
+                    count: historico30?.length
+                  });
+                  
+                  // Obtener información de todos los nodos para contexto completo
+                  const queryTodosNodos = `
+                    SELECT 
+                      n.id, n.tipo_zona, n.latitud, n.longitud, n.activo,
+                      COUNT(l.id) as total_lecturas_nodo,
+                      MAX(l.timestamp) as ultima_lectura_nodo,
+                      AVG(l.temperatura) as temp_promedio_nodo,
+                      AVG(l.humedad) as humedad_promedio_nodo
+                    FROM nodos n
+                    LEFT JOIN lecturas l ON n.id = l.nodo_id
+                    GROUP BY n.id, n.tipo_zona, n.latitud, n.longitud, n.activo
+                    ORDER BY n.id
+                  `;
+
+                  pool.query(queryTodosNodos, [], (errNodos, todosNodos) => {
+                    console.log('🌐 Información de todos los nodos:', {
+                      error: errNodos?.message,
+                      count: todosNodos?.length
+                    });
+
+                    const contexto = {
+                    nodo_actual: {
+                      id: nodo_target,
+                      tipo_zona: nodo.tipo_zona || 'Zona no especificada',
+                      latitud: nodo.latitud || null,
+                      longitud: nodo.longitud || null,
+                      activo: nodo.activo
+                    },
+                    lectura_actual: {
+                      temperatura: lecturaReciente.temperatura,
+                      humedad: lecturaReciente.humedad,
+                      co2: lecturaReciente.co2,
+                      sonido: lecturaReciente.sonido,
+                      timestamp: lecturaReciente.timestamp
+                    },
+                    estadisticas_generales: estadisticas && estadisticas.length > 0 ? estadisticas[0] : {},
+                    todos_los_nodos: todosNodos || [],
+                    historico_reciente: historico || [],
+                    historico_30_dias: historico30 || [],
+                    ultimas_24_horas: ultimas24h || [],
+                    resumen_semanal: semana || [],
+                    metadatos: {
+                      total_datos_disponibles: {
+                        historico_reciente: (historico || []).length,
+                        historico_30_dias: (historico30 || []).length,
+                        ultimas_24h: (ultimas24h || []).length,
+                        resumen_semanal: (semana || []).length,
+                        todos_nodos: (todosNodos || []).length
+                      },
+                      timestamp_consulta: new Date().toISOString()
+                    }
+                  };
+
+                  console.log('📊 Contexto completo generado:', {
+                    nodo_actual: contexto.nodo_actual.id,
+                    lectura_actual: !!contexto.lectura_actual,
+                    estadisticas: !!contexto.estadisticas_generales.total_lecturas,
+                    historico_count: contexto.historico_reciente.length,
+                    historico_30_dias_count: contexto.historico_30_dias.length,
+                    ultimas24h_count: contexto.ultimas_24_horas.length,
+                    resumen_semanal_count: contexto.resumen_semanal.length,
+                    total_nodos: contexto.todos_los_nodos.length
+                  });
+
+                  resolve(contexto);
+                });
+                });
               });
             });
           });

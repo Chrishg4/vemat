@@ -36,50 +36,50 @@ router.get('/', (req, res) => {
     const promptsSugeridos = [
       {
         id: 'riesgo-actual',
-        titulo: '🦟 Evaluar Riesgo Actual',
-        prompt: '¿Cuál es el nivel de riesgo actual de proliferación de mosquitos según las condiciones ambientales?',
+        titulo: '🦟 Evaluación de Riesgo Entomológico',
+        prompt: 'Evalúa cuantitativamente el índice de riesgo entomológico actual considerando los parámetros microclimáticos y su correlación con el ciclo de vida del Aedes aegypti.',
         categoria: 'Análisis'
       },
       {
         id: 'tendencias',
-        titulo: '📈 Analizar Tendencias',
-        prompt: 'Analiza las tendencias de los últimos datos y predice cómo evolucionarán las condiciones en las próximas 24 horas.',
+        titulo: '📈 Modelado Predictivo',
+        prompt: 'Desarrolla un modelo predictivo de 24-48 horas para la evolución de las condiciones ambientales y su impacto en la densidad larvaria proyectada.',
         categoria: 'Predicción'
       },
       {
         id: 'recomendaciones',
-        titulo: '💡 Obtener Recomendaciones',
-        prompt: 'Basándote en las condiciones actuales, ¿qué medidas de control vectorial recomendarías implementar?',
+        titulo: '💡 Estrategias de Control Vectorial',
+        prompt: 'Formula un protocolo técnico de control vectorial integrado basado en las condiciones microclimáticas actuales, incluyendo métodos físicos, biológicos y químicos apropiados.',
         categoria: 'Recomendaciones'
       },
       {
         id: 'condiciones-optimas',
-        titulo: '🌡️ Condiciones Óptimas',
-        prompt: '¿Las condiciones actuales de temperatura y humedad favorecerán el aumento en la población de mosquitos para el sector en monitoreo?',
+        titulo: '🌡️ Análisis Termodinámico',
+        prompt: 'Analiza la relación termodinámica entre temperatura, humedad relativa y presión de vapor para determinar el potencial reproductivo vectorial en las próximas 72 horas.',
         categoria: 'Evaluación'
       },
       {
-        id: 'alerta-temprana',
-        titulo: '⚠️ Sistema de Alerta',
-        prompt: '¿Debería activarse alguna alerta epidemiológica basándose en los parámetros actuales?',
-        categoria: 'Alertas'
+        id: 'analisis-vectorial',
+        titulo: '🔬 Análisis Vectorial',
+        prompt: 'Realiza un análisis técnico sobre la dinámica poblacional de vectores basándote en las variables ambientales actuales y su impacto en la capacidad reproductiva.',
+        categoria: 'Análisis'
       },
       {
         id: 'comparacion-historica',
-        titulo: '📊 Comparación Histórica',
-        prompt: '¿Cómo se comparan las condiciones actuales con el mismo período del año pasado?',
+        titulo: '📊 Análisis Comparativo Temporal',
+        prompt: 'Realiza un análisis estadístico comparativo de las variables microclimáticas actuales versus el mismo período de años anteriores, identificando desviaciones significativas.',
         categoria: 'Histórico'
       },
       {
         id: 'impacto-sonido',
-        titulo: '🔊 Análisis Acústico',
-        prompt: '¿Qué información epidemiológica puede extraerse de los niveles de sonido detectados?',
+        titulo: '🔊 Análisis Bioacústico',
+        prompt: 'Interpreta los patrones bioacústicos detectados en relación con la actividad vectorial nocturna y diurna, correlacionando con variables ambientales.',
         categoria: 'Análisis'
       },
       {
         id: 'co2-correlacion',
-        titulo: '💨 Análisis CO2',
-        prompt: '¿Existe alguna correlación entre los niveles de CO2 y la actividad vectorial en esta zona?',
+        titulo: '💨 Análisis de CO2 y Metabolismo Vectorial',
+        prompt: 'Examina la correlación entre concentraciones de CO2 ambiental y la actividad metabólica vectorial, considerando su impacto en comportamiento de búsqueda de hospedador.',
         categoria: 'Correlación'
       }
     ];
