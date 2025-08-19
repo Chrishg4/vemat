@@ -72,6 +72,39 @@ class VEMATAssistant {
    * Construye contexto de datos y pregunta natural para Gemini
    */
   construirAnalisisEpidemiologico(prompt, datos) {
+    
+    // DETECCION ESPECIAL: Si el usuario pide registros específicos de sensores
+    if (datos.registros_especificos && datos.tipo_consulta && datos.tipo_consulta.includes('especificos')) {
+      const { tipo_dato, registros_especificos, limite_solicitado, columna_principal } = datos;
+      
+      return `Eres un asistente para mostrar datos específicos del sistema VEMAT.
+
+El usuario pidió: "${prompt}"
+
+DATOS ESPECÍFICOS ENCONTRADOS:
+Se encontraron ${registros_especificos.length} registros de ${tipo_dato}.
+
+FORMATO DE RESPUESTA REQUERIDO:
+Presenta estos datos como una lista clara y directa:
+
+📊 Últimos ${limite_solicitado} registros de ${tipo_dato}:
+
+${registros_especificos.map((registro, i) => {
+  const valor = registro[columna_principal];
+  const unidad = columna_principal === 'temperatura' ? '°C' : 
+                columna_principal === 'humedad' ? '%' :
+                columna_principal === 'co2' ? ' ppm' :
+                columna_principal === 'sonido' ? ' Hz' : '';
+  
+  const fecha = new Date(registro.timestamp).toLocaleString('es-CR', { timeZone: 'UTC' });
+  return `${i + 1}. ${fecha} - ${valor}${unidad} (Nodo: ${registro.nodo_id})`;
+}).join('\n')}
+
+💡 Datos obtenidos del sistema VEMAT en tiempo real.
+
+INSTRUCCIONES: Presenta exactamente estos datos en el formato mostrado arriba. NO hagas análisis epidemiológico, solo muestra los datos solicitados.`;
+    }
+
     const contextoNatural = `
 Eres un asistente inteligente para el sistema VEMAT (Vector Environmental Monitoring and Analysis Technology) en Cañas, Guanacaste, Costa Rica.
 
