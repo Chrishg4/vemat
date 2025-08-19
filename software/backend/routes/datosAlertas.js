@@ -4,10 +4,10 @@ const pool = require('../db/connection');
 
 /**
  * @swagger
- * /api/lecturas/alertas:
+ * /api/datosAlertas:
  *   get:
  *     summary: Obtener alertas registradas
- *     tags: [lecturasAlerta]
+ *     tags: [datosAlertas]
  *     parameters:
  *       - in: query
  *         name: nodo_id
@@ -68,7 +68,7 @@ router.get('/', (req, res) => {
 
   pool.query(query, params, (err, results) => {
     if (err) {
-      console.error(' Error en consulta lecturasAlertas:', err);
+      console.error(' Error en consulta datosAlertas:', err);
       return res.status(500).json({ success: false, error: 'Error al obtener alertas', details: err.message });
     }
 
