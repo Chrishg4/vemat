@@ -62,7 +62,8 @@ router.post('/', async (req, res) => {
 
     let contexto = {};
     if (incluir_contexto) {
-      contexto = await obtenerContextoDatos(nodo_id);
+      // Detectar si pide datos específicos
+      contexto = await obtenerContextoDatos(nodo_id, prompt);
       console.log('🔍 Contexto obtenido:', JSON.stringify(contexto, null, 2));
     }
 
@@ -87,8 +88,50 @@ router.post('/', async (req, res) => {
 /**
  * Obtener datos de contexto para enriquecer la consulta
  */
-async function obtenerContextoDatos(nodo_id = null) {
+async function obtenerContextoDatos(nodo_id = null, prompt = '') {
   return new Promise((resolve) => {
+    console.log('📊 Iniciando obtención de contexto:', { nodo_id, consulta: prompt.substring(0, 30) });
+    
+    // Detectar consultas específicas
+    const promptLower = prompt.toLowerCase();
+    
+    // Si pide registros específicos de CO2
+    if (promptLower.includes('registro') && promptLower.includes('co2')) {
+      const numeroMatch = promptLower.match(/\d+/);
+      const limite = numeroMatch ? parseInt(numeroMatch[0]) : 10;
+      
+      console.log('🔍 Consulta específica CO2 detectada, límite:', limite);
+      
+      const queryEspecificoCO2 = `
+        SELECT 
+          l.nodo_id, l.co2, l.temperatura, l.humedad, l.timestamp,
+          n.nombre as nodo_nombre, n.ubicacion
+        FROM lecturas l 
+        LEFT JOIN nodos n ON l.nodo_id = n.id
+        WHERE l.co2 IS NOT NULL AND l.timestamp IS NOT NULL
+        ORDER BY l.timestamp DESC
+        LIMIT ?
+      `;
+      
+      pool.query(queryEspecificoCO2, [limite], (err, registrosCO2) => {
+        if (err) {
+          console.error('❌ Error obteniendo registros específicos de CO2:', err);
+          return resolve({ error: 'Error obteniendo datos de CO2' });
+        }
+        
+        console.log('✅ Registros específicos de CO2 obtenidos:', registrosCO2.length);
+        return resolve({
+          tipo_consulta: 'registros_co2_especificos',
+          registros_co2_especificos: registrosCO2,
+          total_encontrados: registrosCO2.length,
+          limite_solicitado: limite
+        });
+      });
+      
+      return;
+    }
+    
+    // Contexto general para otras consultas
     // Obtener la lectura más reciente
     const queryReciente = `
       SELECT 
