@@ -33,7 +33,7 @@ const assistant = new VEMATAssistant();
  */
 router.get('/', (req, res) => {
   try {
-    const status = assistant.getStatus();
+    const status = assistant.getEstadoOperacional();
     res.json({
       success: true,
       ...status,
