@@ -97,10 +97,6 @@ async function obtenerContextoDatos(nodo_id = null, prompt = '') {
     console.log('🔍 PROMPT LOWER:', promptLower);
     
     // Detectar qué tipo de dato pide y cuántos
-    const numeroMatch = promptLower.match(/\d+/);
-    const limite = numeroMatch ? parseInt(numeroMatch[0]) : 10;
-    console.log('🔢 LIMITE DETECTADO:', limite);
-    
     let tipoDato = null;
     let columnaSQL = null;
     
@@ -122,16 +118,27 @@ async function obtenerContextoDatos(nodo_id = null, prompt = '') {
       console.log('✅ TIPO DATO DETECTADO: sonido');
     }
     
-    console.log('📋 TIPO_DATO:', tipoDato, 'COLUMNA_SQL:', columnaSQL);
-    
     // Si pide registros específicos de algún sensor (múltiples palabras clave)
     const pideRegistros = (promptLower.includes('registro') || promptLower.includes('registros') || 
                           promptLower.includes('dato') || promptLower.includes('datos') || 
                           promptLower.includes('valor') || promptLower.includes('valores') ||
                           promptLower.includes('ultimo') || promptLower.includes('ultimos') ||
                           promptLower.includes('mostrar') || promptLower.includes('dame') ||
-                          promptLower.includes('dar'));
+                          promptLower.includes('dar')) &&
+                          // NO es una consulta de análisis complejo
+                          !promptLower.includes('modelo') && !promptLower.includes('analisis') && 
+                          !promptLower.includes('predictivo') && !promptLower.includes('evolucion') &&
+                          !promptLower.includes('impacto') && !promptLower.includes('tendencia');
     
+    // Solo buscar límite numérico si es una consulta específica de datos
+    let limite = 10; // default
+    if (pideRegistros && tipoDato) {
+      const numeroMatch = promptLower.match(/\d+/);
+      limite = numeroMatch ? parseInt(numeroMatch[0]) : 10;
+      console.log('🔢 LIMITE DETECTADO:', limite);
+    }
+    
+    console.log('📋 TIPO_DATO:', tipoDato, 'COLUMNA_SQL:', columnaSQL);
     console.log('🎯 PIDE_REGISTROS:', pideRegistros, 'TIPO_DATO_EXISTS:', !!tipoDato);
     
     if (pideRegistros && tipoDato) {
