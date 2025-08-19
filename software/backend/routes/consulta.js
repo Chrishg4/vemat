@@ -141,7 +141,7 @@ async function obtenerContextoDatos(nodo_id = null, prompt = '') {
       const queryEspecifico = `
         SELECT 
           l.nodo_id, l.${columnaSQL}, l.temperatura, l.humedad, l.co2, l.sonido, l.timestamp,
-          n.nombre as nodo_nombre, n.ubicacion
+          n.id as nodo_nombre, n.tipo_zona as ubicacion
         FROM lecturas l 
         LEFT JOIN nodos n ON l.nodo_id = n.id
         WHERE l.${columnaSQL} IS NOT NULL AND l.timestamp IS NOT NULL
