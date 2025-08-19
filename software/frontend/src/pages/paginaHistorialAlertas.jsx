@@ -22,7 +22,7 @@ export default function PaginaHistorialAlertas() {
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
           <h3 className="text-lg font-semibold text-green-400 mb-2">Alertas Enviadas</h3>
           <p className="text-3xl font-bold text-white">
-            {alertHistory.filter(alert => alert.estado === 'enviado').length}
+            {alertHistory.length}
           </p>
         </div>
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg">

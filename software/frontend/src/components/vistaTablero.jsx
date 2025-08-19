@@ -109,10 +109,7 @@ export default function VistaTablero() {
           <GraficoTempHumedad chartMode={chartMode} />
         </div>
 
-        {/* Fila 5: Historial de Alertas */}
-        <div className="bg-gray-800 p-4 rounded-xl shadow-lg md:col-span-2">
-          <HistorialAlertas alertas={alertHistory} />
-        </div>
+  {/* Historial de Alertas removido del panel principal */}
       </div>
     </div>
   );
