@@ -4,8 +4,8 @@ class VEMATAssistant {
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY;
     if (!this.apiKey) {
-      console.warn('⚠️ GEMINI_API_KEY no configurada. Usar modo demo.');
-      this.demoMode = true;
+      console.warn('⚠️ GEMINI_API_KEY no configurada. Activando modo simulación epidemiológica.');
+      this.modoSimulacion = true;
     } else {
       this.genAI = new GoogleGenerativeAI(this.apiKey);
       this.model = this.genAI.getGenerativeModel({ 
@@ -16,140 +16,161 @@ class VEMATAssistant {
           maxOutputTokens: 2048,
         }
       });
-      this.demoMode = false;
+      this.modoSimulacion = false;
     }
   }
 
   /**
-   * Procesa consulta del usuario con contexto de VEMAT
+   * Procesa análisis epidemiológico vectorial con contexto técnico especializado
    */
   async procesarConsulta(prompt, datosContexto = {}) {
-    console.log('🔍 VematAssistant - Procesando consulta:', { 
-      prompt: prompt.substring(0, 50) + '...', 
+    console.log('� VematAssistant - Procesando análisis epidemiológico:', { 
+      consulta: prompt.substring(0, 50) + '...', 
       contexto_disponible: Object.keys(datosContexto).length > 0,
-      datos_actuales: datosContexto.actual ? 'Sí' : 'No',
-      modo: this.demoMode ? 'DEMO' : 'PRODUCTION'
+      datos_telemetricos: datosContexto.lectura_actual ? 'Sí' : 'No',
+      modo: this.modoSimulacion ? 'SIMULACION' : 'OPERATIVO'
     });
 
-    if (this.demoMode) {
-      return this.respuestDemo(prompt, datosContexto);
+    if (this.modoSimulacion) {
+      return this.simulacionAnalisisVectorial(prompt, datosContexto);
     }
 
     try {
-      // Construir prompt enriquecido con contexto
-      const promptCompleto = this.construirPromptContextual(prompt, datosContexto);
+      // Construir análisis epidemiológico con contexto técnico especializado
+      const promptTecnico = this.construirAnalisisEpidemiologico(prompt, datosContexto);
       
-      console.log('📤 Enviando consulta a Gemini...');
-      const result = await this.model.generateContent(promptCompleto);
+      console.log('� Transmitiendo consulta al motor de inteligencia artificial...');
+      const result = await this.model.generateContent(promptTecnico);
       const response = await result.response;
-      const texto = response.text();
+      const analisisGenerado = response.text();
 
-      console.log('📥 Respuesta recibida de Gemini');
+      console.log('🧬 Análisis epidemiológico completado');
       
       return {
         success: true,
-        respuesta: texto,
-        tokens_usados: this.estimarTokens(promptCompleto + texto),
+        respuesta: analisisGenerado,
+        tokens_procesados: this.calcularComplejidadComputacional(promptTecnico + analisisGenerado),
         timestamp: new Date().toISOString(),
-        modelo: "gemini-1.5-flash"
+        motor_analitico: "gemini-1.5-flash"
       };
 
     } catch (error) {
-      console.error('❌ Error en consulta Gemini:', error);
+      console.error('⚠️ Error en análisis epidemiológico:', error);
       
-      // Fallback a respuesta básica
+      // Protocolo de contingencia para análisis básico
       return {
         success: false,
-        respuesta: this.respuestaFallback(prompt, error),
-        error: error.message,
+        respuesta: this.protocoloContingencia(prompt, error),
+        error_tecnico: error.message,
         timestamp: new Date().toISOString(),
-        modelo: "fallback"
+        motor_analitico: "contingencia"
       };
     }
   }
 
   /**
-   * Construye prompt con contexto específico de VEMAT
+   * Construye análisis epidemiológico vectorial con contexto técnico especializado
    */
-  construirPromptContextual(prompt, datos) {
-    const contextoVEMAT = `
-SISTEMA: Eres un asistente especializado en vigilancia epidemiológica de vectores (mosquitos) para el proyecto VEMAT en Cañas, Costa Rica.
+  construirAnalisisEpidemiologico(prompt, datos) {
+    const contextoTecnico = `
+SISTEMA DE INTELIGENCIA ARTIFICIAL: Especialista en Vigilancia Epidemiológica Vectorial y Análisis Entomológico para el Proyecto VEMAT (Vector Environmental Monitoring and Analysis Technology).
 
-CONTEXTO GEOGRÁFICO:
-- Ubicación: Cañas, Guanacaste, Costa Rica (10.43°N, -85.08°W)
-- Clima: Tropical seco, temperatura media 27°C
-- Zona endémica: Dengue, Chikungunya, Zika
-- Vector principal: Aedes aegypti
+MARCO GEOGRÁFICO EPIDEMIOLÓGICO:
+- Coordenadas: Cañas, Guanacaste, Costa Rica (10.43°N, -85.08°W)
+- Zona Climática: Bosque Tropical Seco (Clasificación Köppen: Aw)
+- Temperatura Media Anual: 27°C ± 3°C
+- Precipitación: Estacional bimodal (Mayo-Noviembre)
+- Zona Endémica: Arbovirosis (Dengue, Chikungunya, Zika, Mayaro)
+- Vector Objetivo: Aedes aegypti (Linnaeus, 1762)
 
-DATOS DEL SENSOR - NODO: ${datos.nodo?.id || 'N/A'}
-${datos.nodo ? `- Zona: ${datos.nodo.tipo_zona}
-- Coordenadas: ${datos.nodo.latitud}, ${datos.nodo.longitud}
-- Estado: ${datos.nodo.activo ? 'Activo' : 'Inactivo'}` : ''}
+PARÁMETROS TELEMÉTRICOS ACTUALES - ESTACIÓN: ${datos.nodo_actual?.id || 'INDEFINIDA'}
+${datos.nodo_actual ? `- Clasificación Ecosistémica: ${datos.nodo_actual.tipo_zona}
+- Coordenadas Geodésicas: ${datos.nodo_actual.latitud}°N, ${datos.nodo_actual.longitud}°W
+- Estado Operacional: ${datos.nodo_actual.activo ? 'OPERATIVO' : 'INACTIVO'}` : ''}
 
-LECTURA ACTUAL:
-${datos.lectura_actual ? `
-- Temperatura: ${datos.lectura_actual.temperatura}°C
-- Humedad: ${datos.lectura_actual.humedad}%
-- CO2: ${datos.lectura_actual.co2} ppm  
-- Sonido: ${datos.lectura_actual.sonido} Hz
-- Fecha/Hora: ${datos.lectura_actual.timestamp}
-` : 'No hay datos actuales disponibles'}
-
-ESTADÍSTICAS HISTÓRICAS:
-${datos.estadisticas_generales ? `
-- Total de lecturas: ${datos.estadisticas_generales.total_lecturas}
-- Temperatura (Promedio/Min/Max): ${parseFloat(datos.estadisticas_generales.temp_promedio || 0).toFixed(1)}°C / ${datos.estadisticas_generales.temp_minima}°C / ${datos.estadisticas_generales.temp_maxima}°C
-- Humedad (Promedio/Min/Max): ${parseFloat(datos.estadisticas_generales.humedad_promedio || 0).toFixed(1)}% / ${datos.estadisticas_generales.humedad_minima}% / ${datos.estadisticas_generales.humedad_maxima}%
-- CO2 (Promedio/Min/Max): ${parseFloat(datos.estadisticas_generales.co2_promedio || 0).toFixed(1)} ppm / ${datos.estadisticas_generales.co2_minimo} ppm / ${datos.estadisticas_generales.co2_maximo} ppm
-- Periodo de datos: desde ${datos.estadisticas_generales.primera_lectura} hasta ${datos.estadisticas_generales.ultima_lectura}
-` : 'No hay estadísticas disponibles'}
-
-DATOS DISPONIBLES:
-${datos.metadatos ? `
-- Lecturas históricas recientes: ${datos.metadatos.total_datos_disponibles.historico_reciente}
-- Lecturas últimas 24 horas: ${datos.metadatos.total_datos_disponibles.ultimas_24h}
-- Resumen semanal: ${datos.metadatos.total_datos_disponibles.resumen_semanal} días
-` : ''}
-
-TENDENCIAS SEMANALES:
-${datos.resumen_semanal && datos.resumen_semanal.length > 0 ? 
-  datos.resumen_semanal.slice(0, 7).map(dia => 
-    `${dia.fecha}: Temp ${parseFloat(dia.temp_promedio_dia || 0).toFixed(1)}°C, Humedad ${parseFloat(dia.humedad_promedio_dia || 0).toFixed(1)}%, CO2 ${parseFloat(dia.co2_promedio_dia || 0).toFixed(0)} ppm (${dia.lecturas_del_dia} lecturas)`
+RED DE ESTACIONES TELEMÉTRICA:
+${datos.todos_los_nodos && datos.todos_los_nodos.length > 0 ? 
+  datos.todos_los_nodos.map(nodo => 
+    `- Estación ${nodo.id}: ${nodo.tipo_zona} (${nodo.latitud}, ${nodo.longitud}) - ${nodo.activo ? 'ACTIVA' : 'INACTIVA'} - ${nodo.total_lecturas_nodo || 0} registros`
   ).join('\n') 
-  : 'No hay datos semanales disponibles'}
+  : 'Red de sensores no disponible'}
 
-CONOCIMIENTO ESPECIALIZADO:
-- Condiciones óptimas Aedes aegypti: Temp 25-30°C, Humedad >60%
-- Periodo de reproducción: 7-10 días en condiciones ideales
-- Horarios de mayor actividad: 6-10 AM y 4-8 PM
-- Factores de riesgo: agua estancada, alta humedad, temperatura cálida
-- Índices críticos: Temp >32°C o <20°C inhiben reproducción, Humedad <50% reduce actividad
+TELEMETRÍA AMBIENTAL ACTUAL:
+${datos.lectura_actual ? `
+- Temperatura Superficial: ${datos.lectura_actual.temperatura}°C
+- Humedad Relativa: ${datos.lectura_actual.humedad}% HR
+- Concentración CO₂: ${datos.lectura_actual.co2} ppm  
+- Frecuencia Acústica: ${datos.lectura_actual.sonido} Hz
+- Timestamp UTC: ${datos.lectura_actual.timestamp}
+` : 'Telemetría no disponible - Posible falla en sensores'}
 
-INSTRUCCIONES:
-1. Responde en español de Costa Rica 
-2. Analiza TODAS las tendencias y patrones disponibles
-3. Compara datos actuales con promedios históricos
-4. Identifica cambios significativos en las últimas 24 horas
-5. Incluye recomendaciones específicas basadas en los datos
-6. Considera el contexto tropical seco de Guanacaste
-7. Enfócate en prevención y salud pública
-8. Usa los datos históricos para hacer predicciones
+MÉTRICAS ESTADÍSTICAS LONGITUDINALES (TODA LA RED):
+${datos.estadisticas_generales ? `
+- Dataset Total Global: ${datos.estadisticas_generales.total_lecturas} registros telemétricos
+- Red de Sensores: ${datos.estadisticas_generales.total_nodos} estaciones operativas
+- Temperatura Global (μ/min/max): ${parseFloat(datos.estadisticas_generales.temp_promedio || 0).toFixed(2)}°C / ${datos.estadisticas_generales.temp_minima}°C / ${datos.estadisticas_generales.temp_maxima}°C
+- Humedad Relativa Global (μ/min/max): ${parseFloat(datos.estadisticas_generales.humedad_promedio || 0).toFixed(2)}% / ${datos.estadisticas_generales.humedad_minima}% / ${datos.estadisticas_generales.humedad_maxima}%
+- CO₂ Atmosférico Global (μ/min/max): ${parseFloat(datos.estadisticas_generales.co2_promedio || 0).toFixed(1)} ppm / ${datos.estadisticas_generales.co2_minimo} ppm / ${datos.estadisticas_generales.co2_maximo} ppm
+- Ventana Temporal Global: ${datos.estadisticas_generales.primera_lectura} → ${datos.estadisticas_generales.ultima_lectura}
+` : 'Métricas estadísticas no computadas'}
 
-CONSULTA DEL USUARIO:
+VOLUMEN DE DATOS DISPONIBLES (RED COMPLETA):
+${datos.metadatos ? `
+- Registros Históricos Recientes: ${datos.metadatos.total_datos_disponibles.historico_reciente}
+- Telemetría Últimas 24h (Todas las estaciones): ${datos.metadatos.total_datos_disponibles.ultimas_24h}
+- Análisis Temporal Semanal: ${datos.metadatos.total_datos_disponibles.resumen_semanal} registros
+- Estaciones Monitoreadas: ${datos.metadatos.total_datos_disponibles.todos_nodos} nodos
+` : 'Metadatos no disponibles'}
+
+TENDENCIAS EPIDEMIOLÓGICAS TEMPORALES (TODA LA RED):
+${datos.resumen_semanal && datos.resumen_semanal.length > 0 ? 
+  datos.resumen_semanal.slice(0, 15).map(dia => 
+    `${dia.fecha} [Nodo ${dia.nodo_id}]: Temp ${parseFloat(dia.temp_promedio_dia || 0).toFixed(1)}°C (${dia.temp_min_dia}-${dia.temp_max_dia}°C), HR ${parseFloat(dia.humedad_promedio_dia || 0).toFixed(1)}% (${dia.humedad_min_dia}-${dia.humedad_max_dia}%), CO₂ ${parseFloat(dia.co2_promedio_dia || 0).toFixed(0)} ppm (${dia.lecturas_del_dia} registros)`
+  ).join('\n') 
+  : 'Análisis temporal no disponible'}
+
+ACTIVIDAD RECIENTE RED COMPLETA (ÚLTIMAS 24H):
+${datos.ultimas_24_horas && datos.ultimas_24_horas.length > 0 ? 
+  `- Total registros últimas 24h: ${datos.ultimas_24_horas.length}
+- Rango térmico observado: ${Math.min(...datos.ultimas_24_horas.map(r => r.temperatura || 999))}°C - ${Math.max(...datos.ultimas_24_horas.map(r => r.temperatura || -999))}°C
+- Rango humedad observado: ${Math.min(...datos.ultimas_24_horas.map(r => r.humedad || 999))}% - ${Math.max(...datos.ultimas_24_horas.map(r => r.humedad || -999))}%
+- Estaciones activas: ${[...new Set(datos.ultimas_24_horas.map(r => r.nodo_id))].join(', ')}`
+  : 'Sin actividad reciente detectada'}
+
+PARÁMETROS ENTOMOLÓGICOS CRÍTICOS:
+- Rango Térmico Óptimo Aedes aegypti: 25-30°C
+- Umbral Humedad Relativa: >60% HR para reproducción activa
+- Ciclo Gonotrófico: 7-10 días bajo condiciones ideales
+- Picos de Actividad Circadiana: 06:00-10:00h y 16:00-20:00h
+- Factores de Riesgo: Recipientes artificiales, microhábitats urbanos
+- Inhibidores Térmicos: >32°C o <20°C suprimen actividad reproductiva
+- Umbral Crítico Humedad: <50% HR reduce significativamente actividad
+
+PROTOCOLO DE ANÁLISIS:
+1. Emplear terminología científica precisa (español técnico Costa Rica)
+2. Analizar patrones multivariados y correlaciones temporales
+3. Comparar parámetros actuales con referencias estadísticas históricas
+4. Identificar desviaciones significativas en ventana temporal 24h
+5. Generar recomendaciones epidemiológicas específicas basadas en evidencia
+6. Considerar contexto ecogeográfico tropical seco guanacasteco
+7. Priorizar enfoque de salud pública preventiva
+8. Utilizar datos históricos para modelado predictivo
+
+CONSULTA EPIDEMIOLÓGICA:
 ${prompt}
 
-RESPUESTA (analiza todos los datos disponibles, máximo 800 palabras):`;
+ANÁLISIS EPIDEMIOLÓGICO VECTORIAL (Máximo 800 palabras, terminología técnica especializada):`;
 
-    return contextoVEMAT;
+    return contextoTecnico;
   }
 
   /**
-   * Respuesta demo cuando no hay API key
+   * Simulación de análisis epidemiológico vectorial cuando no hay API key
    */
-  respuestDemo(prompt, datosContexto = {}) {
-    console.log('🤖 Modo Demo - Contexto disponible:', Object.keys(datosContexto));
+  simulacionAnalisisVectorial(prompt, datosContexto = {}) {
+    console.log('🔬 Modo Simulación - Análisis epidemiológico con datos:', Object.keys(datosContexto));
     
-    // Si hay datos reales, usarlos
+    // Si hay datos reales, generar análisis técnico simulado
     if (datosContexto.lectura_actual) {
       const { temperatura, humedad, co2, sonido, timestamp } = datosContexto.lectura_actual;
       const nodo = datosContexto.nodo?.id || 'N/A';
@@ -158,125 +179,125 @@ RESPUESTA (analiza todos los datos disponibles, máximo 800 palabras):`;
       
       return {
         success: true,
-        respuesta: `🤖 [MODO DEMO] Análisis completo con datos reales:
+        respuesta: `🔬 [SIMULACIÓN EPIDEMIOLÓGICA] Análisis Vectorial Técnico:
 
-📊 **Estado Actual - Nodo ${nodo}:**
-• Temperatura: ${temperatura || 'N/A'}°C
-• Humedad: ${humedad || 'N/A'}%
-• CO2: ${co2 || 'N/A'} ppm
-• Sonido: ${sonido || 'N/A'} Hz
-• Última lectura: ${new Date(timestamp).toLocaleString('es-CR')}
+📊 **PARÁMETROS TELEMÉTRICOS - ESTACIÓN ${nodo}:**
+• Temperatura Superficial: ${temperatura || 'N/A'}°C
+• Humedad Relativa: ${humedad || 'N/A'}% HR
+• Concentración CO₂: ${co2 || 'N/A'} ppm
+• Frecuencia Acústica: ${sonido || 'N/A'} Hz
+• Timestamp de Registro: ${new Date(timestamp).toLocaleString('es-CR')}
 
-📈 **Estadísticas Históricas:**
-• Total de lecturas: ${estadisticas.total_lecturas || 0}
-• Temperatura promedio: ${parseFloat(estadisticas.temp_promedio || 0).toFixed(1)}°C
-• Humedad promedio: ${parseFloat(estadisticas.humedad_promedio || 0).toFixed(1)}%
-• Datos históricos disponibles: ${historico_count} lecturas recientes
+📈 **MÉTRICAS ESTADÍSTICAS LONGITUDINALES:**
+• Dataset Total: ${estadisticas.total_lecturas || 0} registros telemétricos
+• Temperatura Media Histórica: ${parseFloat(estadisticas.temp_promedio || 0).toFixed(2)}°C
+• Humedad Relativa Media: ${parseFloat(estadisticas.humedad_promedio || 0).toFixed(2)}% HR
+• Volumen de Datos Históricos: ${historico_count} registros recientes
 
-🦟 **Análisis Vectorial:**
-${this.analizarRiesgoDemo(temperatura, humedad)}
+🦟 **EVALUACIÓN DE RIESGO ENTOMOLÓGICO:**
+${this.evaluarRiesgoEntomologico(temperatura, humedad)}
 
-📊 **Comparación con Promedios:**
-${this.compararConPromedios(temperatura, humedad, estadisticas)}
+📊 **ANÁLISIS COMPARATIVO ESTADÍSTICO:**
+${this.analizarDesviacionesEstadisticas(temperatura, humedad, estadisticas)}
 
-💡 **Recomendaciones:**
-${this.obtenerRecomendacionesDemo(prompt, temperatura, humedad)}
+💡 **RECOMENDACIONES EPIDEMIOLÓGICAS:**
+${this.generarRecomendacionesEpidemiologicas(prompt, temperatura, humedad)}
 
-⚠️ **Nota:** Esta es una respuesta simulada con datos reales. Configure GEMINI_API_KEY para análisis completo con IA.`,
+⚠️ **NOTA TÉCNICA:** Análisis generado por simulación con datos telemétricos reales. Para análisis completo con inteligencia artificial, configure GEMINI_API_KEY.`,
         contexto_usado: datosContexto,
-        modo: "demo",
+        modo: "simulacion_epidemiologica",
         timestamp: new Date().toISOString()
       };
     }
 
-    // Respuesta básica sin datos
-    const respuestasDemo = {
-      "riesgo": "Según las condiciones simuladas, el riesgo vectorial es MEDIO. La temperatura de 28°C y humedad del 65% están en rango favorable para Aedes aegypti. Se recomienda eliminar agua estancada y usar repelente durante las horas de mayor actividad (6-10 AM y 4-8 PM).",
-      "tendencia": "Los datos muestran una tendencia ascendente en temperatura y humedad, lo que podría incrementar el riesgo vectorial en las próximas 24-48 horas. Recomiendo intensificar las medidas preventivas.",
-      "recomendaciones": "Para las condiciones actuales en Cañas, recomiendo: 1) Eliminar recipientes con agua estancada, 2) Usar repelente con DEET, 3) Instalar mallas en puertas y ventanas, 4) Reportar síntomas febriles inmediatamente.",
-      "default": "🤖 [MODO DEMO] No se detectaron datos de sensores en la consulta. Asegúrese de que los dispositivos ESP32 estén enviando datos. Para obtener análisis real con IA, configure la API key de Google Gemini."
+    // Respuestas técnicas simuladas sin datos
+    const analisisSimulados = {
+      "riesgo": "EVALUACIÓN DE RIESGO ENTOMOLÓGICO: Bajo condiciones simuladas (Temp: 28°C, HR: 65%), el índice de favorabilidad vectorial es MODERADO-ALTO. Los parámetros térmicos e hídricos se encuentran dentro del rango óptimo para Aedes aegypti. Recomendaciones: Eliminación inmediata de criaderos artificiales y aplicación de medidas de control larvario durante picos de actividad circadiana (06:00-10:00h, 16:00-20:00h).",
+      "tendencia": "MODELADO PREDICTIVO TEMPORAL: Los patrones telemétricos evidencian tendencia ascendente en temperatura y humedad relativa, sugiriendo incremento del riesgo entomológico en ventana temporal 24-48h. Protocolo recomendado: Intensificación de vigilancia entomológica activa y medidas preventivas comunitarias.",
+      "recomendaciones": "PROTOCOLOS EPIDEMIOLÓGICOS PARA ZONA TROPICAL SECA - CAÑAS: 1) Eliminación sistemática de recipientes con agua estancada, 2) Aplicación de repelentes con N,N-dietil-meta-toluamida (DEET), 3) Instalación de barreras físicas (mallas metálicas), 4) Notificación inmediata de síndrome febril agudo al sistema de vigilancia epidemiológica.",
+      "default": "🔬 [SIMULACIÓN EPIDEMIOLÓGICA] Datos telemétricos no detectados. Verificar conectividad de sensores ESP32 y transmisión de telemetría. Para análisis epidemiológico completo con inteligencia artificial, configure GEMINI_API_KEY en variables de entorno."
     };
 
     const palabraClave = prompt.toLowerCase();
-    let respuesta = respuestasDemo.default;
+    let respuesta = analisisSimulados.default;
 
-    if (palabraClave.includes('riesgo')) respuesta = respuestasDemo.riesgo;
-    else if (palabraClave.includes('tendencia')) respuesta = respuestasDemo.tendencia;
-    else if (palabraClave.includes('recomend')) respuesta = respuestasDemo.recomendaciones;
+    if (palabraClave.includes('riesgo')) respuesta = analisisSimulados.riesgo;
+    else if (palabraClave.includes('tendencia')) respuesta = analisisSimulados.tendencia;
+    else if (palabraClave.includes('recomend')) respuesta = analisisSimulados.recomendaciones;
 
     return {
       success: true,
       respuesta: respuesta,
-      tokens_usados: 0,
+      tokens_procesados: 0,
       timestamp: new Date().toISOString(),
-      modelo: "demo-mode"
+      motor_analitico: "simulacion"
     };
   }
 
   /**
-   * Analizar riesgo vectorial basado en temperatura y humedad
+   * Evaluación técnica de riesgo entomológico
    */
-  analizarRiesgoDemo(temperatura, humedad) {
+  evaluarRiesgoEntomologico(temperatura, humedad) {
     if (!temperatura || !humedad) {
-      return "Sin datos suficientes para análisis de riesgo.";
+      return "Datos insuficientes para evaluación de riesgo entomológico.";
     }
 
-    let riesgo = "BAJO";
-    let descripcion = "";
+    let indice_riesgo = "BAJO";
+    let descripcion_tecnica = "";
 
-    // Análisis de temperatura (rango óptimo Aedes aegypti: 25-30°C)
+    // Análisis térmico vectorial (rango óptimo Aedes aegypti: 25-30°C)
     if (temperatura >= 25 && temperatura <= 30) {
       if (humedad >= 60) {
-        riesgo = "ALTO";
-        descripcion = "Condiciones ÓPTIMAS para reproducción de Aedes aegypti.";
+        indice_riesgo = "ALTO";
+        descripcion_tecnica = "Condiciones ÓPTIMAS para desarrollo y reproducción de Aedes aegypti. Actividad gonotrófica máxima.";
       } else {
-        riesgo = "MEDIO";
-        descripcion = "Temperatura favorable, pero humedad baja limita reproducción.";
+        indice_riesgo = "MODERADO";
+        descripcion_tecnica = "Rango térmico favorable, limitado por déficit hídrico atmosférico.";
       }
     } else if (temperatura > 30) {
-      riesgo = humedad >= 70 ? "MEDIO" : "BAJO";
-      descripcion = "Temperatura alta puede reducir actividad vectorial.";
+      indice_riesgo = humedad >= 70 ? "MODERADO" : "BAJO";
+      descripcion_tecnica = "Estrés térmico reduce eficiencia reproductiva vectorial.";
     } else {
-      riesgo = "BAJO";
-      descripcion = "Temperatura subóptima para desarrollo vectorial.";
+      indice_riesgo = "BAJO";
+      descripcion_tecnica = "Condiciones térmicas subóptimas para desarrollo ontogénico vectorial.";
     }
 
-    return `• Nivel de riesgo: **${riesgo}**\n• ${descripcion}`;
+    return `• Índice de Riesgo Entomológico: **${indice_riesgo}**\n• Análisis Técnico: ${descripcion_tecnica}`;
   }
 
   /**
-   * Obtener recomendaciones contextualizadas
+   * Recomendaciones epidemiológicas técnicas contextualizadas
    */
-  obtenerRecomendacionesDemo(prompt, temperatura, humedad) {
+  generarRecomendacionesEpidemiologicas(prompt, temperatura, humedad) {
     const recomendaciones = [];
 
-    // Recomendaciones basadas en condiciones
+    // Protocolos basados en condiciones ambientales
     if (temperatura >= 25 && humedad >= 60) {
-      recomendaciones.push("Eliminar URGENTEMENTE agua estancada");
-      recomendaciones.push("Intensificar uso de repelente");
-      recomendaciones.push("Inspeccionar contenedores semanalmente");
+      recomendaciones.push("Eliminación URGENTE de criaderos artificiales (recipientes, neumáticos, contenedores)");
+      recomendaciones.push("Aplicación intensiva de repelentes con DEET durante picos circadianos");
+      recomendaciones.push("Inspección semanal sistemática de microhábitats urbanos");
     }
 
-    // Recomendaciones específicas por consulta
+    // Recomendaciones específicas por parámetro
     if (prompt.toLowerCase().includes('co2')) {
-      recomendaciones.push("Monitorear ventilación en espacios cerrados");
+      recomendaciones.push("Monitoreo de ventilación en espacios confinados - correlación con atracción vectorial");
     }
 
     if (prompt.toLowerCase().includes('sonido')) {
-      recomendaciones.push("Niveles de ruido pueden indicar actividad urbana que favorece criaderos");
+      recomendaciones.push("Análisis de contaminación acústica como indicador de actividad urbana facilitadora de criaderos");
     }
 
     return recomendaciones.length > 0 
       ? recomendaciones.map((r, i) => `${i + 1}. ${r}`).join('\n')
-      : "Mantener medidas preventivas generales contra vectores.";
+      : "Mantener protocolos epidemiológicos preventivos estándar contra vectores artrópodos.";
   }
 
   /**
-   * Comparar valores actuales con promedios históricos
+   * Análisis estadístico de desviaciones respecto a promedios históricos
    */
-  compararConPromedios(tempActual, humedadActual, estadisticas) {
+  analizarDesviacionesEstadisticas(tempActual, humedadActual, estadisticas) {
     if (!estadisticas.temp_promedio || !estadisticas.humedad_promedio) {
-      return "No hay suficientes datos históricos para comparación.";
+      return "Datos estadísticos históricos insuficientes para análisis comparativo.";
     }
 
     const tempPromedio = parseFloat(estadisticas.temp_promedio);
@@ -284,62 +305,69 @@ ${this.obtenerRecomendacionesDemo(prompt, temperatura, humedad)}
     
     let analisis = [];
 
-    // Análisis de temperatura
-    const difTemp = tempActual - tempPromedio;
-    if (Math.abs(difTemp) > 2) {
-      const tendencia = difTemp > 0 ? "superior" : "inferior";
-      const diferencia = Math.abs(difTemp).toFixed(1);
-      analisis.push(`• Temperatura ${diferencia}°C ${tendencia} al promedio histórico`);
+    // Análisis de desviación térmica
+    const desviacionTermica = tempActual - tempPromedio;
+    if (Math.abs(desviacionTermica) > 2) {
+      const direccion = desviacionTermica > 0 ? "superior" : "inferior";
+      const magnitud = Math.abs(desviacionTermica).toFixed(1);
+      analisis.push(`• Desviación Térmica: ${magnitud}°C ${direccion} al promedio histórico (significativa)`);
     } else {
-      analisis.push("• Temperatura dentro del rango normal");
+      analisis.push("• Temperatura dentro del rango de variabilidad normal (±2°C)");
     }
 
-    // Análisis de humedad
-    const difHumedad = humedadActual - humedadPromedio;
-    if (Math.abs(difHumedad) > 10) {
-      const tendencia = difHumedad > 0 ? "superior" : "inferior";
-      const diferencia = Math.abs(difHumedad).toFixed(1);
-      analisis.push(`• Humedad ${diferencia}% ${tendencia} al promedio histórico`);
+    // Análisis de desviación hídrica
+    const desviacionHidrica = humedadActual - humedadPromedio;
+    if (Math.abs(desviacionHidrica) > 10) {
+      const direccion = desviacionHidrica > 0 ? "superior" : "inferior";
+      const magnitud = Math.abs(desviacionHidrica).toFixed(1);
+      analisis.push(`• Desviación de Humedad Relativa: ${magnitud}% ${direccion} al promedio histórico`);
     } else {
-      analisis.push("• Humedad dentro del rango normal");
+      analisis.push("• Humedad relativa dentro de variabilidad normal (±10%)");
     }
 
     return analisis.join('\n');
   }
 
   /**
-   * Respuesta cuando falla la API
+   * Protocolo de contingencia para errores técnicos
    */
-  respuestaFallback(prompt, error) {
-    return `Lo siento, no pude procesar tu consulta en este momento debido a un error técnico. 
+  protocoloContingencia(prompt, error) {
+    return `PROTOCOLO DE CONTINGENCIA EPIDEMIOLÓGICA - Error en sistema de análisis vectorial.
 
-Error: ${error.message}
+Error Técnico: ${error.message}
 
-Mientras tanto, puedes:
-- Revisar los datos actuales en el dashboard
-- Consultar las alertas automáticas del sistema
-- Contactar con el personal de salud pública local
+ACCIONES INMEDIATAS RECOMENDADAS:
+- Revisar telemetría en dashboard de monitoreo ambiental
+- Consultar sistema automatizado de alertas epidemiológicas
+- Contactar con personal de salud pública local para evaluación manual
+- Verificar conectividad de sensores ESP32 en red telemétrica
 
-Para consultas sobre riesgo vectorial en Cañas, considera factores como temperatura >25°C y humedad >60% como indicadores de condiciones favorables para mosquitos.`;
+PARÁMETROS DE REFERENCIA PARA EVALUACIÓN MANUAL:
+- Riesgo vectorial elevado: Temperatura >25°C + Humedad >60%
+- Condiciones favorables Aedes aegypti: Rango térmico 25-30°C
+- Picos de actividad: Horarios 06:00-10:00h y 16:00-20:00h
+
+CONTACTO DE EMERGENCIA: Sistema de Vigilancia Epidemiológica - Ministerio de Salud Costa Rica`;
   }
 
   /**
-   * Estimar tokens usados (aproximado)
+   * Calcular complejidad computacional (estimación de tokens)
    */
-  estimarTokens(texto) {
-    return Math.ceil(texto.length / 4); // Estimación básica
+  calcularComplejidadComputacional(texto) {
+    return Math.ceil(texto.length / 4); // Estimación básica tokens
   }
 
   /**
-   * Verificar estado del servicio
+   * Verificar estado operacional del servicio
    */
-  getStatus() {
+  getEstadoOperacional() {
     return {
-      servicio: "VEMAT AI Assistant",
-      estado: this.demoMode ? "DEMO" : "ACTIVO",
-      modelo: this.demoMode ? "demo-mode" : "gemini-1.5-flash",
-      api_configurada: !this.demoMode,
-      timestamp: new Date().toISOString()
+      servicio: "VEMAT AI Assistant - Vigilancia Epidemiológica Vectorial",
+      estado: this.modoSimulacion ? "SIMULACION" : "OPERATIVO",
+      motor_analitico: this.modoSimulacion ? "simulacion-tecnica" : "gemini-1.5-flash",
+      api_configurada: !this.modoSimulacion,
+      timestamp: new Date().toISOString(),
+      version: "2.0-epidemiologica"
     };
   }
 }
