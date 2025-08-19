@@ -17,3 +17,6 @@ emailjs.init({
   retryTimes: 3, // Intentar hasta 3 veces si falla
   retryDelay: 2000 // Esperar 2 segundos entre reintentos
 });
+
+
+
