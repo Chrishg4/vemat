@@ -90,14 +90,16 @@ router.post('/', async (req, res) => {
  */
 async function obtenerContextoDatos(nodo_id = null, prompt = '') {
   return new Promise((resolve) => {
-    console.log('📊 Iniciando obtención de contexto:', { nodo_id, consulta: prompt.substring(0, 30) });
+    console.log('📊 INICIO - Obtención de contexto:', { nodo_id, consulta: prompt.substring(0, 50) });
     
     // Detectar consultas específicas de datos
     const promptLower = prompt.toLowerCase();
+    console.log('🔍 PROMPT LOWER:', promptLower);
     
     // Detectar qué tipo de dato pide y cuántos
     const numeroMatch = promptLower.match(/\d+/);
     const limite = numeroMatch ? parseInt(numeroMatch[0]) : 10;
+    console.log('🔢 LIMITE DETECTADO:', limite);
     
     let tipoDato = null;
     let columnaSQL = null;
@@ -105,16 +107,22 @@ async function obtenerContextoDatos(nodo_id = null, prompt = '') {
     if (promptLower.includes('co2')) {
       tipoDato = 'CO2';
       columnaSQL = 'co2';
+      console.log('✅ TIPO DATO DETECTADO: CO2');
     } else if (promptLower.includes('temperatura')) {
       tipoDato = 'temperatura';
       columnaSQL = 'temperatura';
+      console.log('✅ TIPO DATO DETECTADO: temperatura');
     } else if (promptLower.includes('humedad')) {
       tipoDato = 'humedad';
       columnaSQL = 'humedad';
+      console.log('✅ TIPO DATO DETECTADO: humedad');
     } else if (promptLower.includes('sonido')) {
       tipoDato = 'sonido';
       columnaSQL = 'sonido';
+      console.log('✅ TIPO DATO DETECTADO: sonido');
     }
+    
+    console.log('📋 TIPO_DATO:', tipoDato, 'COLUMNA_SQL:', columnaSQL);
     
     // Si pide registros específicos de algún sensor (múltiples palabras clave)
     const pideRegistros = (promptLower.includes('registro') || promptLower.includes('registros') || 
@@ -124,7 +132,10 @@ async function obtenerContextoDatos(nodo_id = null, prompt = '') {
                           promptLower.includes('mostrar') || promptLower.includes('dame') ||
                           promptLower.includes('dar'));
     
+    console.log('🎯 PIDE_REGISTROS:', pideRegistros, 'TIPO_DATO_EXISTS:', !!tipoDato);
+    
     if (pideRegistros && tipoDato) {
+      console.log(`🚀 EJECUTANDO consulta específica ${tipoDato}, límite:`, limite);
       console.log(`🔍 Consulta específica ${tipoDato} detectada, límite:`, limite);
       
       const queryEspecifico = `
