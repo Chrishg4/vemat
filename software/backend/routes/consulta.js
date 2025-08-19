@@ -92,38 +92,58 @@ async function obtenerContextoDatos(nodo_id = null, prompt = '') {
   return new Promise((resolve) => {
     console.log('📊 Iniciando obtención de contexto:', { nodo_id, consulta: prompt.substring(0, 30) });
     
-    // Detectar consultas específicas
+    // Detectar consultas específicas de datos
     const promptLower = prompt.toLowerCase();
     
-    // Si pide registros específicos de CO2
-    if (promptLower.includes('registro') && promptLower.includes('co2')) {
-      const numeroMatch = promptLower.match(/\d+/);
-      const limite = numeroMatch ? parseInt(numeroMatch[0]) : 10;
+    // Detectar qué tipo de dato pide y cuántos
+    const numeroMatch = promptLower.match(/\d+/);
+    const limite = numeroMatch ? parseInt(numeroMatch[0]) : 10;
+    
+    let tipoDato = null;
+    let columnaSQL = null;
+    
+    if (promptLower.includes('co2')) {
+      tipoDato = 'CO2';
+      columnaSQL = 'co2';
+    } else if (promptLower.includes('temperatura')) {
+      tipoDato = 'temperatura';
+      columnaSQL = 'temperatura';
+    } else if (promptLower.includes('humedad')) {
+      tipoDato = 'humedad';
+      columnaSQL = 'humedad';
+    } else if (promptLower.includes('sonido')) {
+      tipoDato = 'sonido';
+      columnaSQL = 'sonido';
+    }
+    
+    // Si pide registros específicos de algún sensor
+    if ((promptLower.includes('registro') || promptLower.includes('dato') || promptLower.includes('valor')) && tipoDato) {
+      console.log(`🔍 Consulta específica ${tipoDato} detectada, límite:`, limite);
       
-      console.log('🔍 Consulta específica CO2 detectada, límite:', limite);
-      
-      const queryEspecificoCO2 = `
+      const queryEspecifico = `
         SELECT 
-          l.nodo_id, l.co2, l.temperatura, l.humedad, l.timestamp,
+          l.nodo_id, l.${columnaSQL}, l.temperatura, l.humedad, l.co2, l.sonido, l.timestamp,
           n.nombre as nodo_nombre, n.ubicacion
         FROM lecturas l 
         LEFT JOIN nodos n ON l.nodo_id = n.id
-        WHERE l.co2 IS NOT NULL AND l.timestamp IS NOT NULL
+        WHERE l.${columnaSQL} IS NOT NULL AND l.timestamp IS NOT NULL
         ORDER BY l.timestamp DESC
         LIMIT ?
       `;
       
-      pool.query(queryEspecificoCO2, [limite], (err, registrosCO2) => {
+      pool.query(queryEspecifico, [limite], (err, registrosEspecificos) => {
         if (err) {
-          console.error('❌ Error obteniendo registros específicos de CO2:', err);
-          return resolve({ error: 'Error obteniendo datos de CO2' });
+          console.error(`❌ Error obteniendo registros específicos de ${tipoDato}:`, err);
+          return resolve({ error: `Error obteniendo datos de ${tipoDato}` });
         }
         
-        console.log('✅ Registros específicos de CO2 obtenidos:', registrosCO2.length);
+        console.log(`✅ Registros específicos de ${tipoDato} obtenidos:`, registrosEspecificos.length);
         return resolve({
-          tipo_consulta: 'registros_co2_especificos',
-          registros_co2_especificos: registrosCO2,
-          total_encontrados: registrosCO2.length,
+          tipo_consulta: `registros_${tipoDato.toLowerCase()}_especificos`,
+          registros_especificos: registrosEspecificos,
+          tipo_dato: tipoDato,
+          columna_principal: columnaSQL,
+          total_encontrados: registrosEspecificos.length,
           limite_solicitado: limite
         });
       });

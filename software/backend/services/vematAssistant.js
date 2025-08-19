@@ -133,23 +133,27 @@ INSTRUCCIONES:
       // Detectar tipo de consulta
       const preguntaLower = prompt.toLowerCase();
       
-      // Si pide registros específicos de CO2
-      if (preguntaLower.includes('registro') && preguntaLower.includes('co2')) {
-        const registrosCO2 = [];
-        if (datosContexto.ultimas_24_horas?.length > 0) {
-          datosContexto.ultimas_24_horas.slice(0, 10).forEach((registro, i) => {
-            registrosCO2.push(`${i + 1}. ${registro.timestamp} - ${registro.co2} ppm (Nodo: ${registro.nodo_id})`);
-          });
-        } else if (datosContexto.lectura_actual) {
-          registrosCO2.push(`1. ${datosContexto.lectura_actual.timestamp} - ${datosContexto.lectura_actual.co2} ppm`);
-        }
+      // Si pide registros específicos de cualquier sensor
+      if (datosContexto.registros_especificos) {
+        const { tipo_dato, registros_especificos, limite_solicitado, columna_principal } = datosContexto;
+        const registros = [];
+        
+        registros_especificos.slice(0, limite_solicitado).forEach((registro, i) => {
+          const valor = registro[columna_principal];
+          const unidad = columna_principal === 'temperatura' ? '°C' : 
+                        columna_principal === 'humedad' ? '%' :
+                        columna_principal === 'co2' ? ' ppm' :
+                        columna_principal === 'sonido' ? ' Hz' : '';
+          
+          registros.push(`${i + 1}. ${registro.timestamp} - ${valor}${unidad} (Nodo: ${registro.nodo_id})`);
+        });
         
         return {
           success: true,
-          respuesta: registrosCO2.length > 0 
-            ? `📊 Últimos registros de CO2:\n\n${registrosCO2.join('\n')}\n\n💡 Datos obtenidos del sistema VEMAT en tiempo real.`
-            : "❌ No hay registros de CO2 disponibles en este momento.",
-          modo: "simulacion_natural",
+          respuesta: registros.length > 0 
+            ? `📊 Últimos ${limite_solicitado} registros de ${tipo_dato}:\n\n${registros.join('\n')}\n\n💡 Datos obtenidos del sistema VEMAT en tiempo real.`
+            : `❌ No hay registros de ${tipo_dato} disponibles en este momento.`,
+          modo: "simulacion_datos_especificos",
           timestamp: new Date().toISOString()
         };
       }
