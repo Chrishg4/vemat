@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 
 const ChatInterface = ({
@@ -8,7 +7,7 @@ const ChatInterface = ({
   historialConsultas,
   statusIA,
   ESTADOS_IA,
-  onDescargarChat // Nueva prop
+  onDescargarChat
 }) => {
   const [consulta, setConsulta] = useState('');
   const messagesEndRef = useRef(null);
@@ -24,6 +23,37 @@ const ChatInterface = ({
   const handleSend = () => {
     enviarConsulta(consulta);
     setConsulta(''); // Limpiar el input después de enviar
+  };
+
+  const handleDescargarChat = () => {
+    if (!historialConsultas || historialConsultas.length === 0) return;
+    const contenido = historialConsultas
+      .map((item, idx) => {
+        let bloque = `Consulta ${idx + 1}: ${item.pregunta}\n`;
+        if (typeof item.respuesta === 'object' && item.respuesta !== null) {
+          bloque += `Respuesta: ${item.respuesta.respuesta || ''}\n`;
+          if (item.respuesta.contexto_usado) {
+            bloque += `Contexto usado: ${item.respuesta.contexto_usado.actual?.nodo_id || 'N/A'}\n`;
+          }
+          if (item.respuesta.timestamp) {
+            bloque += `Fecha: ${new Date(item.respuesta.timestamp).toLocaleString()}\n`;
+          }
+        } else {
+          bloque += `Respuesta: ${item.respuesta}\n`;
+        }
+        return bloque;
+      })
+      .join('\n----------------------\n');
+    const blob = new Blob([contenido], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = 'chat_asistente_IA.txt';
+    document.body.appendChild(enlace);
+    enlace.click();
+    document.body.removeChild(enlace);
+    URL.revokeObjectURL(url);
   };
 
   const RespuestaIA = ({ res }) => (
@@ -52,7 +82,7 @@ const ChatInterface = ({
       {/* Botón de descarga */}
       <div className="flex justify-start mb-4">
         <button
-          onClick={onDescargarChat}
+          onClick={handleDescargarChat}
           className="px-6 py-3 rounded-lg bg-cyan-600 text-white font-semibold shadow hover:bg-cyan-700 transition"
         >
           Descargar Chat
