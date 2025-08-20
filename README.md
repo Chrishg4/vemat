@@ -1,14 +1,14 @@
 # VEMAT - Vigilancia Ecológica de Mosquitos con Asistencia Tecnológica
 
-## 🎯 **ESTADO DEL PROYECTO: COMPLETADO Y EN PRODUCCIÓN** ✅
+## **ESTADO DEL PROYECTO: COMPLETADO Y EN PRODUCCIÓN** 
 
 **Sistema 100% funcional y desplegado en la nube - Listo para presentación**
 
 ### 🌐 **Enlaces del Sistema en Vivo:**
-- **🔗 API Backend:** https://vemat.onrender.com
-- **📖 Documentación API:** https://vemat.onrender.com/api-docs/
-- **💻 Dashboard Frontend:** https://vemat-frontend.onrender.com
-- **📊 Estado:** Sistema operativo 24/7 desde Agosto 2025
+- **API Backend:** https://vemat.onrender.com
+- **Documentación API:** https://vemat.onrender.com/api-docs/
+- **Dashboard Frontend:** https://vemat-frontend.onrender.com
+- **Estado:** Sistema operativo 24/7 desde Agosto 2025
 
 ---
 
@@ -102,7 +102,7 @@ Lista de lo que el sistema debe lograr:
 **Librerías y herramientas implementadas:**
 - **Backend:** Express, MySQL2, Swagger, Axios, Google Gemini API, Nodemailer, node-cron
 - **Frontend:** React 18, Vite, Tailwind CSS, Chart.js, Recharts, Leaflet, React Router
-- **Hardware:** Arduino IDE, bibliotecas DHT22, MH-Z19B, MQ-135, NeoPixel WS2812B
+- **Hardware:** Arduino ESP32 ideaboard, Tres potenciometros que simulan la medicion de: Co2, humedad y sonido, tpm36.
 - **IA y Análisis:** Google Gemini Pro para análisis epidemiológico vectorial
 - **Base de datos:** MySQL 8.0 en Aiven Cloud con almacenamiento persistente
 - **Deployment:** Render.com con alta disponibilidad y auto-deploy desde GitHub
@@ -205,9 +205,9 @@ router.post('/monitoreo-vectorial', (req, res) => {
 ## Documentación Técnica
 
 **Sistema de Monitoreo Vectorial COMPLETO:**
-- **🔗 API Backend:** https://vemat.onrender.com/api-docs/
-- **💻 Dashboard Web:** https://vemat-frontend.onrender.com
-- **📊 Estado del Sistema:** Operativo 24/7 desde Agosto 2025
+- **API Backend:** https://vemat.onrender.com/api-docs/
+- **Dashboard Web:** https://vemat-frontend.onrender.com
+- **Estado del Sistema:** Operativo 24/7 desde Agosto 2025
 
 ### Principales Endpoints API:
 - `POST /api/lecturas` - Recibir datos ambientales de estaciones (ESP32/Arduino)
@@ -219,9 +219,9 @@ router.post('/monitoreo-vectorial', (req, res) => {
 - `POST /api/prompts` - Gestión de consultas especializadas
 
 ### Funcionalidades Implementadas:
-- **✅ Monitoreo en Tiempo Real:** ESP32 + 4 sensores especializados
+- **✅ Monitoreo en Tiempo Real:** ESP32 + 4 sensores simulados
 - **✅ Dashboard Interactivo:** Gráficos, mapas y tablas de datos
-- **✅ Sistema de Alertas:** Emails automáticos 2x al día
+- **✅ Sistema de Alertas:** Emails automáticos 1 al día
 - **✅ IA Epidemiológica:** Asistente con Google Gemini para análisis
 - **✅ Base de Datos:** MySQL con 112+ registros ambientales
 - **✅ Geolocalización:** Mapas con Leaflet para ubicación de estaciones
@@ -246,8 +246,8 @@ router.post('/monitoreo-vectorial', (req, res) => {
 
 **Proyecto desarrollado para:** Control de Enfermedades Vectoriales en Entornos Urbanos  
 **Colaboración:** Autoridades de Ministerio de Salud  
-**Estado Final:** ✅ **COMPLETADO Y EN PRODUCCIÓN**  
+**Estado Final:** **COMPLETADO Y EN PRODUCCIÓN**  
 **Fecha de Finalización:** Agosto 2025  
 **Presentación:** 20 de Agosto de 2025  
 
-**🎯 Sistema 100% funcional y listo para demostración en vivo** 🚀
+**Sistema 100% funcional y listo para demostración en vivo** 🚀
