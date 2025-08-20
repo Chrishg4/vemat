@@ -311,9 +311,9 @@ console.log('📧 Cooldown entre alertas: 10 minutos');
 // Comentar estas líneas para desactivar sistema diario
 // IMPORTANTE: Render usa UTC, Costa Rica es UTC-6
 
-// ALERTA 1: 12:03 AM Costa Rica = 06:03 UTC - PRUEBA TEMPORAL
-cron.schedule('3 6 * * *', async () => {
-  console.log('🕐 Ejecutando análisis programado PRUEBA (12:03 AM Costa Rica / 6:03 AM UTC)...');
+// ALERTA 1: 8:00 AM Costa Rica = 14:00 (2:00 PM) UTC
+cron.schedule('0 14 * * *', async () => {
+  console.log('🕐 Ejecutando análisis programado matutino (8:00 AM Costa Rica / 2:00 PM UTC)...');
   console.log('🕐 Hora servidor UTC:', new Date().toISOString());
   console.log('🕐 Hora Costa Rica:', new Date().toLocaleString('es-CR', {timeZone: 'America/Costa_Rica'}));
   await analyzeAndAlert();
