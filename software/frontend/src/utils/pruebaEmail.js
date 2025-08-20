@@ -15,7 +15,6 @@ export const sendTestEmail = async () => {
       EMAIL_CONFIG.serviceId,
       EMAIL_CONFIG.templateId,
       templateParams);
-    console.log('Correo de prueba enviado con éxito:', response);
     return response;
   } catch (error) {
     console.error('Error al enviar correo de prueba:', error);

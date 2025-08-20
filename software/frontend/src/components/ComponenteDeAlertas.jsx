@@ -37,22 +37,7 @@ const ComponenteDeAlertas = () => {
     return <p>Cargando y validando lecturas para alertas...</p>;
   }
 
-  return (
-    <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
-      <h3 className="text-lg font-bold text-white mb-2">Alertas de Condiciones Críticas</h3>
-      {gruposDeAlerta.length > 0 ? (
-        <ul>
-          {gruposDeAlerta.map((grupo, index) => (
-            <li key={index} className="text-red-500">
-              <strong>Alerta {index + 1}:</strong> Se encontraron 9 lecturas consecutivas cumpliendo las condiciones de temperatura, humedad y CO2.
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-gray-400">No se han detectado condiciones críticas para generar alertas.</p>
-      )}
-    </div>
-  );
+  
 };
 
 export default ComponenteDeAlertas;

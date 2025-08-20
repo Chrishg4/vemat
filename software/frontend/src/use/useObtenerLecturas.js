@@ -32,7 +32,6 @@ export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 10000) 
   const checkAndSendAlerts = async (reading, allReadings) => {
     // Verificar si esta lectura ya ha sido procesada para alertas
     if (reading.id === lastProcessedId) {
-      console.log('Esta lectura ya fue procesada para alertas');
       return;
     }
     
@@ -43,15 +42,12 @@ export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 10000) 
         if (!isFavorableAlertActive) {
           await sendAlertEmail(reading, allReadings); // Enviar el correo
           setIsFavorableAlertActive(true); // Establecer alerta como activa
-          console.log('Alerta de condiciones favorables procesada y enviada.');
         } else {
-          console.log('Condiciones favorables persistentes, no se envía nueva alerta.');
         }
       } else {
         // Las condiciones ya no son favorables
         if (isFavorableAlertActive) {
           setIsFavorableAlertActive(false); // Restablecer el estado de alerta
-          console.log('Condiciones favorables ya no se cumplen. Alerta desactivada.');
           // Opcionalmente, aquí podrías enviar un correo indicando que las condiciones ya no son favorables
         }
       }
@@ -78,7 +74,6 @@ export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 10000) 
         const isNewReading = lastKnownIdRef.current !== latestReading.id;
         
         if (isNewReading) {
-          console.log('Se detectaron nuevos datos en la API');
           setHasNewData(true);
           // No actualizamos lastKnownIdRef aquí, solo cuando se carga completamente
         }
@@ -131,7 +126,6 @@ export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 10000) 
         // Actualizar la referencia del último ID conocido
         // Esto es importante para que checkForNewData pueda comparar correctamente
         lastKnownIdRef.current = processedLatestReading.id;
-        console.log('ID de referencia actualizado:', lastKnownIdRef.current);
         
         // Solo enviar alertas si es una nueva lectura
         if (isNewReading) {
@@ -171,7 +165,6 @@ export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 10000) 
         // Intervalo para actualizar la UI cuando hay datos nuevos (cada 1 minuto como máximo)
         updateInterval = setInterval(() => {
           if (hasNewData) {
-            console.log('Actualizando UI con nuevos datos');
             fetchData();
           }
         }, 60000); // 1 minuto máximo entre actualizaciones de UI
@@ -193,7 +186,6 @@ export const useObtenerLecturas = (autoRefresh = true, refreshInterval = 10000) 
         (new Date().getTime() - lastUpdateTime.getTime() > 60000);
         
       if (shouldUpdateNow) {
-        console.log('Actualizando inmediatamente con nuevos datos');
         fetchData();
       }
     }

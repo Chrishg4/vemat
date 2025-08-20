@@ -99,12 +99,10 @@ export const generateAlertMessage = (readings, allReadings) => {
  * @returns {Promise} - Promesa con el resultado del envío
  */
 export const sendAlertEmail = async (readings, allReadings) => {
-  console.log('Envío de alertas por correo electrónico deshabilitado temporalmente.');
   return null;
 
   const currentTime = Date.now();
   if (currentTime - lastEmailSentTime < MIN_EMAIL_INTERVAL_MS) {
-    console.log('Demasiado pronto para enviar otro correo de alerta. Esperando...');
     return null; // No enviar el correo si no ha pasado suficiente tiempo
   }
 
@@ -129,7 +127,6 @@ export const sendAlertEmail = async (readings, allReadings) => {
       // Esperar un tiempo entre reintentos (excepto en el primer intento)
       if (retryCount > 0) {
         const delayMs = 2000 * retryCount; // Incrementar el tiempo de espera con cada reintento
-        console.log(`Reintentando envío de alerta (${retryCount}/${maxRetries}) después de ${delayMs}ms...`);
         await new Promise(resolve => setTimeout(resolve, delayMs));
       }
 
@@ -139,7 +136,6 @@ export const sendAlertEmail = async (readings, allReadings) => {
         templateParams
       );
       
-      console.log('Alerta enviada con éxito:', response);
       lastEmailSentTime = currentTime; // Actualizar el tiempo del último envío exitoso
       return response;
     } catch (error) {
