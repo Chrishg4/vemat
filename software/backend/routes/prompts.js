@@ -102,7 +102,7 @@ router.get('/', (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Error obteniendo prompts sugeridos:', error);
+    console.error(' Error obteniendo prompts sugeridos:', error);
     res.status(500).json({
       success: false,
       error: 'Error obteniendo prompts sugeridos'

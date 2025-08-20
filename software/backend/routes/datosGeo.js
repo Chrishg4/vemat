@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
   const query = 'SELECT id, latitud, longitud FROM nodos';
   pool.query(query, (err, results) => {
     if (err) {
-      console.error('❌ Error en consulta datosGeo:', err);
+      console.error(' Error en consulta datosGeo:', err);
       return res.status(500).json({ success: false, error: 'Error al obtener datos', details: err.message });
     }
     res.json({ success: true, data: results });

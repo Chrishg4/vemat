@@ -40,7 +40,7 @@ router.get('/', (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('❌ Error obteniendo status IA:', error);
+    console.error(' Error obteniendo status IA:', error);
     res.status(500).json({
       success: false,
       error: 'Error verificando estado del asistente',
