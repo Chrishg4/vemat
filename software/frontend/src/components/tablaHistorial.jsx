@@ -1,6 +1,13 @@
 import React from "react";
+import { useObtenerLecturas } from "../use/useObtenerLecturas";
 
-export default function HistoryTable({ historial }) {
+export default function HistoryTable() {
+  const { data, loading } = useObtenerLecturas();
+
+  if (loading) {
+    return <p className="text-white">Cargando historial...</p>;
+  }
+
   return (
     <div className="overflow-x-auto rounded-xl shadow-md border border-gray-200">
       <table className="min-w-full bg-white text-sm text-left">
@@ -14,7 +21,7 @@ export default function HistoryTable({ historial }) {
           </tr>
         </thead>
         <tbody>
-          {[...historial].reverse().map((item, index) => (
+          {[...(data || [])].reverse().map((item, index) => (
             <tr
               key={index}
               className="border-b border-gray-200 hover:bg-gray-100 transition"
