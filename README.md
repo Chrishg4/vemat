@@ -250,4 +250,4 @@ router.post('/monitoreo-vectorial', (req, res) => {
 **Fecha de Finalización:** Agosto 2025  
 **Presentación:** 20 de Agosto de 2025  
 
-**Sistema 100% funcional y listo para demostración en vivo** 🚀
+**Sistema 100% funcional y listo para demostración en vivo** 
