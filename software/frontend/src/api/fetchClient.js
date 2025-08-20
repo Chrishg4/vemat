@@ -1,7 +1,8 @@
 // src/api/fetchClient.js
 
-// URL completa de la API con proxy CORS
-const API_URL = 'https://vemat.onrender.com/api/datosLectura';
+const API_URL = import.meta.env.PROD
+  ? 'https://vemat.onrender.com/api/datosLectura'
+  : '/api/datosLectura';
 
 /**
  * Cliente fetch para realizar peticiones HTTP
@@ -15,7 +16,7 @@ const fetchClient = {
   get: async () => {
     try {
       
-      const response = await fetch(`${API_URL}?limit=1000`, {
+  const response = await fetch(`${API_URL}?limit=1000`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
