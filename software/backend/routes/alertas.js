@@ -132,7 +132,6 @@ async function sendEmailAlert(data) {
         'chrishg2004@gmail.com',
         'danny24mm11@gmail.com', 
         'Centenopablo97@gmail.com',
-        'jurenap@utn.ac.cr',
         'rodriguezgonzalezjefferson@gmail.com'
       ].join(','),
       subject: '🚨 VEMAT ALERTA: Condiciones Favorables para Mosquitos Detectadas',
