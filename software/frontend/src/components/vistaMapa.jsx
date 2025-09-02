@@ -22,8 +22,8 @@ export default function VistaMapa({ coordenadas }) {
       <div className="h-80 w-full rounded-xl overflow-hidden shadow-md">
         <MapContainer center={[coordenadas.lat, coordenadas.lng]} zoom={15} style={{ height: "100%", width: "100%" }}>
           <TileLayer
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
           />
           <Marker position={[coordenadas.lat, coordenadas.lng]} icon={iconoSensor}>
             <Popup>Sensor ambiental ubicado aquí</Popup>

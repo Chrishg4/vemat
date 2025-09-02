@@ -52,15 +52,15 @@ export default function BarraLateral({ username, onLogout }) {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/grafica" className={linkClasses} title="Gráfica de Datos">
+            <NavLink to="/analisis" className={linkClasses} title="Análisis Combinado">
               <FaChartLine className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
-              {!isCollapsed && 'Gráfica de Datos'}
+              {!isCollapsed && 'Análisis Combinado'}
             </NavLink>
           </li>
           <li>
-            <NavLink to="/epi-week-chart" className={linkClasses} title="Gráfica Semana Epidemiológica">
+            <NavLink to="/graficos-detallados" className={linkClasses} title="Gráficos Detallados">
               <FaChartLine className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
-              {!isCollapsed && 'Gráfica Semana Epidemiológica'}
+              {!isCollapsed && 'Gráficos Detallados'}
             </NavLink>
           </li>
           <li>
@@ -70,15 +70,9 @@ export default function BarraLateral({ username, onLogout }) {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/mapa" className={linkClasses} title="Mapa de Ubicación">
+            <NavLink to="/mapas" className={linkClasses} title="Mapas">
               <FaMapMarkedAlt className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
-              {!isCollapsed && 'Mapa de Ubicación'}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/historial" className={linkClasses} title="Historial de Lecturas">
-              <FaTable className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
-              {!isCollapsed && 'Historial de Lecturas'}
+              {!isCollapsed && 'Mapas'}
             </NavLink>
           </li>
           <li>
@@ -87,13 +81,6 @@ export default function BarraLateral({ username, onLogout }) {
               {!isCollapsed && 'Historial de Alertas'}
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/ia-assistant" className={linkClasses} title="Asistente IA">
-              <FaRobot className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
-              {!isCollapsed && 'Asistente IA'}
-            </NavLink>
-          </li>
-          
         </ul>
       </nav>
       <button

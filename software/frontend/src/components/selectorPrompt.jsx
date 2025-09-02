@@ -38,20 +38,20 @@ const PromptSelector = ({ onSelectPrompt }) => {
   if (error) return <div className="text-ia-danger">Error al cargar prompts: {error}</div>;
 
   return (
-    <div className="mt-6 p-4 bg-gray-800 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold text-white mb-4">Prompts Rápidos</h2>
+    <div className="bg-transparent">
+      <h3 className="text-base font-semibold text-sky-300 mb-3">Prompts Rápidos</h3>
       {todosLosPrompts.length === 0 && !loading && !error && (
-        <p className="text-white">No se encontraron prompts sugeridos.</p>
+        <p className="text-gray-400 text-sm">No se encontraron prompts sugeridos.</p>
       )}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-2">
         {todosLosPrompts.map(prompt => (
           <button
             key={prompt.id}
             onClick={() => onSelectPrompt(prompt)}
-            className="flex items-center p-3 bg-ia-background rounded-lg shadow-sm hover:bg-ia-primary hover:text-white transition-colors duration-200 text-left"
+            className="flex items-center p-2 bg-black/20 border border-gray-700/50 rounded-lg shadow-sm hover:bg-sky-500/30 transition-colors duration-200 text-left"
           >
-            <span className="text-xl mr-2">{getCategoryIcon(prompt.categoria)}</span>
-            <span className="font-medium flex-grow">{prompt.titulo}</span>
+            <span className="text-base mr-2">{getCategoryIcon(prompt.categoria)}</span>
+            <span className="text-sm font-light text-gray-300 flex-grow">{prompt.titulo}</span>
           </button>
         ))}
       </div>

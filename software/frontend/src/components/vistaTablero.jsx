@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import IndicadorGauge from "./indicadorGauge";
 import UbicacionFromCoordenadas from "./ubicacióndeCoordenadas";
 import GraficoTempHumedad from "./graficoTempHumedad";
+import GraficoBioacustica from "./graficoBioacustica";
 import VistaMapa from "./vistaMapa";
 import TablaLecturas from "./tablaLecturas";
 import HistorialAlertas from "./historialAlertas";
@@ -32,7 +33,7 @@ export default function VistaTablero() {
       </div>
 
       <div className="mb-4">
-  <WidgetTableroSemanaEpi />
+        <WidgetTableroSemanaEpi />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

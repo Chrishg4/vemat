@@ -5,6 +5,7 @@ import { ProveedorContextoAuth } from "./context/contextoAuth";
 import { ProveedorContextoTablero } from "./context/contextoTablero";
 import InicioSesion from "./components/inicioSesion";
 import { useContextoAuth } from "./context/contextoAuth";
+import AsistenteIA from "./components/asistenteIA";
 
 // Componente de protección de rutas
 function RutaProtegida({ children }) {
@@ -17,13 +18,16 @@ export default function App() {
   return (
     <div className="relative min-h-screen">
       <BrowserRouter>
-  <ProveedorContextoAuth>
+        <ProveedorContextoAuth>
           <ProveedorContextoTablero>
             <Routes>
               <Route path="/login" element={<InicioSesion />} />
               <Route path="/*" element={
                 <RutaProtegida>
-                  <TableroPrincipal />
+                  <>
+                    <TableroPrincipal />
+                    <AsistenteIA />
+                  </>
                 </RutaProtegida>
               } />
             </Routes>
