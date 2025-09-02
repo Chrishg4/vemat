@@ -96,7 +96,7 @@ const AsistenteIA = () => {
         className={`fixed bottom-5 right-5 w-16 h-16 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 flex items-center justify-center z-50 transform hover:scale-110 ${isOpen ? 'scale-0' : 'scale-100 animate-pulse'}`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17 20L7 20C5.89543 20 5 19.1046 5 18L5 9C5 7.89543 5.89543 7 7 7L17 7C18.1046 7 19 7.89543 19 9L19 18C19 19.1046 18.1046 20 17 20zM15 7L15 3M9 7L9 3M10 11.5C10 11.2239 9.77614 11 9.5 11C9.22386 11 9 11.2239 9 11.5C9 11.7761 9.22386 12 9.5 12C9.77614 12 10 11.7761 10 11.5zM15 11.5C15 11.2239 14.7761 11 14.5 11C14.2239 11 14 11.2239 14 11.5C14 11.7761 14.2239 12 14.5 12C14.7761 12 15 11.7761 15 11.5z" />
         </svg>
       </button>
 
