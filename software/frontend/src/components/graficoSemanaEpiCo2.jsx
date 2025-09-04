@@ -31,19 +31,19 @@ export default function CO2EpiWeekChart() {
   const formatNumber = (value) => value.toFixed(1);
 
   return (
-    <div className="chart-container bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
+    <div className="chart-container bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border">
       <div className="flex flex-col items-start mb-4">
-        <h2 className="text-white text-xl font-semibold mb-4">
+        <h2 className="text-ia-text text-xl font-semibold mb-4">
           Evolución de Datos por Semana Epidemiológica
         </h2>
         <div className="flex items-center">
-          <span className="text-gray-400 font-semibold mr-2">Filtrar por año:</span>
+          <span className="text-ia-text-secondary font-semibold mr-2">Filtrar por año:</span>
           {years.length > 0 && (
             <div className="relative inline-block w-[140px]">
               <select
                 value={selectedYear || ''}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
-                className="appearance-none border border-cyan-500 rounded-lg px-3 py-2 pr-8 bg-gray-800 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow cursor-pointer transition duration-150 w-full"
+                className="appearance-none border border-ia-accent rounded-lg px-3 py-2 pr-8 bg-ia-background text-ia-text font-semibold focus:outline-none focus:ring-2 focus:ring-ia-accent shadow cursor-pointer transition duration-150 w-full"
               >
                 {years.map(year => (
                   <option key={year} value={year}>
@@ -60,18 +60,18 @@ export default function CO2EpiWeekChart() {
       </div>
       <ResponsiveContainer width="100%" height={320}>
         <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-          <XAxis dataKey="name" tick={{ fill: "#ccc", fontSize: 12 }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--ia-border)" />
+          <XAxis dataKey="name" tick={{ fill: "var(--ia-text-secondary)", fontSize: 12 }} />
           <YAxis
             yAxisId="left"
-            label={{ value: "°C / %", angle: -90, position: "insideLeft", fill: "#ccc" }}
-            tick={{ fill: "#ccc" }}
+            label={{ value: "°C / %", angle: -90, position: "insideLeft", fill: "var(--ia-text-secondary)" }}
+            tick={{ fill: "var(--ia-text-secondary)" }}
           />
           <YAxis
             yAxisId="right"
             orientation="right"
-            label={{ value: "CO₂ ppm / Bioacustica (Hz)", angle: 90, position: "insideRight", fill: "#ccc" }}
-            tick={{ fill: "#ccc" }}
+            label={{ value: "CO₂ ppm / Bioacustica (Hz)", angle: 90, position: "insideRight", fill: "var(--ia-text-secondary)" }}
+            tick={{ fill: "var(--ia-text-secondary)" }}
             tickFormatter={formatNumber}
           />
           <Tooltip formatter={formatNumber} />
@@ -80,7 +80,7 @@ export default function CO2EpiWeekChart() {
             yAxisId="left"
             type="monotone"
             dataKey="temperatura"
-            stroke="#ff7300"
+            stroke="var(--ia-warning)"
             dot={true}
             name="Temperatura (°C)"
           />
@@ -88,7 +88,7 @@ export default function CO2EpiWeekChart() {
             yAxisId="left"
             type="monotone"
             dataKey="humedad"
-            stroke="#387908"
+            stroke="var(--ia-success)"
             dot={true}
             name="Humedad (%)"
           />
@@ -96,7 +96,7 @@ export default function CO2EpiWeekChart() {
             yAxisId="right"
             type="monotone"
             dataKey="co2"
-            stroke="#0088FE"
+            stroke="var(--ia-info)"
             dot={true}
             name="CO₂ (ppm)"
           />
@@ -104,7 +104,7 @@ export default function CO2EpiWeekChart() {
             yAxisId="right"
             type="monotone"
             dataKey="acustica"
-            stroke="#FF0000"
+            stroke="var(--ia-error)"
             dot={true}
             name="Bioacustica (Hz)"
           />

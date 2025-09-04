@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useServicioIA from '../hooks/useServicioIA';
+import { Spinner } from './SkeletonLoaders';
+import AlertaEnhanced from './AlertaEnhanced';
 
 const PromptSelector = ({ onSelectPrompt }) => {
   const { obtenerPromptsSugeridos, loading, error } = useServicioIA();
@@ -34,8 +36,8 @@ const PromptSelector = ({ onSelectPrompt }) => {
     }
   };
 
-  if (loading) return <div className="text-ia-text">Cargando prompts...</div>;
-  if (error) return <div className="text-ia-danger">Error al cargar prompts: {error}</div>;
+  if (loading) return <Spinner size="md" />;
+  if (error) return <AlertaEnhanced mensaje={`Error al cargar prompts: ${error}`} severity="alta" />;
 
   return (
     <div className="bg-transparent">

@@ -1,5 +1,29 @@
 /* src/index.css */
-@import 'leaflet/dist/leaflet.css'; /* This line must be first */
+@import 'leaflet/dist/leaflet.css';
+
+/* Variables de color base */
+:root {
+  /* Tema claro por defecto */
+  --ia-background: #f5f5f5;     /* Fondo principal muy claro */
+  --ia-card: #e5e5e5;          /* Fondo de tarjetas */
+  --ia-text: #111111;          /* Texto principal oscuro */
+  --ia-text-secondary: #4a4a4a; /* Texto secundario */
+  --ia-border: #d1d1d1;        /* Bordes */
+  --ia-accent: #4ade80;        /* Color de acento (verde) */
+  
+  /* Transiciones suaves */
+  --theme-transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* Tema oscuro */
+:root[class="dark"] {
+  --ia-background: #1a1a1a;     /* Fondo principal gris oscuro */
+  --ia-card: #2a2a2a;          /* Fondo de tarjetas */
+  --ia-text: #eaeaea;          /* Texto principal claro */
+  --ia-text-secondary: #a0a0a0; /* Texto secundario */
+  --ia-border: #404040;        /* Bordes */
+  --ia-accent: #4ade80;        /* Mantener el mismo acento */
+}
 
 @tailwind base;
 @tailwind components;
@@ -17,12 +41,98 @@
 }
 
 :root {
-  --ia-primary: #2563EB;     /* Azul principal (Tailwind blue-600) */
-  --ia-warning: #F59E0B;     /* Amarillo para demo */
-  --ia-danger: #EF4444;      /* Rojo para errores */
-  --ia-info: #3B82F6;        /* Azul para información (Tailwind blue-500) */
-  --ia-background: #EFF6FF;  /* Azul muy claro para fondo (Tailwind blue-50) */
-  --ia-text: #1E3A8A;        /* Azul oscuro para texto (Tailwind blue-900) */
+  /* Colores de estado (mantienen un toque de color para indicadores importantes) */
+  --ia-primary: #4F46E5;    /* Índigo elegante */
+  --ia-warning: #B45309;    /* Naranja oscuro */
+  --ia-danger: #DC2626;     /* Rojo oscuro */
+  --ia-info: #2563EB;       /* Azul oscuro */
+
+  /* Paleta de grises compartida */
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --gray-900: #111827;
+  --gray-950: #030712;
+}
+
+/* Tema Claro - Todo en grises claros */
+:root[class="light"] {
+  --ia-background: var(--gray-100);    /* Fondo principal gris muy claro */
+  --ia-surface: var(--gray-50);        /* Superficie de componentes */
+  --ia-card: var(--gray-50);           /* Fondo de tarjetas */
+  --ia-card-hover: var(--gray-200);    /* Estado hover de tarjetas */
+  --ia-text: var(--gray-900);          /* Texto principal */
+  --ia-text-secondary: var(--gray-600); /* Texto secundario */
+  --ia-border: var(--gray-200);        /* Bordes sutiles */
+  --ia-border-strong: var(--gray-300);  /* Bordes más prominentes */
+  --ia-shadow: rgba(0, 0, 0, 0.1);     /* Sombras suaves */
+  
+  /* Botones y elementos interactivos mantienen sus colores */
+  --btn-primary: #4F46E5;              /* Color principal para botones */
+  --btn-hover: #4338CA;                /* Color hover para botones */
+}
+
+/* Tema Oscuro - Sofisticado y Profesional */
+:root[class="dark"] {
+  --ia-background: var(--gray-900);    /* Fondo principal gris oscuro */
+  --ia-surface: var(--gray-800);       /* Superficie de componentes */
+  --ia-card: var(--gray-800);          /* Fondo de tarjetas */
+  --ia-card-hover: var(--gray-700);    /* Estado hover de tarjetas */
+  --ia-text: var(--gray-50);           /* Texto principal */
+  --ia-text-secondary: var(--gray-400); /* Texto secundario */
+  --ia-border: var(--gray-700);        /* Bordes sutiles */
+  --ia-border-strong: var(--gray-600); /* Bordes más prominentes */
+  --ia-shadow: rgba(0, 0, 0, 0.25);    /* Sombras más pronunciadas */
+}
+
+/* Tema Claro */
+:root[class="light"] {
+  --ia-background: #fafafa;  /* Gris 50 */
+  --ia-card: #f3f4f6;       /* Gris 100 */
+  --ia-card-header: #e5e7eb; /* Gris 200 */
+  --ia-card-hover: #e5e7eb;  /* Gris 200 */
+  --ia-text: #1f2937;       /* Gris 800 */
+  --ia-text-secondary: #6b7280; /* Gris 500 */
+  --ia-border: #e5e7eb;     /* Gris 200 */
+  --ia-accent: #4ade80;     /* Verde */
+  
+  /* Colores de alerta */
+  --ia-error: #dc2626;      /* Rojo 600 */
+  --ia-error-bg: #fee2e2;   /* Rojo 100 */
+  --ia-warning: #d97706;    /* Amarillo 600 */
+  --ia-warning-bg: #fef3c7; /* Amarillo 100 */
+  --ia-success: #16a34a;    /* Verde 600 */
+  --ia-success-bg: #dcfce7; /* Verde 100 */
+  --ia-info: #2563eb;       /* Azul 600 */
+  --ia-info-bg: #dbeafe;    /* Azul 100 */
+}
+
+/* Tema Oscuro */
+:root[class="dark"] {
+  --ia-background: #111827;  /* Gris 900 */
+  --ia-card: #1f2937;       /* Gris 800 */
+  --ia-card-header: #374151; /* Gris 700 */
+  --ia-card-hover: #374151;  /* Gris 700 */
+  --ia-text: #e5e7eb;       /* Gris 200 */
+  --ia-text-secondary: #9ca3af; /* Gris 400 */
+  --ia-border: #374151;     /* Gris 700 */
+  --ia-accent: #4ade80;     /* Verde */
+  
+  /* Colores de alerta */
+  --ia-error: #f87171;      /* Rojo 400 */
+  --ia-error-bg: rgba(220, 38, 38, 0.2); /* Rojo 600 con transparencia */
+  --ia-warning: #fbbf24;    /* Amarillo 400 */
+  --ia-warning-bg: rgba(217, 119, 6, 0.2); /* Amarillo 600 con transparencia */
+  --ia-success: #4ade80;    /* Verde 400 */
+  --ia-success-bg: rgba(22, 163, 74, 0.2); /* Verde 600 con transparencia */
+  --ia-info: #60a5fa;       /* Azul 400 */
+  --ia-info-bg: rgba(37, 99, 235, 0.2); /* Azul 600 con transparencia */
 }
 
 /* Other custom CSS below */

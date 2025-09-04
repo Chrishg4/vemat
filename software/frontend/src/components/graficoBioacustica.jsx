@@ -34,22 +34,22 @@ export default function BioacusticaChart({ data }) {
   const chartData = processData(data);
 
   return (
-    <div className="chart-container bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
-      <h2 className="text-white text-xl font-semibold mb-4">Monitoreo Bioacústico</h2>
+    <div className="chart-container bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border transition-colors duration-500">
+      <h2 className="text-ia-text text-xl font-semibold mb-4">Monitoreo Bioacústico</h2>
       <ResponsiveContainer width="100%" height={320}>
         <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-          <XAxis dataKey="name" tick={{ fill: "#ccc", fontSize: 12 }} label={{ value: 'Fecha/Hora', position: "insideBottom", offset: -5, fill: "#ccc" }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--ia-border)" />
+          <XAxis dataKey="name" tick={{ fill: "var(--ia-text-secondary)", fontSize: 12 }} label={{ value: 'Fecha/Hora', position: "insideBottom", offset: -5, fill: "var(--ia-text-secondary)" }} />
           <YAxis
-            label={{ value: "Bioacústica (Hz)", angle: -90, position: "insideLeft", fill: "#ccc" }}
-            tick={{ fill: "#ccc" }}
+            label={{ value: "Bioacústica (Hz)", angle: -90, position: "insideLeft", fill: "var(--ia-text-secondary)" }}
+            tick={{ fill: "var(--ia-text-secondary)" }}
           />
           <Tooltip />
           <Legend />
           <Line
             type="monotone"
             dataKey="value"
-            stroke="#FF0000"
+            stroke="var(--ia-error)"
             dot={false}
             name="Bioacústica (Hz)"
           />

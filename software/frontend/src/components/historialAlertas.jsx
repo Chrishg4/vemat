@@ -1,58 +1,74 @@
 // src/components/historialAlertas.jsx
 import React from "react";
 import UbicacionFromCoordenadas from "./ubicacióndeCoordenadas";
+import ResponsiveTable from "./ResponsiveTable";
 
-export default function HistorialAlertas({ alertas }) {
+export default function HistorialAlertas({ alertas, loading }) {
+  const columns = [
+    {
+      header: "Tipo",
+      render: (alerta) => <span className="text-blue-400">{alerta.tipo}</span>,
+    },
+    {
+      header: "Valor",
+      render: (alerta) => (
+        <span className="text-blue-400">
+          {alerta.valor}
+          {alerta.tipo === "temperatura"
+            ? "°C"
+            : alerta.tipo === "humedad"
+            ? "%"
+            : alerta.tipo === "co2"
+            ? " ppm"
+            : ""}
+        </span>
+      ),
+    },
+    { header: "Rango Normal", field: "rangoNormal" },
+    {
+      header: "Estado",
+      render: (alerta) => (
+        <span
+          className={`px-2 py-1 rounded-full text-xs ${
+            alerta.estado === "enviado"
+              ? "bg-green-500/20 text-green-400"
+              : "bg-red-500/20 text-red-400"
+          }`}
+        >
+          {alerta.estado}
+        </span>
+      ),
+    },
+    {
+      header: "Coordenadas",
+      render: (alerta) =>
+        alerta.latitud && alerta.longitud
+          ? `${alerta.latitud.toFixed(5)}, ${alerta.longitud.toFixed(5)}`
+          : "N/A",
+    },
+    {
+      header: "Ubicación",
+      render: (alerta) => (
+        <UbicacionFromCoordenadas
+          lat={alerta.latitud}
+          lon={alerta.longitud}
+        />
+      ),
+    },
+  ];
+
   return (
-    <div className="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800 overflow-x-auto">
-      <h2 className="text-xl font-semibold mb-4 text-white">Historial de Alertas</h2>
-      {alertas.length === 0 ? (
-        <p className="text-gray-400 text-center py-4">No hay alertas registradas</p>
-      ) : (
-        <table className="w-full table-auto text-sm">
-          <thead>
-            <tr className="text-blue-400">
-              <th className="px-4 py-2">Tipo</th>
-              <th className="px-4 py-2">Valor</th>
-              <th className="px-4 py-2">Rango Normal</th>
-              <th className="px-4 py-2">Estado</th>
-              <th className="px-4 py-2">Coordenadas</th>
-              <th className="px-4 py-2">Ubicación</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-300">
-            {[...alertas].reverse().map((alerta, index) => {
-              return (
-                <tr key={index} className="text-center border-t border-gray-800 hover:bg-gray-800">
-                  <td className="px-4 py-2 text-blue-400">{alerta.tipo}</td>
-                  <td className="px-4 py-2 text-blue-400">
-                    {alerta.valor}
-                    {alerta.tipo === 'temperatura' ? '°C' :
-                     alerta.tipo === 'humedad' ? '%' :
-                     alerta.tipo === 'co2' ? ' ppm' : ''}
-                  </td>
-                  <td className="px-4 py-2">{alerta.rangoNormal}</td>
-                  <td className="px-4 py-2">
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      alerta.estado === 'enviado' ? 'bg-green-500/20 text-green-400' :
-                      'bg-red-500/20 text-red-400'
-                    }`}>
-                      {alerta.estado}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2">
-                    {alerta.latitud && alerta.longitud ? 
-                      `${alerta.latitud.toFixed(5)}, ${alerta.longitud.toFixed(5)}` : 'N/A'}
-                  </td>
-                  <td className="px-4 py-2">
-                    <UbicacionFromCoordenadas lat={alerta.latitud} lon={alerta.longitud} />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      )}
+    <div className="bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border">
+      <h2 className="text-xl font-semibold mb-4 text-ia-text">
+        Historial de Alertas
+      </h2>
+      <ResponsiveTable
+        columns={columns}
+        data={[...alertas].reverse()}
+        loading={loading}
+        noDataMessage="No hay alertas registradas"
+        containerClassName="overflow-x-auto"
+      />
     </div>
   );
 }

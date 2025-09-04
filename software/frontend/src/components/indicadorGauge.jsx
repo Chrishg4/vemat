@@ -1,19 +1,21 @@
 // src/components/indicadorGauge.jsx
 import React from 'react';
-import { FaTemperatureHigh, FaTint, FaVolumeUp } from 'react-icons/fa';
 import IconoCo2 from './iconoCo2'; // Importar el icono personalizado
+import IconoTemperatura from './iconoTemperatura';
+import IconoHumedad from './iconoHumedad';
+import IconoBioacustica from './iconoBioacustica';
 import { useObtenerLecturas } from '../use/useObtenerLecturas';
 
 const TarjetaIndicador = ({ icono, titulo, valor, unidad, color }) => {
   const IconoComponente = icono;
   return (
-    <div className={`bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col items-center justify-center text-white border border-gray-700`}>
-      <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full" style={{ backgroundColor: color }}>
-        <IconoComponente className="w-10 h-10" />
+    <div className={`bg-ia-card p-6 rounded-2xl shadow-md flex flex-col items-center justify-center text-ia-text border border-ia-border transition-colors duration-500`}>
+      <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-opacity-20 dark:bg-opacity-30" style={{ backgroundColor: color }}>
+        <IconoComponente className="w-10 h-10" style={{ color: color }} />
       </div>
-      <h3 className="text-lg font-semibold text-gray-300">{titulo}</h3>
-      <p className="text-4xl font-bold text-white">
-        {valor} <span className="text-2xl text-gray-400">{unidad}</span>
+      <h3 className="text-lg font-semibold text-ia-text-secondary">{titulo}</h3>
+      <p className="text-4xl font-bold text-ia-text">
+        {valor} <span className="text-2xl text-ia-text-secondary">{unidad}</span>
       </p>
     </div>
   );
@@ -25,19 +27,19 @@ export default function IndicadorGauge() {
   const indicadores = [
     {
       id: 'temperatura',
-      icono: FaTemperatureHigh,
+      icono: IconoTemperatura,
       titulo: 'Temperatura',
       valor: parseFloat(latest.temperatura).toFixed(1),
       unidad: '°C',
-      color: '#ff7300',
+      color: 'var(--ia-warning)',
     },
     {
       id: 'humedad',
-      icono: FaTint,
+      icono: IconoHumedad,
       titulo: 'Humedad',
       valor: parseFloat(latest.humedad).toFixed(1),
       unidad: '%',
-      color: '#387908',
+      color: 'var(--ia-success)',
     },
     {
       id: 'co2',
@@ -45,15 +47,15 @@ export default function IndicadorGauge() {
       titulo: 'CO₂',
       valor: parseFloat(latest.co2).toFixed(0),
       unidad: 'ppm',
-      color: '#0088FE',
+      color: 'var(--ia-info)',
     },
     {
       id: 'acustica',
-      icono: FaVolumeUp,
+      icono: IconoBioacustica,
       titulo: 'Bioacustica',
       valor: parseFloat(latest.acustica).toFixed(0),
       unidad: 'Hz',
-      color: '#FF0000',
+      color: 'var(--ia-error)',
     },
   ];
 
@@ -68,12 +70,12 @@ export default function IndicadorGauge() {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-white text-xl font-semibold">
+        <h2 className="text-ia-text text-xl font-semibold">
           Lecturas Actuales
         </h2>
         <div className="text-right">
-          <p className="text-gray-400 text-sm">ID del Nodo: <span className="font-semibold text-gray-200">{latest.nodo_id || 'N/A'}</span></p>
-          <p className="text-gray-400 text-sm">Fecha: <span className="font-semibold text-gray-200">{fechaFormateada}</span></p>
+          <p className="text-ia-text-secondary text-sm">ID del Nodo: <span className="font-semibold text-ia-text">{latest.nodo_id || 'N/A'}</span></p>
+          <p className="text-ia-text-secondary text-sm">Fecha: <span className="font-semibold text-ia-text">{fechaFormateada}</span></p>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">

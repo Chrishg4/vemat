@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
+import { Spinner } from './SkeletonLoaders';
 
 const ChatInterface = ({
   enviarConsulta,
@@ -74,7 +75,7 @@ const ChatInterface = ({
         {isLoadingQuery && (
           <div className="text-center my-4 flex justify-center items-center space-x-2">
             <span className="text-gray-400">Analizando...</span>
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-sky-300"></div>
+            <Spinner size="sm" />
           </div>
         )}
 
@@ -101,7 +102,7 @@ const ChatInterface = ({
           onClick={handleSend}
           disabled={isLoadingQuery || !consulta.trim() || statusIA.estado === ESTADOS_IA.CARGANDO || statusIA.estado === ESTADOS_IA.ERROR}
         >
-          {isLoadingQuery ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> : 'Enviar'}
+          {isLoadingQuery ? <Spinner size="sm" /> : 'Enviar'}
         </button>
       </div>
     </div>

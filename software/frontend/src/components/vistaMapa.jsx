@@ -17,8 +17,8 @@ export default function VistaMapa({ coordenadas }) {
   }
 
   return (
-    <div className="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
-      <h2 className="text-white text-xl font-semibold mb-4">Ubicación del Sensor</h2>
+    <div className="bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border transition-colors duration-500">
+      <h2 className="text-ia-text text-xl font-semibold mb-4">Ubicación del Sensor</h2>
       <div className="h-80 w-full rounded-xl overflow-hidden shadow-md">
         <MapContainer center={[coordenadas.lat, coordenadas.lng]} zoom={15} style={{ height: "100%", width: "100%" }}>
           <TileLayer
@@ -30,7 +30,7 @@ export default function VistaMapa({ coordenadas }) {
           </Marker>
         </MapContainer>
       </div>
-      <div className="text-white text-sm mt-2 text-center">
+      <div className="text-ia-text text-sm mt-2 text-center">
         <p>Latitud: {coordenadas.lat.toFixed(5)}, Longitud: {coordenadas.lng.toFixed(5)}</p>
         <p>Ubicación: Universidad Tecnica Nacional</p>
       </div>

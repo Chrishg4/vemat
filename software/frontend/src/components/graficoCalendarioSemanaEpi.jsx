@@ -50,33 +50,45 @@ const EpiWeekCalendarChart = () => {
 
     const ctx = chartRef.current.getContext('2d');
 
+    // Obtener variables CSS para usar colores consistentes con el tema
+    const getCSSVariable = (varName) => {
+      return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    };
+    
+    // Usar colores del tema para los meses
     const monthColors = [
-      'rgba(255, 99, 132, 0.5)', // Enero (Red)
-      'rgba(54, 162, 235, 0.5)', // Febrero (Blue)
-      'rgba(255, 206, 86, 0.5)', // Marzo (Yellow)
-      'rgba(75, 192, 192, 0.5)', // Abril (Green)
-      'rgba(153, 102, 255, 0.5)', // Mayo (Purple)
-      'rgba(255, 159, 64, 0.5)', // Junio (Orange)
-      'rgba(199, 199, 199, 0.5)', // Julio (Grey)
-      'rgba(83, 102, 255, 0.5)', // Agosto (Indigo)
-      'rgba(255, 99, 71, 0.5)', // Septiembre (Tomato)
-      'rgba(60, 179, 113, 0.5)', // Octubre (MediumSeaGreen)
-      'rgba(218, 112, 214, 0.5)', // Noviembre (Orchid)
-      'rgba(100, 149, 237, 0.5)', // Diciembre (CornflowerBlue)
+      'var(--ia-error-bg)',    // Enero 
+      'var(--ia-info-bg)',     // Febrero
+      'var(--ia-warning-bg)',  // Marzo
+      'var(--ia-success-bg)',  // Abril
+      'var(--ia-error-bg)',    // Mayo
+      'var(--ia-info-bg)',     // Junio
+      'var(--ia-warning-bg)',  // Julio
+      'var(--ia-success-bg)',  // Agosto
+      'var(--ia-error-bg)',    // Septiembre
+      'var(--ia-info-bg)',     // Octubre
+      'var(--ia-warning-bg)',  // Noviembre
+      'var(--ia-success-bg)',  // Diciembre
     ];
 
     const backgroundColors = epiWeeks.map(week => {
       if (week.weekNumber === 1 || week.weekNumber === 52) {
-        return 'rgba(255, 0, 0, 0.7)'; // Highlight Week 1 and 52 in red
+        return 'var(--ia-error)'; // Destacar semanas 1 y 52 con el color de error
       }
       return monthColors[week.month];
     });
 
     const borderColors = epiWeeks.map(week => {
       if (week.weekNumber === 1 || week.weekNumber === 52) {
-        return 'rgba(255, 0, 0, 1)';
+        return 'var(--ia-error)';
       }
-      return monthColors[week.month].replace('0.5', '1');
+      // Para los bordes, usar colores más oscuros
+      switch(week.month % 4) {
+        case 0: return 'var(--ia-error)';
+        case 1: return 'var(--ia-info)';
+        case 2: return 'var(--ia-warning)';
+        case 3: return 'var(--ia-success)';
+      }
     });
 
     chartInstance.current = new Chart(ctx, {
@@ -157,7 +169,8 @@ const EpiWeekCalendarChart = () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '800px' }}> {/* Adjust height as needed */}
+    <div className="bg-ia-card p-6 rounded-lg shadow-md transition-colors duration-500" style={{ width: '100%', height: '800px' }}>
+      <h2 className="text-xl font-semibold text-ia-text mb-4">Calendario de Semanas Epidemiológicas 2025</h2>
       <canvas ref={chartRef}></canvas>
     </div>
   );

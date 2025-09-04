@@ -15,6 +15,7 @@ import {
   ResponsiveContainer
 } from "recharts";
 import { useContextoTablero } from "../context/contextoTablero";
+
 export default function TempHumidityChart({ chartMode = 'line', showOnly = null, title = 'Gráfica de Datos' }) {
   const { data, soundHistory } = useContextoTablero();
 
@@ -42,25 +43,29 @@ export default function TempHumidityChart({ chartMode = 'line', showOnly = null,
   const ChartElement = chartMode === 'bar' ? Bar : (chartMode === 'area' ? Area : Line);
 
   return (
-    <div className="chart-container bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-800">
-      <h2 className="text-white text-xl font-semibold mb-4">{title}</h2>
+    <div className="chart-container bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border transition-colors duration-500">
+      <h2 className="text-ia-text text-xl font-semibold mb-4">{title}</h2>
       <ResponsiveContainer width="100%" height={320}>
         <ChartComponent data={processedChartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-          <XAxis dataKey="name" tick={{ fill: "#ccc", fontSize: 12 }} label={{ value: xAxisLabel, position: "insideBottom", offset: -5, fill: "#ccc" }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--ia-border)" />
+          <XAxis
+            dataKey="name"
+            tick={{ fill: "var(--ia-text-secondary)", fontSize: 12 }}
+            label={{ value: xAxisLabel, position: "insideBottom", offset: -5, fill: "var(--ia-text-secondary)" }}
+          />
           {(!showOnly || showOnly === 'temperatura' || showOnly === 'humedad') && (
             <YAxis
               yAxisId="left"
-              label={{ value: "°C / %", angle: -90, position: "insideLeft", fill: "#ccc" }}
-              tick={{ fill: "#ccc" }}
+              label={{ value: "°C / %", angle: -90, position: "insideLeft", fill: "var(--ia-text-secondary)" }}
+              tick={{ fill: "var(--ia-text-secondary)" }}
             />
           )}
           {(!showOnly || showOnly === 'co2' || showOnly === 'acustica') && (
             <YAxis
               yAxisId="right"
               orientation="right"
-              label={{ value: showOnly === 'co2' ? "CO₂ (ppm)" : (showOnly === 'acustica' ? "Bioacústica (Hz)" : "CO₂ (ppm) / Bioacústica (Hz)"), angle: 90, position: "insideRight", fill: "#ccc" }}
-              tick={{ fill: "#ccc" }}
+              label={{ value: showOnly === 'co2' ? "CO₂ (ppm)" : (showOnly === 'acustica' ? "Bioacústica (Hz)" : "CO₂ (ppm) / Bioacústica (Hz)"), angle: 90, position: "insideRight", fill: "var(--ia-text-secondary)" }}
+              tick={{ fill: "var(--ia-text-secondary)" }}
             />
           )}
           <Tooltip />
@@ -70,8 +75,8 @@ export default function TempHumidityChart({ chartMode = 'line', showOnly = null,
               yAxisId="left"
               type={chartMode === 'line' ? "monotone" : undefined}
               dataKey="temperatura"
-              stroke="#ff7300"
-              fill={chartMode === 'area' ? "rgba(255, 115, 0, 0.3)" : "#ff7300"}
+              stroke="var(--ia-warning)"
+              fill={chartMode === 'area' ? "var(--ia-warning-bg)" : "var(--ia-warning)"}
               dot={chartMode === 'line' ? false : undefined}
               name="Temperatura (°C)"
             />
@@ -81,8 +86,8 @@ export default function TempHumidityChart({ chartMode = 'line', showOnly = null,
               yAxisId="left"
               type={chartMode === 'line' ? "monotone" : undefined}
               dataKey="humedad"
-              stroke="#387908"
-              fill={chartMode === 'area' ? "rgba(56, 121, 8, 0.3)" : "#387908"}
+              stroke="var(--ia-success)"
+              fill={chartMode === 'area' ? "var(--ia-success-bg)" : "var(--ia-success)"}
               dot={chartMode === 'line' ? false : undefined}
               name="Humedad (%)"
             />
@@ -92,8 +97,8 @@ export default function TempHumidityChart({ chartMode = 'line', showOnly = null,
               yAxisId="right"
               type={chartMode === 'line' ? "monotone" : undefined}
               dataKey="co2"
-              stroke="#0088FE"
-              fill={chartMode === 'area' ? "rgba(0, 136, 254, 0.3)" : "#0088FE"}
+              stroke="var(--ia-info)"
+              fill={chartMode === 'area' ? "var(--ia-info-bg)" : "var(--ia-info)"}
               dot={chartMode === 'line' ? false : undefined}
               name="CO₂ (ppm)"
             />
@@ -103,8 +108,8 @@ export default function TempHumidityChart({ chartMode = 'line', showOnly = null,
               yAxisId="right"
               type={chartMode === 'line' ? "monotone" : undefined}
               dataKey="acustica"
-              stroke="#FF0000"
-              fill={chartMode === 'area' ? "rgba(255, 0, 0, 0.3)" : "#FF0000"}
+              stroke="var(--ia-error)"
+              fill={chartMode === 'area' ? "var(--ia-error-bg)" : "var(--ia-error)"}
               dot={chartMode === 'line' ? false : undefined}
               name="Bioacústica (Hz)"
             />

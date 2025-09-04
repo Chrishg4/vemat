@@ -2,32 +2,41 @@
 import React from "react";
 import HistorialAlertas from "../components/historialAlertas";
 import { useObtenerHistorialAlertas } from "../use/useObtenerHistorialAlertas";
+import AlertaEnhanced from "../components/AlertaEnhanced";
 
 export default function PaginaHistorialAlertas() {
   const { alertHistory, loading, error } = useObtenerHistorialAlertas();
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-white">Historial de Alertas</h2>
-      <div className="bg-gray-800 p-6 rounded-xl shadow-lg">
-  <HistorialAlertas alertas={alertHistory} />
+      <h2 className="text-2xl font-bold mb-4 text-ia-text">Historial de Alertas</h2>
+      
+      {error && (
+        <AlertaEnhanced
+          mensaje={error.message || "Ocurrió un error al cargar el historial de alertas."}
+          severity="alta"
+        />
+      )}
+
+      <div className="bg-ia-card p-6 rounded-xl shadow-lg border border-ia-border">
+        <HistorialAlertas alertas={alertHistory} loading={loading} />
       </div>
 
       {/* Estadísticas de alertas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-        <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
-          <h3 className="text-lg font-semibold text-blue-400 mb-2">Total de Alertas</h3>
-          <p className="text-3xl font-bold text-white">{alertHistory.length}</p>
+        <div className="bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border">
+          <h3 className="text-lg font-semibold text-ia-accent mb-2">Total de Alertas</h3>
+          <p className="text-3xl font-bold text-ia-text">{alertHistory.length}</p>
         </div>
-        <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
+        <div className="bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border">
           <h3 className="text-lg font-semibold text-green-400 mb-2">Alertas Enviadas</h3>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-3xl font-bold text-ia-text">
             {alertHistory.filter(alert => alert.estado === 'enviado').length}
           </p>
         </div>
-        <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
+        <div className="bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border">
           <h3 className="text-lg font-semibold text-red-400 mb-2">Alertas con Error</h3>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-3xl font-bold text-ia-text">
             {alertHistory.filter(alert => alert.estado === 'error').length}
           </p>
         </div>

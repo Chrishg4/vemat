@@ -1,10 +1,12 @@
 import React from "react";
 import { GiAmberMosquito } from "react-icons/gi";
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaMoon, FaSun } from "react-icons/fa";
 import { useContextoTablero } from "../context/contextoTablero";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Encabezado() {
   const { hasNewData, refreshData, data, loading } = useContextoTablero();
+  const { theme, toggleTheme } = useTheme();
   
   const handleRefresh = () => {
     refreshData();
@@ -17,18 +19,29 @@ export default function Encabezado() {
   const mostrarIndicadorNuevosDatos = hasNewData && data.length > 0 && !loading;
   
   return (
-    <header className="bg-gray-800 text-white py-3 shadow-md">
+    <header className="bg-ia-card shadow-lg py-3 transition-colors duration-500">
       <div className="container mx-auto flex justify-between items-center px-4">
-        <span className="text-sm font-semibold text-gray-300 whitespace-nowrap mr-4">
+        <span className="text-sm font-semibold text-ia-text-secondary whitespace-nowrap mr-4">
           Universidad Tecnica Nacional - Sede Guanacaste
         </span>
         
-        <h1 className="text-xl font-bold flex-1 text-center mx-auto flex items-center justify-center">
-          <GiAmberMosquito className="mr-2 text-yellow-400 text-2xl" />
+        <h1 className="text-xl font-bold flex-1 text-center mx-auto flex items-center justify-center text-ia-text">
+          <GiAmberMosquito className="mr-2 text-ia-accent text-2xl" />
           Sistema de Vigilancia Eco-epidemiológico de Mosquitos
         </h1>
         
         <div className="w-48 flex justify-end items-center">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full hover:bg-ia-card transition-colors duration-500 mr-4"
+            title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+          >
+            {theme === 'dark' ? (
+              <FaSun className="text-yellow-400" />
+            ) : (
+              <FaMoon className="text-gray-500" />
+            )}
+          </button>
           {mostrarIndicadorNuevosDatos && (
             <button 
               onClick={handleRefresh}

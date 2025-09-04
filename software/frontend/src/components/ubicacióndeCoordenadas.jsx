@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { obtenerCiudadDeCoordenadas } from '../services/serviciodegeocodificación';
 import { FaMapMarkerAlt } from 'react-icons/fa';
+import { Spinner } from './SkeletonLoaders';
 
 export default function UbicacionFromCoordenadas({ lat, lon }) {
   const [ciudad, setCiudad] = useState('Cargando...');
@@ -59,7 +60,7 @@ export default function UbicacionFromCoordenadas({ lat, lon }) {
   return (
     <span className={`flex items-center ${error ? 'text-gray-400' : 'text-gray-300'}`}>
       <FaMapMarkerAlt className="mr-1 text-blue-400" />
-      {loading ? 'Cargando ubicación...' : ciudad}
+      {loading ? <Spinner size="sm" /> : ciudad}
     </span>
   );
 }

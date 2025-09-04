@@ -40,7 +40,7 @@ function ChartComponent({ chartData }) {
         plugins: {
           legend: {
             labels: {
-              color: 'rgb(209 213 219)',
+              color: 'var(--ia-text)',
             },
           },
         },
@@ -49,26 +49,26 @@ function ChartComponent({ chartData }) {
             title: {
               display: true,
               text: 'Fecha/Hora',
-              color: 'rgb(209 213 219)',
+              color: 'var(--ia-text)',
             },
             grid: {
-              color: 'rgba(75, 85, 99, 0.5)',
+              color: 'var(--ia-border)',
             },
             ticks: {
-              color: 'rgb(209 213 219)',
+              color: 'var(--ia-text-secondary)',
             },
           },
           y: {
             title: {
               display: true,
               text: 'Valor',
-              color: 'rgb(209 213 219)',
+              color: 'var(--ia-text)',
             },
             grid: {
-              color: 'rgba(75, 85, 99, 0.5)',
+              color: 'var(--ia-border)',
             },
             ticks: {
-              color: 'rgb(209 213 219)',
+              color: 'var(--ia-text-secondary)',
             },
           },
         },
@@ -83,9 +83,9 @@ function ChartComponent({ chartData }) {
   }, [chartData]);
 
   return (
-    <div className="bg-gray-800 p-6 rounded-lg shadow-xl h-96">
-      <h2 className="text-xl font-semibold text-white mb-4 flex items-center space-x-2">
-        <span className="text-cyan-400 text-2xl">📈</span>
+    <div className="bg-ia-card p-6 rounded-lg shadow-md h-96 transition-colors duration-500">
+      <h2 className="text-xl font-semibold text-ia-text mb-4 flex items-center space-x-2">
+        <span className="text-ia-accent text-2xl">📈</span>
         <span>Temperatura y Humedad</span>
       </h2>
       <canvas ref={chartRef}></canvas>

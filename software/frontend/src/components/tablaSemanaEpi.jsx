@@ -1,9 +1,10 @@
 import React from "react";
 import { useContextoTablero } from "../context/contextoTablero";
 import { getEpiWeek } from "../utils/epiWeek";
+import ResponsiveTable from "./ResponsiveTable";
 
 export default function EpiWeekTable() {
-  const { data } = useContextoTablero();
+  const { data, loading } = useContextoTablero();
 
   const groupedData = data.reduce((acc, item) => {
     const epiWeek = getEpiWeek(item.fecha);
@@ -35,9 +36,13 @@ export default function EpiWeekTable() {
     avgSound: (week.totalSound / week.count).toFixed(2),
   })).sort((a, b) => a.name.localeCompare(b.name));
 
-  if (!tableData || tableData.length === 0) {
-    return <p className="text-white">Cargando datos de semana epidemiológica...</p>;
-  }
+  const columns = [
+    { header: 'Semana Epidemiológica', field: 'name' },
+    { header: 'Temp. Promedio (°C)', field: 'avgTemp' },
+    { header: 'Hum. Promedio (%)', field: 'avgHum' },
+    { header: 'CO₂ Promedio (ppm)', field: 'avgCo2' },
+    { header: 'Bioacustica Promedio (Hz)', field: 'avgSound' }
+  ];
 
   return (
     <div className="bg-gray-900 p-4 rounded-xl shadow-lg w-full">
@@ -45,31 +50,12 @@ export default function EpiWeekTable() {
         Datos Agregados por Semana Epidemiológica
       </h2>
       <div className="overflow-auto max-h-[400px] no-scrollbar">
-        <table className="min-w-full text-sm text-gray-300">
-          <thead className="text-xs border-b border-gray-600 sticky top-0 bg-gray-900">
-            <tr>
-              <th className="px-4 py-3 text-left text-cyan-400">Semana Epidemiológica</th>
-              <th className="px-4 py-3 text-left text-cyan-400">Temp. Promedio (°C)</th>
-              <th className="px-4 py-3 text-left text-cyan-400">Hum. Promedio (%)</th>
-              <th className="px-4 py-3 text-left text-cyan-400">CO₂ Promedio (ppm)</th>
-              <th className="px-4 py-3 text-left text-cyan-400">Bioacustica Promedio (Hz)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableData.map((row, index) => (
-              <tr
-                key={index}
-                className="border-b border-gray-700 hover:bg-gray-800 transition"
-              >
-                <td className="px-4 py-3">{row.name}</td>
-                <td className="px-4 py-3">{row.avgTemp}</td>
-                <td className="px-4 py-3">{row.avgHum}</td>
-                <td className="px-4 py-3">{row.avgCo2}</td>
-                <td className="px-4 py-3">{row.avgSound}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ResponsiveTable
+          columns={columns}
+          data={tableData}
+          loading={loading}
+          noDataMessage="No hay datos de semana epidemiológica para mostrar"
+        />
       </div>
     </div>
   );

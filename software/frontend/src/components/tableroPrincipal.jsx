@@ -30,12 +30,12 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-900">
+    <div className="flex h-screen overflow-hidden bg-ia-background transition-colors duration-500">
       <BarraLateral username={user} onLogout={logout} />
       <div className="flex flex-col flex-1 w-0 overflow-hidden">
         <Encabezado />
-        <main className="flex-1 relative z-0 overflow-y-auto no-scrollbar focus:outline-none">
-          <div className="p-2 max-w-7xl mx-auto">
+        <main className="flex-1 relative z-0 overflow-y-auto no-scrollbar focus:outline-none transition-colors duration-500">
+          <div className="p-4 max-w-7xl mx-auto">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<VistaTablero />} />

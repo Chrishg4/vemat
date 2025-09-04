@@ -1,0 +1,18 @@
+@layer components {
+  .btn-primary {
+    @apply bg-ia-accent hover:bg-opacity-90 text-white transition-colors duration-500;
+  }
+  
+  .btn-secondary {
+    @apply bg-ia-card hover:bg-opacity-90 text-ia-text border border-ia-border transition-colors duration-500;
+  }
+
+  .card {
+    @apply bg-ia-card border border-ia-border rounded-lg shadow-md transition-colors duration-500;
+  }
+
+  .input {
+    @apply bg-ia-background border border-ia-border text-ia-text placeholder-ia-text-secondary rounded-md 
+    focus:ring-2 focus:ring-ia-accent focus:border-transparent transition-colors duration-500;
+  }
+}

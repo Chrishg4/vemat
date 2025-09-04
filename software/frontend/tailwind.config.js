@@ -1,15 +1,31 @@
 /** @type {import('tailwindcss').Config} */
+import colors from 'tailwindcss/colors';
+
 export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        'ia-primary': '#10B981',
-        'ia-warning': '#F59E0B',
-        'ia-danger': '#EF4444',
-        'ia-info': '#3B82F6',
-        'ia-background': '#F0FDF4',
-        'ia-text': '#065F46',
+        'ia-background': 'var(--ia-background)',
+        'ia-card': 'var(--ia-card)',
+        'ia-card-header': 'var(--ia-card-header)',
+        'ia-card-hover': 'var(--ia-card-hover)',
+        'ia-text': 'var(--ia-text)',
+        'ia-text-secondary': 'var(--ia-text-secondary)',
+        'ia-border': 'var(--ia-border)',
+        'ia-accent': 'var(--ia-accent)',
+        'ia-error': 'var(--ia-error)',
+        'ia-error-bg': 'var(--ia-error-bg)',
+        'ia-warning': 'var(--ia-warning)',
+        'ia-warning-bg': 'var(--ia-warning-bg)',
+        'ia-success': 'var(--ia-success)',
+        'ia-success-bg': 'var(--ia-success-bg)',
+        'ia-info': 'var(--ia-info)',
+        'ia-info-bg': 'var(--ia-info-bg)',
+      },
+      transitionProperty: {
+        'theme': 'background-color, color, border-color, box-shadow',
       },
       keyframes: {
         'slide-in-up': {
