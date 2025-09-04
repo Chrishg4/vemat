@@ -6,6 +6,7 @@ import { ProveedorContextoTablero } from "./context/contextoTablero";
 import InicioSesion from "./components/inicioSesion";
 import { useContextoAuth } from "./context/contextoAuth";
 import AsistenteIA from "./components/asistenteIA";
+import ComponenteDeAlertas from "./components/ComponenteDeAlertas";
 
 // Componente de protección de rutas
 function RutaProtegida({ children }) {
@@ -27,6 +28,7 @@ export default function App() {
                   <>
                     <TableroPrincipal />
                     <AsistenteIA />
+                    <ComponenteDeAlertas />
                   </>
                 </RutaProtegida>
               } />
