@@ -10,21 +10,16 @@ export default function HistorialAlertas({ alertas, loading }) {
       render: (alerta) => <span className="text-blue-400">{alerta.tipo}</span>,
     },
     {
-      header: "Valor",
+      header: "Fecha",
       render: (alerta) => (
         <span className="text-blue-400">
-          {alerta.valor}
-          {alerta.tipo === "temperatura"
-            ? "°C"
-            : alerta.tipo === "humedad"
-            ? "%"
-            : alerta.tipo === "co2"
-            ? " ppm"
-            : ""}
+          {new Date(alerta.fecha).toLocaleDateString('es-CR')}
         </span>
       ),
     },
-    { header: "Rango Normal", field: "rangoNormal" },
+    
+    
+    
     {
       header: "Estado",
       render: (alerta) => (

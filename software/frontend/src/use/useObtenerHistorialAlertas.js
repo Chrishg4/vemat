@@ -42,7 +42,7 @@ export const useObtenerHistorialAlertas = () => {
         const avgCO2 = (promedios.co2 / grupo.length).toFixed(1);
 
         return {
-          fecha: ultimaLectura.fecha,
+          fecha: grupo[8] ? grupo[8].fecha : ultimaLectura.fecha,
           tipo: 'Condiciones Favorables',
           valor: `Condiciones favorables para proliferación de mosquitos detectadas. Fecha: ${new Date(ultimaLectura.fecha).toLocaleDateString('es-CR')}, Hora: ${new Date(ultimaLectura.fecha).toLocaleTimeString('es-CR')}. Promedios (últimas 9 mediciones): Temp: ${avgTemp}°C, Hum: ${avgHum}%, CO2: ${avgCO2}ppm.`,
           rangoNormal: 'Ver detalles',
