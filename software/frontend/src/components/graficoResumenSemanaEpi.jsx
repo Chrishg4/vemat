@@ -22,7 +22,7 @@ const GraficoResumenSemanaEpi = ({ data }) => {
   const [selectedMetric, setSelectedMetric] = useState('temperatura');
 
   if (!data || data.length === 0) {
-    return <p className="text-white">No hay datos disponibles para mostrar el gráfico.</p>;
+    return <p className="text-ia-text">No hay datos disponibles para mostrar el gráfico.</p>;
   }
 
   const currentMetric = metricOptions[selectedMetric];

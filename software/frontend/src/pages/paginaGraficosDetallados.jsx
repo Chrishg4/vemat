@@ -8,11 +8,11 @@ export default function PaginaGraficosDetallados() {
 
   return (
     <div className="p-4 space-y-6">
-      <h1 className="text-2xl font-bold text-white mb-6">Análisis Detallado de Sensores</h1>
+      <h1 className="text-2xl font-bold text-ia-text mb-6">Análisis Detallado de Sensores</h1>
 
       {/* Gráfico de Temperatura */}
-      <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">Temperatura</h2>
+      <div className="bg-ia-card p-4 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold text-ia-text mb-4">Temperatura</h2>
         <div className="h-auto">
           <GraficoTempHumedad 
             chartMode="line" 
@@ -23,8 +23,8 @@ export default function PaginaGraficosDetallados() {
       </div>
 
       {/* Gráfico de Humedad */}
-      <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">Humedad</h2>
+      <div className="bg-ia-card p-4 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold text-ia-text mb-4">Humedad</h2>
         <div className="h-auto">
           <GraficoTempHumedad 
             chartMode="line" 
@@ -35,8 +35,8 @@ export default function PaginaGraficosDetallados() {
       </div>
 
       {/* Gráfico de CO2 */}
-      <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">CO₂</h2>
+      <div className="bg-ia-card p-4 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold text-ia-text mb-4">CO₂</h2>
         <div className="h-auto">
           <GraficoTempHumedad 
             chartMode="line" 
@@ -47,8 +47,8 @@ export default function PaginaGraficosDetallados() {
       </div>
 
       {/* Gráfico de Bioacústica */}
-      <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">Bioacústica</h2>
+      <div className="bg-ia-card p-4 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold text-ia-text mb-4">Bioacústica</h2>
         <GraficoBioacustica data={data} />
       </div>
     </div>

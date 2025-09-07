@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TableroPrincipal from "./components/tableroPrincipal";
 import { ProveedorContextoAuth } from "./context/contextoAuth";
 import { ProveedorContextoTablero } from "./context/contextoTablero";
-import { ThemeProvider } from "./context/themeContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import InicioSesion from "./components/inicioSesion";
 import { useContextoAuth } from "./context/contextoAuth";
 import AsistenteIA from "./components/asistenteIA";

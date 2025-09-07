@@ -91,22 +91,22 @@ const MapaMultiNodo = () => {
   const centroMapa = [10.43079, -85.08499];
 
   return (
-    <div style={{ position: 'relative', height: '500px', width: '100%' }} className="bg-gray-800 rounded-xl p-4">
+    <div style={{ position: 'relative', height: '500px', width: '100%' }} className="bg-ia-card rounded-xl p-4">
       {error && (
-        <div className="absolute top-4 left-4 z-[1000] bg-red-600 p-2 rounded-lg text-white text-sm">
+        <div className="absolute top-4 left-4 z-[1000] bg-ia-error p-2 rounded-lg text-ia-text text-sm">
           Error: {error}
         </div>
       )}
       
       {heatmapData.length === 0 && !error && (
-        <div className="absolute top-4 left-4 z-[1000] bg-yellow-600 p-2 rounded-lg text-white text-sm">
+        <div className="absolute top-4 left-4 z-[1000] bg-ia-warning p-2 rounded-lg text-ia-text text-sm">
           No hay alertas recientes para mostrar en el mapa de calor.
         </div>
       )}
       
       {/* Leyenda del mapa de calor */}
-      <div className="absolute bottom-4 left-4 z-[1000] bg-gray-700 p-2 rounded-lg border border-gray-600">
-        <div className="text-white text-sm">
+      <div className="absolute bottom-4 left-4 z-[1000] bg-ia-card-secondary p-2 rounded-lg border border-ia-border">
+        <div className="text-ia-text text-sm">
           <p className="font-semibold mb-1">Niveles de Amenaza (CO2 ppm)</p>
           <div className="flex items-center space-x-2">
             <div className="w-24 h-4 bg-gradient-to-r from-yellow-500 to-red-500 rounded"></div>

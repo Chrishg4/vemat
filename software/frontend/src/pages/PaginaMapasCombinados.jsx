@@ -14,11 +14,11 @@ export default function PaginaMapasCombinados() {
   return (
     <div className="p-4 space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-white mb-4">Mapa de Calor de Alertas</h2>
+        <h2 className="text-2xl font-bold text-ia-text mb-4">Mapa de Calor de Alertas</h2>
         <MapaMultiNodo />
       </div>
       <div>
-        <h2 className="text-2xl font-bold text-white mb-4">Ubicación del Sensor Principal</h2>
+        <h2 className="text-2xl font-bold text-ia-text mb-4">Ubicación del Sensor Principal</h2>
         <VistaMapa coordenadas={coordenadasSensor} />
       </div>
     </div>
