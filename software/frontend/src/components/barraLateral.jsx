@@ -1,7 +1,7 @@
 // src/components/barraLateral.jsx
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaTachometerAlt, FaChartLine, FaMapMarkedAlt, FaTable, FaUserCircle, FaSignOutAlt, FaBell, FaBars, FaChevronLeft, FaCalendarWeek, FaRobot, FaMoon, FaSun } from 'react-icons/fa';
+import { FaTachometerAlt, FaChartLine, FaMapMarkedAlt, FaImages, FaUserCircle, FaSignOutAlt, FaBell, FaBars, FaChevronLeft, FaCalendarWeek, FaRobot, FaMoon, FaSun } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 
 export default function BarraLateral({ username, onLogout }) {
@@ -84,6 +84,12 @@ export default function BarraLateral({ username, onLogout }) {
             <NavLink to="/alertas" className={linkClasses} title="Historial de Alertas">
               <FaBell className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
               {!isCollapsed && 'Historial de Alertas'}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/galeria-mosquitos" className={linkClasses} title="Galería de Mosquitos">
+              <FaImages className={`text-lg ${isCollapsed ? 'mx-auto' : 'mr-2'}`} />
+              {!isCollapsed && 'Galería de Mosquitos'}
             </NavLink>
           </li>
         </ul>

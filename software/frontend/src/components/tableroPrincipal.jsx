@@ -11,6 +11,7 @@ import AsistenteIA from "./asistenteIA";
 import PaginaAnalisisCombinado from "../pages/PaginaAnalisisCombinado";
 import PaginaMapasCombinados from "../pages/PaginaMapasCombinados";
 import PaginaGraficosDetallados from "../pages/paginaGraficosDetallados";
+import PaginaGaleriaMosquitos from "../pages/PaginaGaleriaMosquitos";
 
 import { useContextoAuth } from "../context/contextoAuth";
 import { useContextoTablero } from "../context/contextoTablero";
@@ -45,6 +46,7 @@ export default function Dashboard() {
               <Route path="/graficos-detallados" element={<PaginaGraficosDetallados />} />
               <Route path="/alertas" element={<PaginaHistorialAlertas />} />
               <Route path="/resumen-semanal" element={<PaginaResumenSemanaEpi />} />
+              <Route path="/galeria-mosquitos" element={<PaginaGaleriaMosquitos />} />
             </Routes>
           </div>
         </main>
