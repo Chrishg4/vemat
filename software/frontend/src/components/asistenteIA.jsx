@@ -15,48 +15,43 @@ const ESTADOS_IA = {
 const AsistenteIA = () => {
   const { verificarStatus, consultarIA, loading, error } = useServicioIA();
   const [statusIA, setStatusIA] = useState({ estado: ESTADOS_IA.CARGANDO });
-  const [respuesta, setRespuesta] = useState(null);
   const [historialConsultas, setHistorialConsultas] = useState([]);
   const [isLoadingQuery, setIsLoadingQuery] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
     const getStatus = async () => {
       try {
         const response = await verificarStatus();
-        if (response.success) {
-          if (response.modo === 'demo') {
-            setStatusIA({ estado: ESTADOS_IA.DEMO, disponible: response.disponible, modo: response.modo });
-          } else {
-            setStatusIA({ estado: ESTADOS_IA.DISPONIBLE, disponible: response.disponible, modo: response.modo });
-          }
-        } else {
-          setStatusIA({ estado: ESTADOS_IA.ERROR });
-        }
+        setStatusIA({
+          estado: response.success ? (response.modo === 'demo' ? ESTADOS_IA.DEMO : ESTADOS_IA.DISPONIBLE) : ESTADOS_IA.ERROR,
+          ...response
+        });
       } catch (error) {
         console.error('Error al verificar estado:', error);
         setStatusIA({ estado: ESTADOS_IA.ERROR });
       }
     };
-
     getStatus();
   }, [verificarStatus]);
 
-  const handleSeleccionPrompt = async (prompt) => {
+  const enviarConsultaUnificada = async (textoUsuario, textoParaIA) => {
+    if (!textoParaIA.trim()) return;
+
     try {
       setIsLoadingQuery(true);
-      // Añade el prompt del usuario al historial
-      setHistorialConsultas(prev => [...prev, { tipo: 'usuario', mensaje: prompt.titulo }]);
+      setHistorialConsultas(prev => [...prev, { tipo: 'usuario', mensaje: textoUsuario }]);
       
-      const respuesta = await consultarIA(prompt.prompt);
+      const respuesta = await consultarIA(textoParaIA);
       
-      // Añade la respuesta del asistente al historial
       setHistorialConsultas(prev => [...prev, { 
         tipo: 'asistente', 
         mensaje: respuesta.respuesta,
         contexto_usado: respuesta.contexto_usado,
         timestamp: new Date()
       }]);
+      setMensaje(''); // Limpiar el input de texto
     } catch (error) {
       console.error('Error al consultar IA:', error);
       setHistorialConsultas(prev => [...prev, { 
@@ -68,24 +63,14 @@ const AsistenteIA = () => {
     }
   };
 
-  const handleEnviarMensaje = async (mensaje) => {
-    try {
-      setIsLoadingQuery(true);
-      setHistorialConsultas(prev => [...prev, { tipo: 'usuario', mensaje }]);
-      const respuesta = await consultarIA(mensaje);
-      setHistorialConsultas(prev => [...prev, { 
-        tipo: 'asistente', 
-        mensaje: respuesta.respuesta 
-      }]);
-    } catch (error) {
-      console.error('Error al consultar IA:', error);
-      setHistorialConsultas(prev => [...prev, { 
-        tipo: 'error', 
-        mensaje: 'Error al procesar la consulta. Por favor, intente nuevamente.' 
-      }]);
-    } finally {
-      setIsLoadingQuery(false);
-    }
+  // Se llama al enviar desde el input de texto
+  const handleEnviarMensaje = () => {
+    enviarConsultaUnificada(mensaje, mensaje);
+  };
+
+  // Se llama al hacer clic en un prompt rápido
+  const handleSeleccionPrompt = (prompt) => {
+    enviarConsultaUnificada(prompt.titulo, prompt.prompt);
   };
 
   return (
@@ -111,23 +96,21 @@ const AsistenteIA = () => {
             <span className="text-base font-bold text-sky-300">Asistente VEMAT</span>
             <IndicadorEstadoIA status={statusIA} />
           </div>
-          <div className="flex items-center space-x-1">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="p-1.5 hover:bg-gray-700/80 rounded-full transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="p-1.5 hover:bg-gray-700/80 rounded-full transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         {/* Contenido */}
         <div className="flex-1 overflow-hidden flex flex-col bg-transparent">
           {/* Selector de prompts predefinidos */}
           <div className="p-3 border-b border-gray-700/50 bg-black/20">
-            <SelectorPrompt onSeleccionPrompt={handleSeleccionPrompt} />
+            <SelectorPrompt onSelectPrompt={handleSeleccionPrompt} />
           </div>
 
           {/* Interfaz del chat */}
@@ -138,7 +121,8 @@ const AsistenteIA = () => {
               isLoadingQuery={isLoadingQuery}
               statusIA={statusIA}
               ESTADOS_IA={ESTADOS_IA}
-              respuesta={respuesta}
+              mensaje={mensaje}
+              setMensaje={setMensaje}
             />
           </div>
         </div>

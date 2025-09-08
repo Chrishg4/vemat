@@ -1,16 +1,16 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Spinner } from './SkeletonLoaders';
 
 const ChatInterface = ({
   enviarConsulta,
   isLoadingQuery,
-  respuesta,
   historialConsultas = [],
   statusIA,
-  ESTADOS_IA
+  ESTADOS_IA,
+  mensaje,
+  setMensaje
 }) => {
-  const [consulta, setConsulta] = useState('');
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -19,11 +19,12 @@ const ChatInterface = ({
 
   useEffect(() => {
     scrollToBottom();
-  }, [historialConsultas, respuesta]);
+  }, [historialConsultas]);
 
   const handleSend = () => {
-    enviarConsulta(consulta);
-    setConsulta(''); // Limpiar el input después de enviar
+    if (mensaje.trim()) {
+      enviarConsulta();
+    }
   };
 
   const RespuestaIA = ({ res }) => (
@@ -45,7 +46,7 @@ const ChatInterface = ({
   return (
     <div className="bg-transparent flex flex-col h-full">
       <div className="flex-grow overflow-y-auto pr-2 no-scrollbar">
-        {historialConsultas.length === 0 && !respuesta && (
+        {historialConsultas.length === 0 && (
           <p className="text-gray-400 text-center opacity-75 mt-4 text-sm">¡Hola! ¿En qué puedo ayudarte hoy? Puedes usar los prompts rápidos o escribir tu consulta.</p>
         )}
 
@@ -87,8 +88,8 @@ const ChatInterface = ({
           className="flex-grow p-2 border border-gray-700/50 rounded-l-md focus:outline-none focus:ring-2 focus:ring-sky-500/50 resize-none bg-black/20 text-white text-sm"
           rows="1"
           placeholder="Escribe tu consulta aquí..."
-          value={consulta}
-          onChange={(e) => setConsulta(e.target.value)}
+          value={mensaje}
+          onChange={(e) => setMensaje(e.target.value)}
           onKeyPress={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
@@ -100,7 +101,7 @@ const ChatInterface = ({
         <button
           className="px-5 py-3 bg-sky-500/50 text-white font-semibold rounded-r-lg hover:bg-sky-500/80 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed h-full text-sm flex items-center justify-center"
           onClick={handleSend}
-          disabled={isLoadingQuery || !consulta.trim() || statusIA.estado === ESTADOS_IA.CARGANDO || statusIA.estado === ESTADOS_IA.ERROR}
+          disabled={isLoadingQuery || !mensaje.trim() || statusIA.estado === ESTADOS_IA.CARGANDO || statusIA.estado === ESTADOS_IA.ERROR}
         >
           {isLoadingQuery ? <Spinner size="sm" /> : 'Enviar'}
         </button>
