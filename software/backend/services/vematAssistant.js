@@ -118,6 +118,13 @@ ${datos.resumen_semanal && datos.resumen_semanal.length > 0 ?
   ).join('\n') 
   : 'No hay datos semanales disponibles'}
 
+LECTURAS HISTÓRICAS RECIENTES (últimas 10 de 50):
+${datos.historico_reciente && datos.historico_reciente.length > 0 ?
+  datos.historico_reciente.slice(0, 10).map(l => 
+    `- ${l.fecha_formateada}: Temp ${l.temperatura}°C, Hum ${l.humedad}%, CO2 ${l.co2}ppm, Sonido ${l.sonido}Hz`
+  ).join('\n')
+  : 'No hay lecturas históricas recientes disponibles.'}
+
 CONOCIMIENTO ESPECIALIZADO:
 - Condiciones óptimas Aedes aegypti: Temp 25-30°C, Humedad >60%
 - Periodo de reproducción: 7-10 días en condiciones ideales
