@@ -1,6 +1,7 @@
 // src/components/historialAlertas.jsx
 import React from "react";
 import UbicacionFromCoordenadas from "./ubicacióndeCoordenadas";
+import DownloadMosquitoData from './DownloadMosquitoData';
 import ResponsiveTable from "./ResponsiveTable";
 
 export default function HistorialAlertas({ alertas, loading }) {
@@ -57,6 +58,10 @@ export default function HistorialAlertas({ alertas, loading }) {
       <h2 className="text-xl font-semibold mb-4 text-ia-text">
         Historial de Alertas
       </h2>
+      <div className="mb-3">
+        {/* Nota: usamos el mismo componente de descarga para proporcionar una exportación rápida. */}
+        <DownloadMosquitoData fields={['tipo','fecha','estado','latitud','longitud']} />
+      </div>
       <ResponsiveTable
         columns={columns}
         data={[...alertas].reverse()}

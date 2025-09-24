@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { mosquitoData } from '../data/mosquitoData';
+import { mosquitoData, mosquitoColumns } from '../data/mosquitoData';
 import ModalFichaInformativa from './ModalFichaInformativa';
+import DownloadMosquitoData from './DownloadMosquitoData';
 
 // Componente para la tarjeta de mosquito
 const TarjetaMosquito = ({ mosquito, onVerMas }) => (
@@ -45,7 +46,7 @@ const GaleriaMosquitos = () => {
   };
 
   return (
-    <div>
+    <div id="galeria-mosquitos">
       {/* Controles de Filtro */}
       <div className="mb-8 p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
         <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
@@ -62,6 +63,9 @@ const GaleriaMosquitos = () => {
                 <option key={especie} value={especie}>{especie}</option>
               ))}
             </select>
+          </div>
+          <div className="flex items-end">
+            <DownloadMosquitoData fields={mosquitoColumns} />
           </div>
         </div>
       </div>

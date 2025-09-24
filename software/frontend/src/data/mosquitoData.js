@@ -145,3 +145,16 @@ export const mosquitoData = [
     ]
   }
 ];
+
+// Sugerencia de columnas exportables (top-level keys). Útil para componentes de exportación.
+export const mosquitoColumns = [
+  'id',
+  'species',
+  'description',
+  'captureDate',
+  'lifeCycle',
+  'commonSeason',
+  'provinces',
+  'controlMethods',
+  'diseases'
+];

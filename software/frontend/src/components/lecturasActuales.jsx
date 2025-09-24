@@ -2,6 +2,7 @@ import React from 'react'
 import { useContextoTablero } from '../context/contextoTablero'
 import { FaSync, FaMapMarkerAlt } from 'react-icons/fa'
 import { FaBell } from 'react-icons/fa'
+import DownloadMosquitoData from './DownloadMosquitoData'
 import IconoCo2 from './iconoCo2'
 import IconoTemperatura from './iconoTemperatura'
 import IconoHumedad from './iconoHumedad'
@@ -64,6 +65,10 @@ export default function CurrentReadings() {
               <FaSync className="w-4 h-4" />
             </button>
           )}
+          {/* Botón de descarga de datos (CSV) */}
+          <div className="ml-3">
+            <DownloadMosquitoData fields={['nodo_id','fecha','temperatura','humedad','co2','acustica','latitud','longitud']} />
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
