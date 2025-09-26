@@ -151,3 +151,42 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Estilos específicos para tarjetas tipo panel (coincide con diseño de la segunda imagen) */
+.panel-card {
+  background: var(--ia-card);
+  border: 1px solid var(--ia-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(2,6,23,0.35);
+  padding: 16px;
+}
+
+/* Encabezado de tarjetas */
+.panel-card .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* Estilizar leyenda y etiquetas dentro de las tarjetas */
+.panel-legend {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* Ajustes para los controles de Leaflet para que se vean blancos y con borde redondeado */
+.leaflet-control-zoom, .leaflet-bar a, .leaflet-bar a:hover {
+  background: rgba(255,255,255,0.95) !important;
+  color: var(--ia-text) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  box-shadow: 0 2px 6px rgba(2,6,23,0.2);
+  border-radius: 6px !important;
+}
+
+/* Hacer que el mapa ocupe todo el contenedor sin sobresalir */
+.leaflet-container {
+  border-radius: 8px;
+}
