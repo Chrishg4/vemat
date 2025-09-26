@@ -31,11 +31,8 @@ export default function CO2EpiWeekChart() {
   const formatNumber = (value) => value.toFixed(1);
 
   return (
-    <div className="chart-container bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border">
+    <>
       <div className="flex flex-col items-start mb-4">
-        <h2 className="text-ia-text text-xl font-semibold mb-4">
-          Evolución de Datos por Semana Epidemiológica
-        </h2>
         <div className="flex items-center">
           <span className="text-ia-text-secondary font-semibold mr-2">Filtrar por año:</span>
           {years.length > 0 && (
@@ -110,6 +107,6 @@ export default function CO2EpiWeekChart() {
           />
         </LineChart>
       </ResponsiveContainer>
-    </div>
+    </>
   );
 }

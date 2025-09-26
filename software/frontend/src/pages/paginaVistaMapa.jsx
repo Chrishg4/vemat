@@ -34,8 +34,8 @@ export default function PaginaVistaMapa() {
   }
 
   return (
-    <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold text-white mb-4">Mapa de Ubicación del Dispositivo</h2>
+    <div className="bg-ia-card p-6 rounded-xl shadow-lg border border-ia-border text-ia-text">
+      <h2 className="text-2xl font-semibold mb-4">Mapa de Ubicación del Dispositivo</h2>
       <VistaMapa coordenadas={coordenadas} />
     </div>
   );

@@ -13,12 +13,12 @@ const PaginaResumenSemanaEpi = () => {
   if (loading) {
     return (
       <div className="p-6 text-ia-text">
-        <h1 className="text-3xl font-bold mb-6">Resumen por Semana Epidemiológica</h1>
-        <div className="bg-ia-card p-6 rounded-lg shadow-xl mb-6">
+        <h1 className="text-3xl font-bold mb-4">Resumen por Semana Epidemiológica</h1>
+        <div className="bg-ia-card p-6 rounded-xl shadow-xl mb-6 border border-ia-border">
           <h2 className="text-2xl font-semibold mb-4">Tabla de Resumen</h2>
           <TableSkeleton />
         </div>
-        <div className="bg-ia-card p-6 rounded-lg shadow-xl">
+        <div className="bg-ia-card p-6 rounded-xl shadow-xl border border-ia-border">
           <h2 className="text-2xl font-semibold mb-4">Gráfica de Resumen</h2>
           <ChartSkeleton />
         </div>
@@ -33,15 +33,15 @@ const PaginaResumenSemanaEpi = () => {
   const summarizedData = resumirPorSemanaEpi(rawData);
 
   return (
-    <div className="p-6 text-ia-text">
-      <h1 className="text-3xl font-bold mb-6">Resumen por Semana Epidemiológica</h1>
+    <div className="p-6 text-ia-text space-y-6">
+      <h1 className="text-3xl font-bold">Resumen por Semana Epidemiológica</h1>
       
-      <div className="bg-ia-card p-6 rounded-lg shadow-xl mb-6">
+      <div className="bg-ia-card p-6 rounded-xl shadow-xl border border-ia-border">
         <h2 className="text-2xl font-semibold mb-4">Tabla de Resumen</h2>
         <TablaResumenSemanaEpi data={summarizedData} />
       </div>
 
-      <div className="bg-ia-card p-6 rounded-lg shadow-xl">
+      <div className="bg-ia-card p-6 rounded-xl shadow-xl border border-ia-border">
         <h2 className="text-2xl font-semibold mb-4">Gráfica de Resumen</h2>
         <GraficoResumenSemanaEpi data={summarizedData} />
       </div>

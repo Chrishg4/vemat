@@ -18,7 +18,7 @@ export default function VistaMapa({ coordenadas, showCoords = true }) {
 
   return (
     <>
-      <div className="h-full w-full rounded-lg overflow-hidden">
+      <div className="h-full w-full rounded-lg overflow-hidden panel-card">
         <div className="h-80 w-full">
           <MapContainer center={[coordenadas.lat, coordenadas.lng]} zoom={15} style={{ height: "100%", width: "100%" }}>
             <TileLayer
@@ -32,9 +32,12 @@ export default function VistaMapa({ coordenadas, showCoords = true }) {
         </div>
       </div>
       {showCoords && (
-        <div className="text-ia-text text-sm mt-2 text-center">
-          <p>Latitud: {coordenadas.lat.toFixed(5)}, Longitud: {coordenadas.lng.toFixed(5)}</p>
-          <p>Ubicación: Universidad Tecnica Nacional</p>
+        <div className="text-ia-text text-sm mt-2 text-center panel-legend">
+          <div>
+            <p className="font-medium">Latitud: <span className="font-normal">{coordenadas.lat.toFixed(5)}</span></p>
+            <p className="font-medium">Longitud: <span className="font-normal">{coordenadas.lng.toFixed(5)}</span></p>
+          </div>
+          <div className="text-ia-text-secondary">Ubicación: Universidad Tecnica Nacional</div>
         </div>
       )}
     </>
