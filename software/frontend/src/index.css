@@ -4,12 +4,12 @@
 /* Variables de color base */
 :root {
   /* Tema claro por defecto */
-  --ia-background: #f5f5f5;     /* Fondo principal muy claro */
-  --ia-card: #e5e5e5;          /* Fondo de tarjetas */
-  --ia-text: #111111;          /* Texto principal oscuro */
-  --ia-text-secondary: #4a4a4a; /* Texto secundario */
-  --ia-border: #d1d1d1;        /* Bordes */
-  --ia-accent: #4ade80;        /* Color de acento (verde) */
+  --ia-background: #f8f9fa;     /* Fondo principal muy claro */
+  --ia-card: #ffffff;          /* Fondo de tarjetas blanco */
+  --ia-text: #1e293b;          /* Texto principal azul oscuro */
+  --ia-text-secondary: #64748b; /* Texto secundario gris azulado */
+  --ia-border: #e2e8f0;        /* Bordes sutiles */
+  --ia-accent: #3b82f6;        /* Color de acento (azul) */
   
   /* Transiciones suaves */
   --theme-transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
@@ -17,12 +17,12 @@
 
 /* Tema oscuro */
 :root[class="dark"] {
-  --ia-background: #1a1a1a;     /* Fondo principal gris oscuro */
-  --ia-card: #2a2a2a;          /* Fondo de tarjetas */
-  --ia-text: #eaeaea;          /* Texto principal claro */
-  --ia-text-secondary: #a0a0a0; /* Texto secundario */
-  --ia-border: #404040;        /* Bordes */
-  --ia-accent: #4ade80;        /* Mantener el mismo acento */
+  --ia-background: #0f172a;     /* Fondo principal azul muy oscuro */
+  --ia-card: #1e293b;          /* Fondo de tarjetas azul oscuro */
+  --ia-text: #f8fafc;          /* Texto principal claro */
+  --ia-text-secondary: #94a3b8; /* Texto secundario */
+  --ia-border: #334155;        /* Bordes */
+  --ia-accent: #3b82f6;        /* Mantener el mismo acento */
 }
 
 @tailwind base;
@@ -41,11 +41,18 @@
 }
 
 :root {
-  /* Colores de estado (mantienen un toque de color para indicadores importantes) */
+  /* Colores de estado (colores vibrantes para indicadores importantes) */
   --ia-primary: #4F46E5;    /* Índigo elegante */
-  --ia-warning: #B45309;    /* Naranja oscuro */
-  --ia-danger: #DC2626;     /* Rojo oscuro */
-  --ia-info: #2563EB;       /* Azul oscuro */
+  --ia-warning: #F59E0B;    /* Amarillo/naranja para temperatura */
+  --ia-success: #10B981;    /* Verde para humedad */
+  --ia-error: #EF4444;      /* Rojo para bioacústica */
+  --ia-info: #60A5FA;       /* Azul claro para CO2 */
+  
+  /* Versiones de fondo con opacidad */
+  --ia-warning-bg: rgba(245, 158, 11, 0.1);
+  --ia-success-bg: rgba(16, 185, 129, 0.1);
+  --ia-error-bg: rgba(239, 68, 68, 0.1);
+  --ia-info-bg: rgba(96, 165, 250, 0.1);
 
   /* Paleta de grises compartida */
   --gray-50: #F9FAFB;

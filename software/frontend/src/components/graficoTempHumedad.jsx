@@ -46,18 +46,24 @@ export default function TempHumidityChart({ chartMode = 'line', showOnly = null,
     <div className="chart-container bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border transition-colors duration-500">
       <h2 className="text-ia-text text-xl font-semibold mb-4">{title}</h2>
       <ResponsiveContainer width="100%" height={320}>
-        <ChartComponent data={processedChartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--ia-border)" />
+        <ChartComponent data={processedChartData} className="bg-gradient-to-b from-ia-card to-ia-background">
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--ia-border)" opacity={0.5} />
           <XAxis
             dataKey="name"
-            tick={{ fill: "var(--ia-text-secondary)", fontSize: 12 }}
-            label={{ value: xAxisLabel, position: "insideBottom", offset: -5, fill: "var(--ia-text-secondary)" }}
+            tick={{ fill: "var(--ia-text-secondary)", fontSize: 10 }}
+            axisLine={{ stroke: "var(--ia-border)" }}
+            tickLine={{ stroke: "var(--ia-border)" }}
+            label={{ value: xAxisLabel, position: "insideBottom", offset: -5, fill: "var(--ia-text-secondary)", fontSize: 12 }}
+            height={50}
           />
           {(!showOnly || showOnly === 'temperatura' || showOnly === 'humedad') && (
             <YAxis
               yAxisId="left"
               label={{ value: "°C / %", angle: -90, position: "insideLeft", fill: "var(--ia-text-secondary)" }}
-              tick={{ fill: "var(--ia-text-secondary)" }}
+              tick={{ fill: "var(--ia-text-secondary)", fontSize: 10 }}
+              axisLine={{ stroke: "var(--ia-border)" }}
+              tickLine={{ stroke: "var(--ia-border)" }}
+              width={40}
             />
           )}
           {(!showOnly || showOnly === 'co2' || showOnly === 'acustica') && (
@@ -65,55 +71,102 @@ export default function TempHumidityChart({ chartMode = 'line', showOnly = null,
               yAxisId="right"
               orientation="right"
               label={{ value: showOnly === 'co2' ? "CO₂ (ppm)" : (showOnly === 'acustica' ? "Bioacústica (Hz)" : "CO₂ (ppm) / Bioacústica (Hz)"), angle: 90, position: "insideRight", fill: "var(--ia-text-secondary)" }}
-              tick={{ fill: "var(--ia-text-secondary)" }}
+              tick={{ fill: "var(--ia-text-secondary)", fontSize: 10 }}
+              axisLine={{ stroke: "var(--ia-border)" }}
+              tickLine={{ stroke: "var(--ia-border)" }}
+              width={40}
             />
           )}
-          <Tooltip />
-          <Legend />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "var(--ia-card)",
+              borderColor: "var(--ia-border)",
+              color: "var(--ia-text)",
+              borderRadius: "8px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              padding: "10px"
+            }}
+            labelStyle={{ color: "var(--ia-text)", fontWeight: "bold", marginBottom: "5px" }}
+            cursor={{ strokeDasharray: "3 3" }}
+          />
+          <Legend
+            wrapperStyle={{ color: "var(--ia-text-secondary)", paddingTop: "10px" }}
+            iconType="circle"
+          />
           {(!showOnly || showOnly === 'temperatura') && (
             <ChartElement
-              yAxisId="left"
-              type={chartMode === 'line' ? "monotone" : undefined}
+              type={chartMode === 'area' ? 'area' : 'line'}
               dataKey="temperatura"
-              stroke="var(--ia-warning)"
-              fill={chartMode === 'area' ? "var(--ia-warning-bg)" : "var(--ia-warning)"}
-              dot={chartMode === 'line' ? false : undefined}
               name="Temperatura (°C)"
+              stroke="var(--ia-error)"
+              fill="url(#colorTemp)"
+              fillOpacity={chartMode === 'area' ? 0.6 : 0}
+              yAxisId="left"
+              dot={false}
+              strokeWidth={2}
+              activeDot={{ r: 6, stroke: 'var(--ia-error)', strokeWidth: 2, fill: 'var(--ia-background)' }}
             />
           )}
           {(!showOnly || showOnly === 'humedad') && (
             <ChartElement
-              yAxisId="left"
-              type={chartMode === 'line' ? "monotone" : undefined}
+              type={chartMode === 'area' ? 'area' : 'line'}
               dataKey="humedad"
-              stroke="var(--ia-success)"
-              fill={chartMode === 'area' ? "var(--ia-success-bg)" : "var(--ia-success)"}
-              dot={chartMode === 'line' ? false : undefined}
               name="Humedad (%)"
+              stroke="var(--ia-info)"
+              fill="url(#colorHum)"
+              fillOpacity={chartMode === 'area' ? 0.6 : 0}
+              yAxisId="left"
+              dot={false}
+              strokeWidth={2}
+              activeDot={{ r: 6, stroke: 'var(--ia-info)', strokeWidth: 2, fill: 'var(--ia-background)' }}
             />
           )}
           {(!showOnly || showOnly === 'co2') && (
             <ChartElement
-              yAxisId="right"
-              type={chartMode === 'line' ? "monotone" : undefined}
+              type={chartMode === 'area' ? 'area' : 'line'}
               dataKey="co2"
-              stroke="var(--ia-info)"
-              fill={chartMode === 'area' ? "var(--ia-info-bg)" : "var(--ia-info)"}
-              dot={chartMode === 'line' ? false : undefined}
               name="CO₂ (ppm)"
+              stroke="var(--ia-warning)"
+              fill="url(#colorCO2)"
+              fillOpacity={chartMode === 'area' ? 0.6 : 0}
+              yAxisId="right"
+              dot={false}
+              strokeWidth={2}
+              activeDot={{ r: 6, stroke: 'var(--ia-warning)', strokeWidth: 2, fill: 'var(--ia-background)' }}
             />
           )}
           {(!showOnly || showOnly === 'acustica') && (
             <ChartElement
-              yAxisId="right"
-              type={chartMode === 'line' ? "monotone" : undefined}
+              type={chartMode === 'area' ? 'area' : 'line'}
               dataKey="acustica"
-              stroke="var(--ia-error)"
-              fill={chartMode === 'area' ? "var(--ia-error-bg)" : "var(--ia-error)"}
-              dot={chartMode === 'line' ? false : undefined}
               name="Bioacústica (Hz)"
+              stroke="var(--ia-success)"
+              fill="url(#colorAcus)"
+              fillOpacity={chartMode === 'area' ? 0.6 : 0}
+              yAxisId="right"
+              dot={false}
+              strokeWidth={2}
+              activeDot={{ r: 6, stroke: 'var(--ia-success)', strokeWidth: 2, fill: 'var(--ia-background)' }}
             />
           )}
+          <defs>
+            <linearGradient id="colorTemp" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--ia-error)" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="var(--ia-error)" stopOpacity={0.1}/>
+            </linearGradient>
+            <linearGradient id="colorHum" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--ia-info)" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="var(--ia-info)" stopOpacity={0.1}/>
+            </linearGradient>
+            <linearGradient id="colorCO2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--ia-warning)" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="var(--ia-warning)" stopOpacity={0.1}/>
+            </linearGradient>
+            <linearGradient id="colorAcus" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--ia-success)" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="var(--ia-success)" stopOpacity={0.1}/>
+            </linearGradient>
+          </defs>
         </ChartComponent>
       </ResponsiveContainer>
     </div>
