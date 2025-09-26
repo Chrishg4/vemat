@@ -216,32 +216,6 @@ export default function VistaTablero() {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-ia-text">Panel Principal de Control</h1>
-        <div className="flex space-x-2 bg-ia-background rounded-lg p-1">
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'dashboard' ? 'bg-ia-accent text-white shadow-md' : 'text-ia-text-secondary hover:bg-ia-border/30'}`}
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => setActiveTab('map')}
-            className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'map' ? 'bg-ia-accent text-white shadow-md' : 'text-ia-text-secondary hover:bg-ia-border/30'}`}
-          >
-            Mapa
-          </button>
-          <button
-            onClick={() => setActiveTab('data')}
-            className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'data' ? 'bg-ia-accent text-white shadow-md' : 'text-ia-text-secondary hover:bg-ia-border/30'}`}
-          >
-            Datos
-          </button>
-          <button
-            onClick={() => setActiveTab('alerts')}
-            className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'alerts' ? 'bg-ia-accent text-white shadow-md' : 'text-ia-text-secondary hover:bg-ia-border/30'}`}
-          >
-            Alertas
-          </button>
-        </div>
       </div>
 
       <div className="mb-4">
