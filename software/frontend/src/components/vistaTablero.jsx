@@ -76,7 +76,7 @@ export default function VistaTablero() {
         return (
           <div className="space-y-6">
             {/* Indicadores principales */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <IndicadorGauge />
             </div>
 
@@ -88,9 +88,9 @@ export default function VistaTablero() {
             {/* Gráficos y mapa */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Gráfico de temperatura y humedad */}
-              <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
+              <div>
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-ia-text">Temperatura y Humedad</h2>
+                  <h2 className="text-xl font-semibold text-ia-text">Grafica de Datos</h2>
                   <div className="flex space-x-2">
                     <button
                       onClick={() => setChartMode('line')}
@@ -112,19 +112,23 @@ export default function VistaTablero() {
                     </button>
                   </div>
                 </div>
-                <GraficoTempHumedad chartMode={chartMode} />
+                <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
+                    <GraficoTempHumedad chartMode={chartMode} />
+                </div>
               </div>
 
               {/* Mapa de ubicación */}
-              <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
-                <h2 className="text-xl font-semibold text-ia-text mb-4">Ubicación del Dispositivo</h2>
-                <div className="h-[320px] rounded-lg overflow-hidden">
-                  <VistaMapa coordenadas={coordenadasSensor} />
+              <div>
+                <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
+                    <div className="h-[320px] rounded-lg overflow-hidden">
+                        <VistaMapa coordenadas={coordenadasSensor} />
+                    </div>
                 </div>
                 {latest && latest.latitude && latest.longitude && (
-                  <div className="mt-2 text-sm text-ia-text-secondary">
-                    <UbicacionFromCoordenadas lat={latest.latitude} lon={latest.longitude} />
-                  </div>
+                    <div className="mt-4 text-sm text-ia-text-secondary">
+                        <p className="font-semibold text-ia-text mb-1">Ubicación del Sensor</p>
+                        <UbicacionFromCoordenadas lat={latest.latitude} lon={latest.longitude} />
+                    </div>
                 )}
               </div>
             </div>

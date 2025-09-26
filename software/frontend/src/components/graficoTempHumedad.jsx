@@ -43,10 +43,8 @@ export default function TempHumidityChart({ chartMode = 'line', showOnly = null,
   const ChartElement = chartMode === 'bar' ? Bar : (chartMode === 'area' ? Area : Line);
 
   return (
-    <div className="chart-container bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border transition-colors duration-500">
-      <h2 className="text-ia-text text-xl font-semibold mb-4">{title}</h2>
       <ResponsiveContainer width="100%" height={320}>
-        <ChartComponent data={processedChartData} className="bg-gradient-to-b from-ia-card to-ia-background">
+        <ChartComponent data={processedChartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--ia-border)" opacity={0.5} />
           <XAxis
             dataKey="name"
@@ -169,6 +167,5 @@ export default function TempHumidityChart({ chartMode = 'line', showOnly = null,
           </defs>
         </ChartComponent>
       </ResponsiveContainer>
-    </div>
   );
 }

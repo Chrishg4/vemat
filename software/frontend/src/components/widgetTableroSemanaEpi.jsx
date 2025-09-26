@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useObtenerLecturas } from '../use/useObtenerLecturas';
 import { resumirPorSemanaEpi } from '../utils/utilidadesResumen';
@@ -9,28 +8,7 @@ import IconoCo2 from './iconoCo2';
 import IconoBioacustica from './iconoBioacustica';
 import { MetricDisplaySkeleton } from './SkeletonLoaders';
 import AlertaEnhanced from './AlertaEnhanced';
-
-const MetricDisplay = ({ label, data, unit, icon: IconComponent, color }) => (
-  <div className="p-4 bg-ia-card rounded-xl shadow-md flex flex-col items-center justify-center text-ia-text border border-ia-border transition-colors duration-500">
-    <div className="flex items-center justify-center w-16 h-16 mb-3 rounded-full" style={{ backgroundColor: color }}>
-      <IconComponent className="w-10 h-10" />
-    </div>
-    <h4 className="text-lg font-semibold text-ia-text-secondary mb-2">{label}</h4>
-    <p className="text-4xl font-bold text-ia-text mb-2">
-      {data.avg?.toFixed(1) ?? 'N/A'} <span className="text-2xl text-ia-text-secondary">{unit}</span>
-    </p>
-    <div className="grid grid-cols-2 gap-2 text-center w-full">
-      <div>
-        <p className="text-xs text-ia-text-secondary">Mín</p>
-        <p className="text-md font-bold text-ia-accent">{data.min?.toFixed(1) ?? 'N/A'}{unit}</p>
-      </div>
-      <div>
-        <p className="text-xs text-ia-text-secondary">Máx</p>
-        <p className="text-md font-bold text-ia-accent">{data.max?.toFixed(1) ?? 'N/A'}{unit}</p>
-      </div>
-    </div>
-  </div>
-);
+import TarjetaIndicador from './TarjetaIndicador'; // Import the new component
 
 const WidgetTableroSemanaEpi = () => {
   const { data: rawData, loading, error } = useObtenerLecturas();
@@ -84,8 +62,43 @@ const WidgetTableroSemanaEpi = () => {
   // Determinar si estamos mostrando la semana actual o una semana anterior
   const isCurrentWeek = currentWeekData.key === currentWeekKey;
   
+  const metrics = [
+    {
+      id: 'temperatura',
+      titulo: 'Temperatura',
+      data: currentWeekData.temperatura,
+      unidad: '°C',
+      icono: IconoTemperatura,
+      color: 'var(--ia-warning)',
+    },
+    {
+      id: 'humedad',
+      titulo: 'Humedad',
+      data: currentWeekData.humedad,
+      unidad: '%',
+      icono: IconoHumedad,
+      color: 'var(--ia-success)',
+    },
+    {
+      id: 'co2',
+      titulo: 'CO2',
+      data: currentWeekData.co2,
+      unidad: ' ppm',
+      icono: IconoCo2,
+      color: 'var(--ia-info)',
+    },
+    {
+      id: 'bioacustica',
+      titulo: 'Bioacustica',
+      data: currentWeekData.acustica,
+      unidad: ' Hz',
+      icono: IconoBioacustica,
+      color: 'var(--ia-error)',
+    },
+  ];
+
   return (
-    <div className="p-4 bg-ia-card rounded-lg shadow-xl text-ia-text">
+    <>
       <h3 className="text-xl font-bold mb-4">
         {isCurrentWeek 
           ? `Resumen de la Semana Actual (${currentWeekData.name})` 
@@ -98,12 +111,20 @@ const WidgetTableroSemanaEpi = () => {
         )}
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricDisplay label="Temperatura" data={currentWeekData.temperatura} unit="°C" icon={IconoTemperatura} color="var(--ia-warning)" />
-        <MetricDisplay label="Humedad" data={currentWeekData.humedad} unit="%" icon={IconoHumedad} color="var(--ia-success)" />
-        <MetricDisplay label="CO2" data={currentWeekData.co2} unit=" ppm" icon={IconoCo2} color="var(--ia-info)" />
-        <MetricDisplay label="Bioacustica" data={currentWeekData.acustica} unit=" Hz" icon={IconoBioacustica} color="var(--ia-error)" />
+        {metrics.map((metric) => (
+          <TarjetaIndicador
+            key={metric.id}
+            titulo={metric.titulo}
+            valor={metric.data.avg?.toFixed(1) ?? 'N/A'}
+            unidad={metric.unidad}
+            icono={metric.icono}
+            color={metric.color}
+            minValue={metric.data.min?.toFixed(1) ?? 'N/A'}
+            maxValue={metric.data.max?.toFixed(1) ?? 'N/A'}
+          />
+        ))}
       </div>
-    </div>
+    </>
   );
 };
 
