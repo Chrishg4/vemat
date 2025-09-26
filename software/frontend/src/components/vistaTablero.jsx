@@ -119,21 +119,22 @@ export default function VistaTablero() {
                 </div>
               </div>
 
-              {/* Mapa de ubicación (tarjeta estilo gráfico) */}
+              {/* Mapa de ubicación */}
               <div>
-                <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
-                  <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold text-ia-text">Ubicación del Sensor</h2>
-                  </div>
+                </div>
+                <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
                   <div className="h-[320px] rounded-lg overflow-hidden">
                     <VistaMapa coordenadas={coordenadasSensor} showCoords={false} />
                   </div>
-                  {latest && latest.latitude && latest.longitude && (
+                </div>
+                {latest && latest.latitude && latest.longitude && (
                     <div className="mt-3 text-sm text-ia-text-secondary text-center">
                       <p className="font-medium">Lat: {Number(latest.latitude).toFixed(5)} — Lon: {Number(latest.longitude).toFixed(5)}</p>
+                      <UbicacionFromCoordenadas lat={latest.latitude} lon={latest.longitude} />
                     </div>
-                  )}
-                </div>
+                )}
               </div>
             </div>
 
