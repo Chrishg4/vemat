@@ -42,13 +42,13 @@ export default function MosquitoAnalysis({ title = 'Análisis de Mosquitos' }) {
   };
 
   return (
-    <div className="chart-container bg-ia-card p-4 rounded-xl shadow-lg border border-ia-border transition-colors duration-500">
-      <h2 className="text-ia-text text-xl font-semibold mb-4">{title}</h2>
+    <div className="mt-6">
+      <h3 className="text-ia-text text-lg font-semibold mb-3">{title}</h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
         {/* Distribución de especies */}
         <div>
-          <h3 className="text-ia-text text-lg font-medium mb-3">Distribución de Especies</h3>
+          <h4 className="text-ia-text text-md font-medium mb-3">Distribución de Especies</h4>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <defs>
@@ -96,9 +96,9 @@ export default function MosquitoAnalysis({ title = 'Análisis de Mosquitos' }) {
         
         {/* Actividad por hora */}
         <div>
-          <h3 className="text-ia-text text-lg font-medium mb-3">Actividad por Hora</h3>
+          <h4 className="text-ia-text text-md font-medium mb-3">Actividad por Hora</h4>
           <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={activityData} className="bg-gradient-to-b from-ia-card to-ia-background">
+            <BarChart data={activityData}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--ia-border)" opacity={0.5} />
               <XAxis 
                 dataKey="name" 
@@ -137,59 +137,58 @@ export default function MosquitoAnalysis({ title = 'Análisis de Mosquitos' }) {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
-      
-      {/* Riesgo por zona */}
-      <div className="mb-6">
-        <h3 className="text-ia-text text-lg font-medium mb-3">Índice de Riesgo por Zona</h3>
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart 
-            data={riskData} 
-            layout="vertical"
-            className="bg-gradient-to-b from-ia-card to-ia-background"
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--ia-border)" opacity={0.5} horizontal={false} />
-            <XAxis 
-              type="number"
-              tick={{ fill: 'var(--ia-text-secondary)', fontSize: 10 }}
-              axisLine={{ stroke: 'var(--ia-border)' }}
-              tickLine={{ stroke: 'var(--ia-border)' }}
-            />
-            <YAxis 
-              dataKey="name" 
-              type="category"
-              tick={{ fill: 'var(--ia-text-secondary)', fontSize: 10 }}
-              axisLine={{ stroke: 'var(--ia-border)' }}
-              tickLine={{ stroke: 'var(--ia-border)' }}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'var(--ia-card)',
-                borderColor: 'var(--ia-border)',
-                color: 'var(--ia-text)',
-                borderRadius: '8px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                padding: '10px'
-              }}
-              cursor={{ fill: 'rgba(var(--ia-accent-rgb), 0.1)' }}
-            />
-            <Legend />
-            <Bar 
-              dataKey="value" 
-              name="Índice de Riesgo" 
-              radius={[0, 4, 4, 0]}
-            >
-              {riskData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+
+        {/* Riesgo por zona */}
+        <div>
+            <h4 className="text-ia-text text-md font-medium mb-3">Índice de Riesgo por Zona</h4>
+            <ResponsiveContainer width="100%" height={220}>
+                <BarChart 
+                    data={riskData} 
+                    layout="vertical"
+                >
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ia-border)" opacity={0.5} horizontal={false} />
+                    <XAxis 
+                    type="number"
+                    tick={{ fill: 'var(--ia-text-secondary)', fontSize: 10 }}
+                    axisLine={{ stroke: 'var(--ia-border)' }}
+                    tickLine={{ stroke: 'var(--ia-border)' }}
+                    />
+                    <YAxis 
+                    dataKey="name" 
+                    type="category"
+                    tick={{ fill: 'var(--ia-text-secondary)', fontSize: 10 }}
+                    axisLine={{ stroke: 'var(--ia-border)' }}
+                    tickLine={{ stroke: 'var(--ia-border)' }}
+                    />
+                    <Tooltip
+                    contentStyle={{
+                        backgroundColor: 'var(--ia-card)',
+                        borderColor: 'var(--ia-border)',
+                        color: 'var(--ia-text)',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                        padding: '10px'
+                    }}
+                    cursor={{ fill: 'rgba(var(--ia-accent-rgb), 0.1)' }}
+                    />
+                    <Legend />
+                    <Bar 
+                    dataKey="value" 
+                    name="Índice de Riesgo" 
+                    radius={[0, 4, 4, 0]}
+                    >
+                    {riskData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                    </Bar>
+                </BarChart>
+            </ResponsiveContainer>
+        </div>
       </div>
       
       {/* Resumen de análisis */}
-      <div className="p-4 bg-ia-background rounded-lg border border-ia-border">
-        <h3 className="text-ia-text text-lg font-medium mb-2">Resumen de Análisis</h3>
+      <div className="mt-4 bg-ia-card rounded-xl shadow-lg border border-ia-border p-4">
+        <h4 className="text-ia-text text-lg font-medium mb-2">Resumen de Análisis</h4>
         <p className="text-ia-text-secondary text-sm">
           El análisis muestra una predominancia de <span className="font-semibold text-ia-error">Aedes aegypti</span> (45%), 
           con mayor actividad durante las <span className="font-semibold">16:00 horas</span>. 

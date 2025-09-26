@@ -15,6 +15,8 @@ import { useObtenerHistorialAlertas } from "../use/useObtenerHistorialAlertas";
 import ComponenteDeAlertas from "./ComponenteDeAlertas";
 import AlertaEnhanced from "./AlertaEnhanced";
 import ResponsiveTable from "./ResponsiveTable";
+import AnalisisBioacustica from "./AnalisisBioacustica";
+import DownloadMosquitoData from './DownloadMosquitoData'; // Import the download component
 
 export default function VistaTablero() {
   const { latest, data, loading: lecturasLoading } = useObtenerLecturas();
@@ -133,36 +135,43 @@ export default function VistaTablero() {
               </div>
             </div>
 
-            {/* Gráfico de bioacústica y alertas */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Gráfico de bioacústica */}
+            {/* Gráfico de bioacústica */}
+            <div>
+              <h2 className="text-xl font-semibold text-ia-text mb-4">Bioacústica</h2>
               <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
-                <h2 className="text-xl font-semibold text-ia-text mb-4">Bioacústica</h2>
-                <GraficoBioacustica data={data} showAnalysis={true} />
+                <GraficoBioacustica data={data} />
               </div>
+            </div>
 
-              {/* Alertas recientes */}
-              <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
-                <h2 className="text-xl font-semibold text-ia-text mb-4">Alertas Recientes</h2>
-                <HistorialAlertas alertas={alertHistory} loading={loading} limit={5} />
-              </div>
+            {/* Análisis de Bioacústica */}
+            <AnalisisBioacustica />
+
+            {/* Historial de Alertas */}
+            <div>
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold text-ia-text">Historial de Alertas</h2>
+                    <DownloadMosquitoData fields={['tipo','fecha','estado','latitud','longitud']} />
+                </div>
+                <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
+                    <HistorialAlertas alertas={alertHistory} loading={loading} limit={5} />
+                </div>
             </div>
 
             {/* Análisis de mosquitos */}
-            <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
-              <MosquitoAnalysis />
-            </div>
+            <MosquitoAnalysis />
 
             {/* Tabla de lecturas recientes */}
-            <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500">
+            <div>
               <h2 className="text-xl font-semibold text-ia-text mb-4">Lecturas Recientes</h2>
-              <ResponsiveTable 
-                columns={lecturasRecientesColumns}
-                data={[...(data || [])].slice(-5).reverse()}
-                loading={lecturasLoading}
-                noDataMessage="No hay lecturas recientes"
-                containerClassName="overflow-auto rounded-xl border border-ia-border bg-ia-card"
-              />
+              <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500">
+                <ResponsiveTable 
+                  columns={lecturasRecientesColumns}
+                  data={[...(data || [])].slice(-5).reverse()}
+                  loading={lecturasLoading}
+                  noDataMessage="No hay lecturas recientes"
+                  containerClassName="overflow-auto"
+                />
+              </div>
             </div>
           </div>
         );
