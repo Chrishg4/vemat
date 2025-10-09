@@ -64,9 +64,7 @@ const GaleriaMosquitos = () => {
               ))}
             </select>
           </div>
-          <div className="flex items-end">
-            <DownloadMosquitoData fields={mosquitoColumns} />
-          </div>
+          {/* Botones de descarga eliminados para simplificar la interfaz */}
         </div>
       </div>
 

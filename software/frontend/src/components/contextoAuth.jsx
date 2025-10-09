@@ -1,23 +1,29 @@
-import React, { createContext, useContext, useState } from "react";
+// src/context/ThemeContext.jsx
+import { createContext, useContext, useState, useEffect } from 'react';
 
-// Crear el contexto
-const AuthContext = createContext(null);
+const ThemeContext = createContext();
 
-// Proveedor de contexto
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // Inicialmente no hay usuario
+export const ThemeProvider = ({ children }) => {
+  const [tema, setTema] = useState('light'); // 'light' o 'dark'
 
-  const login = (username) => setUser(username);  // Ahora guardamos el nombre de usuario
-  const logout = () => setUser(null);     // Limpia la sesión del usuario
+  useEffect(() => {
+    const root = document.documentElement;
+    if (tema === 'light') {
+      root.classList.remove('theme-azure-dark');
+      root.classList.add('theme-azure');
+    } else {
+      root.classList.remove('theme-azure');
+      root.classList.add('theme-azure-dark');
+    }
+  }, [tema]);
+
+  const toggleTema = () => setTema((prev) => (prev === 'light' ? 'dark' : 'light'));
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <ThemeContext.Provider value={{ tema, toggleTema }}>
       {children}
-    </AuthContext.Provider>
+    </ThemeContext.Provider>
   );
-}
+};
 
-// Hook para consumir el contexto
-export function useContextoAuth() {
-  return useContext(ContextoAuth);
-}
+export const useTheme = () => useContext(ThemeContext);

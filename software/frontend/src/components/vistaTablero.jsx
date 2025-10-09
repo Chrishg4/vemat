@@ -151,10 +151,10 @@ export default function VistaTablero() {
 
             {/* Historial de Alertas */}
             <div>
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold text-ia-text">Historial de Alertas</h2>
-                    <DownloadMosquitoData fields={['tipo','fecha','estado','latitud','longitud']} />
-                </div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-ia-text">Historial de Alertas</h2>
+          {/* Botones de descarga eliminados para simplificar la interfaz */}
+        </div>
                 <div className="bg-ia-card rounded-xl shadow-lg border border-ia-border p-4 transition-colors duration-500 hover:shadow-xl">
                     <HistorialAlertas alertas={alertHistory} loading={loading} limit={5} />
                 </div>

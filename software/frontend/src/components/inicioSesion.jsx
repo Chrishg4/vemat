@@ -4,8 +4,8 @@ import FormularioInicioSesion from "./formularioInicioSesion";
 
 export default function Login() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 to-black flex items-center justify-center p-4 relative">
-      <div className="absolute top-4 left-4 text-white text-xl font-bold">VEMAT/UTN</div>
+  <div className="min-h-screen bg-ia-background text-ia-text flex items-center justify-center p-4 relative transition-colors duration-500">
+  <div className="absolute top-4 left-4 text-ia-text text-xl font-bold transition-colors duration-500">VEMAT/UTN</div>
   <FormularioInicioSesion />
     </div>
   );

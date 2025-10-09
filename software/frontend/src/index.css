@@ -1,167 +1,119 @@
-/* src/index.css */
 @import 'leaflet/dist/leaflet.css';
 
-/* Variables de color base */
+/* =========================================================
+   ⚫ Escala de Grises — Tema Claro & Oscuro (Versión Limpia)
+   ========================================================= */
+
+/* 🌞 Tema Claro */
 :root {
-  /* Tema claro por defecto */
-  --ia-background: #f8f9fa;     /* Fondo principal muy claro */
-  --ia-card: #ffffff;          /* Fondo de tarjetas blanco */
-  --ia-text: #1e293b;          /* Texto principal azul oscuro */
-  --ia-text-secondary: #64748b; /* Texto secundario gris azulado */
-  --ia-border: #e2e8f0;        /* Bordes sutiles */
-  --ia-accent: #3b82f6;        /* Color de acento (azul) */
-  
-  /* Transiciones suaves */
-  --theme-transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+  --ia-background: #FFFFFF;
+  --ia-card: #c0c0c06e;
+  --ia-card-header: #ffffff;
+  --ia-card-hover: #F1F5F9;
+  --ia-text: #1E293B;
+  --ia-text-secondary: #1E293B;
+  --ia-border: #CBD5E1;
+  --ia-accent: #3636361c;
+
+  /* Estados */
+  --ia-error: #EF4444;
+  --ia-error-bg: #FEF2F2;
+  --ia-warning: #FACC15;
+  --ia-warning-bg: #FEF9C3;
+  --ia-success: #22C55E;
+  --ia-success-bg: #DCFCE7;
+  --ia-info: #0EA5E9;
+  --ia-info-bg: #E0F2FE;
+
+  /* Sombras y transición */
+  --ia-shadow: rgba(0, 0, 0, 0.08);
+
+ --theme-transition: background-color 2s ease-in-out, 
+                      color 2s ease-in-out, 
+                      border-color 2s ease-in-out, 
+                      box-shadow 2s ease-in-out;
 }
 
-/* Tema oscuro */
-:root[class="dark"] {
-  --ia-background: #0f172a;     /* Fondo principal azul muy oscuro */
-  --ia-card: #1e293b;          /* Fondo de tarjetas azul oscuro */
-  --ia-text: #f8fafc;          /* Texto principal claro */
-  --ia-text-secondary: #94a3b8; /* Texto secundario */
-  --ia-border: #334155;        /* Bordes */
-  --ia-accent: #3b82f6;        /* Mantener el mismo acento */
+/* 🌙 Tema Oscuro */
+:root.dark {
+  --ia-background: #0F0F0F;
+  --ia-card: #1A1A1A;
+  --ia-card-header: #222222;
+  --ia-card-hover: #2B2B2B;
+  --ia-text: #E0E0E0;
+  --ia-text-secondary: #A8A8A8;
+  --ia-border: #2E2E2E;
+  --ia-accent: #6E6E6E;
+
+  /* Estados */
+  --ia-error: #F87171;
+  --ia-error-bg: #3B1C1C;
+  --ia-warning: #FBBF24;
+  --ia-warning-bg: #3A2F14;
+  --ia-success: #86EFAC;
+  --ia-success-bg: #1B2B1D;
+  --ia-info: #60A5FA;
+  --ia-info-bg: #14213D;
+
+  --ia-shadow: rgba(0, 0, 0, 0.35);
 }
 
+/* Transiciones suaves entre temas */
+* {
+  transition: var(--theme-transition);
+}
+
+/* =========================================================
+   🧱 Tailwind Base
+   ========================================================= */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom scrollbar hiding utility */
+/* =========================================================
+   ✨ Utilidades personalizadas
+   ========================================================= */
+
+/* Scrollbar oculto */
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
   .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
-:root {
-  /* Colores de estado (colores vibrantes para indicadores importantes) */
-  --ia-primary: #4F46E5;    /* Índigo elegante */
-  --ia-warning: #F59E0B;    /* Amarillo/naranja para temperatura */
-  --ia-success: #10B981;    /* Verde para humedad */
-  --ia-error: #EF4444;      /* Rojo para bioacústica */
-  --ia-info: #60A5FA;       /* Azul claro para CO2 */
-  
-  /* Versiones de fondo con opacidad */
-  --ia-warning-bg: rgba(245, 158, 11, 0.1);
-  --ia-success-bg: rgba(16, 185, 129, 0.1);
-  --ia-error-bg: rgba(239, 68, 68, 0.1);
-  --ia-info-bg: rgba(96, 165, 250, 0.1);
+/* =========================================================
+   🩶 Base general
+   ========================================================= */
 
-  /* Paleta de grises compartida */
-  --gray-50: #F9FAFB;
-  --gray-100: #F3F4F6;
-  --gray-200: #E5E7EB;
-  --gray-300: #D1D5DB;
-  --gray-400: #9CA3AF;
-  --gray-500: #6B7280;
-  --gray-600: #4B5563;
-  --gray-700: #374151;
-  --gray-800: #1F2937;
-  --gray-900: #111827;
-  --gray-950: #030712;
-}
-
-/* Tema Claro - Todo en grises claros */
-:root[class="light"] {
-  --ia-background: var(--gray-100);    /* Fondo principal gris muy claro */
-  --ia-surface: var(--gray-50);        /* Superficie de componentes */
-  --ia-card: var(--gray-50);           /* Fondo de tarjetas */
-  --ia-card-hover: var(--gray-200);    /* Estado hover de tarjetas */
-  --ia-text: var(--gray-900);          /* Texto principal */
-  --ia-text-secondary: var(--gray-600); /* Texto secundario */
-  --ia-border: var(--gray-200);        /* Bordes sutiles */
-  --ia-border-strong: var(--gray-300);  /* Bordes más prominentes */
-  --ia-shadow: rgba(0, 0, 0, 0.1);     /* Sombras suaves */
-  
-  /* Botones y elementos interactivos mantienen sus colores */
-  --btn-primary: #4F46E5;              /* Color principal para botones */
-  --btn-hover: #4338CA;                /* Color hover para botones */
-}
-
-/* Tema Oscuro - Sofisticado y Profesional */
-:root[class="dark"] {
-  --ia-background: var(--gray-900);    /* Fondo principal gris oscuro */
-  --ia-surface: var(--gray-800);       /* Superficie de componentes */
-  --ia-card: var(--gray-800);          /* Fondo de tarjetas */
-  --ia-card-hover: var(--gray-700);    /* Estado hover de tarjetas */
-  --ia-text: var(--gray-50);           /* Texto principal */
-  --ia-text-secondary: var(--gray-400); /* Texto secundario */
-  --ia-border: var(--gray-700);        /* Bordes sutiles */
-  --ia-border-strong: var(--gray-600); /* Bordes más prominentes */
-  --ia-shadow: rgba(0, 0, 0, 0.25);    /* Sombras más pronunciadas */
-}
-
-/* Tema Claro */
-:root[class="light"] {
-  --ia-background: #fafafa;  /* Gris 50 */
-  --ia-card: #f3f4f6;       /* Gris 100 */
-  --ia-card-header: #e5e7eb; /* Gris 200 */
-  --ia-card-hover: #e5e7eb;  /* Gris 200 */
-  --ia-text: #1f2937;       /* Gris 800 */
-  --ia-text-secondary: #6b7280; /* Gris 500 */
-  --ia-border: #e5e7eb;     /* Gris 200 */
-  --ia-accent: #4ade80;     /* Verde */
-  
-  /* Colores de alerta */
-  --ia-error: #dc2626;      /* Rojo 600 */
-  --ia-error-bg: #fee2e2;   /* Rojo 100 */
-  --ia-warning: #d97706;    /* Amarillo 600 */
-  --ia-warning-bg: #fef3c7; /* Amarillo 100 */
-  --ia-success: #16a34a;    /* Verde 600 */
-  --ia-success-bg: #dcfce7; /* Verde 100 */
-  --ia-info: #2563eb;       /* Azul 600 */
-  --ia-info-bg: #dbeafe;    /* Azul 100 */
-}
-
-/* Tema Oscuro */
-:root[class="dark"] {
-  --ia-background: #111827;  /* Gris 900 */
-  --ia-card: #1f2937;       /* Gris 800 */
-  --ia-card-header: #374151; /* Gris 700 */
-  --ia-card-hover: #374151;  /* Gris 700 */
-  --ia-text: #e5e7eb;       /* Gris 200 */
-  --ia-text-secondary: #9ca3af; /* Gris 400 */
-  --ia-border: #374151;     /* Gris 700 */
-  --ia-accent: #4ade80;     /* Verde */
-  
-  /* Colores de alerta */
-  --ia-error: #f87171;      /* Rojo 400 */
-  --ia-error-bg: rgba(220, 38, 38, 0.2); /* Rojo 600 con transparencia */
-  --ia-warning: #fbbf24;    /* Amarillo 400 */
-  --ia-warning-bg: rgba(217, 119, 6, 0.2); /* Amarillo 600 con transparencia */
-  --ia-success: #4ade80;    /* Verde 400 */
-  --ia-success-bg: rgba(22, 163, 74, 0.2); /* Verde 600 con transparencia */
-  --ia-info: #60a5fa;       /* Azul 400 */
-  --ia-info-bg: rgba(37, 99, 235, 0.2); /* Azul 600 con transparencia */
-}
-
-/* Other custom CSS below */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background-color: var(--ia-background);
+  color: var(--ia-text);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Estilos específicos para tarjetas tipo panel (coincide con diseño de la segunda imagen) */
+/* Paneles / Tarjetas */
 .panel-card {
   background: var(--ia-card);
   border: 1px solid var(--ia-border);
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(2,6,23,0.35);
+  box-shadow: 0 6px 16px var(--ia-shadow);
   padding: 16px;
+  transition: var(--theme-transition);
 }
 
-/* Encabezado de tarjetas */
+.panel-card:hover {
+  background: var(--ia-card-hover);
+}
+
+/* Encabezado de panel */
 .panel-card .panel-header {
   display: flex;
   justify-content: space-between;
@@ -169,7 +121,7 @@ body {
   margin-bottom: 12px;
 }
 
-/* Estilizar leyenda y etiquetas dentro de las tarjetas */
+/* Leyenda dentro del panel */
 .panel-legend {
   display: flex;
   gap: 12px;
@@ -177,16 +129,22 @@ body {
   margin-top: 12px;
 }
 
-/* Ajustes para los controles de Leaflet para que se vean blancos y con borde redondeado */
-.leaflet-control-zoom, .leaflet-bar a, .leaflet-bar a:hover {
-  background: rgba(255,255,255,0.95) !important;
+/* =========================================================
+   🗺️ Ajustes para Leaflet
+   ========================================================= */
+
+.leaflet-control-zoom,
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
   color: var(--ia-text) !important;
-  border: 1px solid rgba(0,0,0,0.08) !important;
-  box-shadow: 0 2px 6px rgba(2,6,23,0.2);
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 6px rgba(2, 6, 23, 0.2);
   border-radius: 6px !important;
 }
 
-/* Hacer que el mapa ocupe todo el contenedor sin sobresalir */
 .leaflet-container {
   border-radius: 8px;
+  width: 100%;
+  height: 100%;
 }

@@ -1,10 +1,12 @@
 // src/components/formularioInicioSesion.jsx
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import { useInicioSesion } from '../use/useInicioSesion';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 export default function FormularioInicioSesion() {
+  const { theme, toggleTheme } = useTheme();
   const {
     usuario,
     setUsuario,
@@ -34,7 +36,20 @@ export default function FormularioInicioSesion() {
     }
   }, [loginExitoso, error]);
   return (
-    <div className="flex items-center justify-center min-h-screen">
+  <div className="flex items-center justify-center min-h-screen bg-ia-background text-ia-text transition-colors duration-500">
+      {/* Botón de cambio de tema */}
+      <button
+        onClick={toggleTheme}
+        className="fixed top-6 right-8 z-50 flex items-center gap-2 px-4 py-2 rounded-full shadow-lg bg-white/80 dark:bg-black/80 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-300 hover:bg-gray-200 dark:hover:bg-gray-900"
+        aria-label="Cambiar tema"
+      >
+        {theme === 'dark' ? (
+          <span role="img" aria-label="Claro">🌞</span>
+        ) : (
+          <span role="img" aria-label="Oscuro">🌙</span>
+        )}
+        <span className="font-semibold text-sm">{theme === 'dark' ? 'Claro' : 'Oscuro'}</span>
+      </button>
       {/* Toaster flotante arriba derecha */}
       {showToast && (
         <div className={`fixed top-6 right-8 z-50 min-w-[260px] p-3 rounded-xl shadow-xl flex items-center gap-3 ${toastType === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'} animate-fade-in`}>
@@ -49,7 +64,7 @@ export default function FormularioInicioSesion() {
           >×</button>
         </div>
       )}
-      <div className="relative py-10 px-12 rounded-3xl shadow-2xl w-full max-w-xl text-gray-200 bg-white/10 backdrop-blur-lg border border-white/20 flex flex-col justify-center">
+  <div className="relative py-10 px-12 rounded-3xl shadow-2xl w-full max-w-xl text-ia-text bg-white/10 dark:bg-black/30 backdrop-blur-lg border border-white/20 flex flex-col justify-center">
   <div className="flex flex-row items-center justify-between mb-2">
           <div className="text-left">
             <p className="text-4xl font-bold text-black-400 mb-0 mt-0">¡Bienvenido!</p>
