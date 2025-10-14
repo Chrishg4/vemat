@@ -1,34 +1,34 @@
 @import 'leaflet/dist/leaflet.css';
 
 /* =========================================================
-   ⚫ Escala de Grises — Tema Claro & Oscuro (Versión Limpia)
+   🔵 Azure Tech — Tema Claro & Oscuro (Versión Integrada)
    ========================================================= */
 
 /* 🌞 Tema Claro */
 :root {
-  --ia-background: #FFFFFF;
-  --ia-card: #c0c0c06e;
-  --ia-card-header: #ffffff;
-  --ia-card-hover: #F1F5F9;
-  --ia-text: #1E293B;
-  --ia-text-secondary: #1E293B;
-  --ia-border: #CBD5E1;
-  --ia-accent: #3636361c;
+  --ia-background: #EFF6FF;  /* Azul muy claro */
+  --ia-card: #FFFFFF;
+  --ia-card-header: #E2E8F0;
+  --ia-card-hover: #DBEAFE;
+  --ia-text: #1E3A8A;        /* Azul profundo */
+  --ia-text-secondary: #334155;
+  --ia-border: #BFDBFE;
+  --ia-accent: #2563EB33;
 
   /* Estados */
   --ia-error: #EF4444;
   --ia-error-bg: #FEF2F2;
-  --ia-warning: #FACC15;
-  --ia-warning-bg: #FEF9C3;
+  --ia-warning: #F59E0B;
+  --ia-warning-bg: #FFFBEB;
   --ia-success: #22C55E;
-  --ia-success-bg: #DCFCE7;
-  --ia-info: #0EA5E9;
-  --ia-info-bg: #E0F2FE;
+  --ia-success-bg: #ECFDF5;
+  --ia-info: #3B82F6;
+  --ia-info-bg: #DBEAFE;
 
-  /* Sombras y transición */
+  /* Sombras y transiciones */
   --ia-shadow: rgba(0, 0, 0, 0.08);
 
- --theme-transition: background-color 2s ease-in-out, 
+  --theme-transition: background-color 2s ease-in-out, 
                       color 2s ease-in-out, 
                       border-color 2s ease-in-out, 
                       box-shadow 2s ease-in-out;
@@ -36,29 +36,32 @@
 
 /* 🌙 Tema Oscuro */
 :root.dark {
-  --ia-background: #0F0F0F;
-  --ia-card: #1A1A1A;
-  --ia-card-header: #222222;
-  --ia-card-hover: #2B2B2B;
-  --ia-text: #E0E0E0;
-  --ia-text-secondary: #A8A8A8;
-  --ia-border: #2E2E2E;
-  --ia-accent: #6E6E6E;
+  --ia-background: #0A1120;      /* Azul nocturno elegante */
+  --ia-card: #111827;            /* Azul gris oscuro */
+  --ia-card-header: #1E293B;     /* Azul más claro para contraste */
+  --ia-card-hover: #1E3A8A33;    /* Sutil reflejo azul al pasar */
+  --ia-text: #E2E8F0;            /* Gris azulado claro */
+  --ia-text-secondary: #94A3B8;
+  --ia-border: #1E3A8A;
+  --ia-accent: #2563EB80;
 
   /* Estados */
   --ia-error: #F87171;
   --ia-error-bg: #3B1C1C;
   --ia-warning: #FBBF24;
   --ia-warning-bg: #3A2F14;
-  --ia-success: #86EFAC;
-  --ia-success-bg: #1B2B1D;
+  --ia-success: #4ADE80;
+  --ia-success-bg: #1E3A2F;
   --ia-info: #60A5FA;
-  --ia-info-bg: #14213D;
+  --ia-info-bg: #1E3A8A;
 
-  --ia-shadow: rgba(0, 0, 0, 0.35);
+  /* Sombras */
+  --ia-shadow: rgba(0, 0, 0, 0.45);
 }
 
-/* Transiciones suaves entre temas */
+/* =========================================================
+   ⚙️ Transiciones globales
+   ========================================================= */
 * {
   transition: var(--theme-transition);
 }
