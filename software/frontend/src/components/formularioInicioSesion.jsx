@@ -64,7 +64,7 @@ export default function FormularioInicioSesion() {
           >×</button>
         </div>
       )}
-  <div className="relative py-10 px-12 rounded-3xl shadow-2xl w-full max-w-xl text-ia-text bg-white/10 dark:bg-black/30 backdrop-blur-lg border border-white/20 flex flex-col justify-center">
+  <div className="relative py-10 px-12 rounded-3xl shadow-2xl w-full max-w-xl text-ia-text bg-gray-100/70 dark:bg-gray-900/70 backdrop-blur-lg border border-white/20 flex flex-col justify-center">
   <div className="flex flex-row items-center justify-between mb-2">
           <div className="text-left">
             <p className="text-4xl font-bold text-black-400 mb-0 mt-0">¡Bienvenido!</p>
